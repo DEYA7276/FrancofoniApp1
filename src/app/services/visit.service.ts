@@ -12,16 +12,12 @@ export class VisitService {
   async registerVisit(participantId: string, standId: string): Promise<{ success: boolean; message: string }> {
     const visitsRef = collection(this.firestore, 'visits');
     
-    // Check if total visits < 5
+    // Get all visits for this participant to check limits
     const qTotal = query(visitsRef, where('participantId', '==', participantId));
     const totalVisitsSnap = await getDocs(qTotal);
-    if (totalVisitsSnap.size >= 5) {
-      return { success: false, message: 'El participante ya alcanzó el máximo de 5 visitas.' };
-    }
+    const totalVisits = totalVisitsSnap.size;
 
-    // Check last visit to prevent repeating stand sequentially
-    // We order them by time or just check all and find the latest. Real apps use orderBy('fecha', 'desc') 
-    // but requires index. We'll sort in memory since size is max 5.
+    // Check last visit for repeating stand or cooldown logic
     const allVisits = totalVisitsSnap.docs.map(d => d.data() as Visit);
     allVisits.sort((a, b) => {
       const timeA = a.fecha instanceof Timestamp ? a.fecha.toMillis() : new Date(a.fecha).getTime();
@@ -31,15 +27,22 @@ export class VisitService {
 
     if (allVisits.length > 0) {
       const lastVisit = allVisits[0];
+      
+      // Rule: cannot repeat the same stand immediately
       if (lastVisit.standId === standId) {
-         // Optionally, "permitir después de tiempo": could check if time difference is > X minutes.
-         // Let's say 10 minutes.
-         const now = Date.now();
-         const lastTime = lastVisit.fecha instanceof Timestamp ? lastVisit.fecha.toMillis() : new Date(lastVisit.fecha).getTime();
-         const diffMinutes = (now - lastTime) / 60000;
-         if (diffMinutes < 10) {
-           return { success: false, message: 'No se puede repetir el stand seguidamente tan rápido (espera 10 min).' };
-         }
+        return { success: false, message: 'No se puede repetir el mismo stand consecutivamente.' };
+      }
+
+      // Rule: Every 5 stands, must wait 5 minutes
+      if (totalVisits % 5 === 0) {
+        const now = Date.now();
+        const lastTime = lastVisit.fecha instanceof Timestamp ? lastVisit.fecha.toMillis() : new Date(lastVisit.fecha).getTime();
+        const diffMinutes = (now - lastTime) / 60000;
+        
+        if (diffMinutes < 5) {
+          const waitMinutes = Math.ceil(5 - diffMinutes);
+          return { success: false, message: `Has completado un ciclo de 5 stands. Debes esperar ${waitMinutes} minuto(s) para continuar.` };
+        }
       }
     }
 

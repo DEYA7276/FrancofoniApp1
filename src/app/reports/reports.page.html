@@ -9,16 +9,31 @@
 
 <ion-content [fullscreen]="true" class="ion-padding">
   
-  <ion-card *ngIf="mostVisitedStand">
-    <ion-card-header>
-      <ion-card-title>Stand Más Visitado</ion-card-title>
-    </ion-card-header>
-    <ion-card-content class="ion-text-center">
-      <ion-icon name="trophy-outline" color="warning" style="font-size: 64px;"></ion-icon>
-      <h2>{{ mostVisitedStand.standName }}</h2>
-      <p>{{ mostVisitedStand.count }} visitas totales</p>
-    </ion-card-content>
-  </ion-card>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Calificación por Stand</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #ratingsChart></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Picos de Visitantes</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #peaksChart></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
   <ion-card *ngIf="visitsPerStand.length > 0">
     <ion-list-header>
