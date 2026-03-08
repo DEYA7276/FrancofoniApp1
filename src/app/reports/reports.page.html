@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Reportes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  
+  <ion-card *ngIf="mostVisitedStand">
+    <ion-card-header>
+      <ion-card-title>Stand Más Visitado</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-text-center">
+      <ion-icon name="trophy-outline" color="warning" style="font-size: 64px;"></ion-icon>
+      <h2>{{ mostVisitedStand.standName }}</h2>
+      <p>{{ mostVisitedStand.count }} visitas totales</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="visitsPerStand.length > 0">
+    <ion-list-header>
+      <ion-label>Visitas por Stand</ion-label>
+    </ion-list-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let item of visitsPerStand">
+          <ion-icon name="podium-outline" slot="start" color="primary"></ion-icon>
+          <ion-label>{{ item.standName }}</ion-label>
+          <ion-badge color="tertiary" slot="end">{{ item.count }}</ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="visitsPerStand.length === 0">
+    <ion-card-content class="ion-text-center">
+      <p>Aún no hay visitas registradas.</p>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

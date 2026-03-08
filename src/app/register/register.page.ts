@@ -1,20 +1,61 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { 
+  IonHeader, IonToolbar, IonButtons, IonBackButton, 
+  IonTitle, IonContent, IonCard, IonCardHeader, 
+  IonCardTitle, IonCardContent, IonItem, IonLabel, 
+  IonInput, IonSelect, IonSelectOption, IonButton, 
+  ToastController 
+} from '@ionic/angular/standalone';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [
+    IonHeader, IonToolbar, IonButtons, IonBackButton, 
+    IonTitle, IonContent, IonCard, IonCardHeader, 
+    IonCardTitle, IonCardContent, IonItem, IonLabel, 
+    IonInput, IonSelect, IonSelectOption, IonButton,
+    CommonModule, FormsModule
+  ]
 })
-export class RegisterPage implements OnInit {
+export class RegisterPage {
+  private userService = inject(UserService);
+  private toastCtrl = inject(ToastController);
 
-  constructor() { }
+  email = '';
+  password = '';
+  role: 'admin' | 'supervisor' | 'usuario' = 'usuario';
 
-  ngOnInit() {
+  async registerUser() {
+    if (!this.email || !this.password || !this.role) {
+      this.showToast('Completa todos los campos');
+      return;
+    }
+
+    try {
+      await this.userService.createUserAdmin(this.email, this.password, this.role);
+      this.showToast('Usuario registrado con éxito', 'success');
+      this.email = '';
+      this.password = '';
+      this.role = 'usuario';
+    } catch (e: any) {
+      this.showToast('Error al registrar usuario: ' + e.message, 'danger');
+    }
   }
 
+  async showToast(message: string, color: 'success' | 'warning' | 'danger' = 'warning') {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 3000,
+      color,
+      position: 'bottom'
+    });
+    await toast.present();
+  }
 }
+

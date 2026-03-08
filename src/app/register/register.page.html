@@ -1,13 +1,41 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>register</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registrar Usuarios</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">register</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Crear cuenta administrativa o de operador</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      
+      <ion-item>
+        <ion-label position="floating">Correo Electrónico</ion-label>
+        <ion-input type="email" [(ngModel)]="email"></ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label position="floating">Contraseña (Mínimo 6 caracteres)</ion-label>
+        <ion-input type="password" [(ngModel)]="password"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Rol de Usuario</ion-label>
+        <ion-select [(ngModel)]="role">
+          <ion-select-option value="usuario">Encargado de Stand (Usuario)</ion-select-option>
+          <ion-select-option value="supervisor">Supervisor</ion-select-option>
+          <ion-select-option value="admin">Administrador (Total)</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-button expand="block" style="margin-top: 20px;" (click)="registerUser()">Crear Usuario</ion-button>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
