@@ -2,6 +2,7 @@
   <ion-toolbar class="glass-header">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/dashboard"></ion-back-button>
+      <img src="assets/logo_participante.png" class="navbar-logo" alt="Logo">
     </ion-buttons>
     <ion-title>Gestión de Stands</ion-title>
   </ion-toolbar>
@@ -21,6 +22,11 @@
       <ion-item class="premium-input-item">
         <ion-label position="stacked">Descripción</ion-label>
         <ion-textarea [(ngModel)]="newStand.descripcion" placeholder="Describe los platillos..."></ion-textarea>
+      </ion-item>
+
+      <ion-item class="premium-input-item">
+        <ion-label position="stacked">Responsable (Alumno)</ion-label>
+        <ion-input [(ngModel)]="newStand.responsable" placeholder="Nombre del alumno responsable"></ion-input>
       </ion-item>
 
       <ion-item *ngIf="usuarios$ | async as usuarios" class="premium-input-item">
@@ -58,6 +64,7 @@
         <ion-label style="margin-top: 15px; margin-bottom: 15px;">
           <h2 style="margin-bottom: 12px;">{{ stand.nombre }} <ion-badge [color]="stand.activo ? 'success' : 'medium'" style="margin-left: 10px;">{{ stand.activo ? 'Activo' : 'Inactivo' }}</ion-badge></h2>
           <p style="margin-bottom: 8px; font-size: 0.95em;"><strong>Pabellón/Descripción:</strong> {{ stand.descripcion }}</p>
+          <p style="margin-bottom: 8px; font-size: 0.95em;"><strong>Responsable:</strong> {{ stand.responsable || 'No asignado' }}</p>
           <p style="margin-bottom: 8px; font-size: 0.95em;"><strong>Encargado Técnico:</strong> {{ getEncargadoName(usuarios, stand.usuarioId) }}</p>
         </ion-label>
         <ion-buttons slot="end">

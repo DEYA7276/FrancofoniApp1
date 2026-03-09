@@ -5,8 +5,7 @@ import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButtons,
   IonBackButton, IonCard, IonCardHeader, IonCardTitle,
   IonCardContent, IonItem, IonLabel, IonInput, IonButton,
-  IonList, IonListHeader, IonThumbnail, IonImg, IonIcon,
-  IonSelect, IonSelectOption, ToastController
+  IonIcon, IonSelect, IonSelectOption, ToastController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { trash, peopleOutline, create, download, mail, print } from 'ionicons/icons';
@@ -29,8 +28,7 @@ import * as QRCode from 'qrcode';
     IonContent, IonHeader, IonTitle, IonToolbar, IonButtons,
     IonBackButton, IonCard, IonCardHeader, IonCardTitle,
     IonCardContent, IonItem, IonLabel, IonInput, IonButton,
-    IonList, IonListHeader, IonThumbnail, IonImg, IonIcon,
-    IonSelect, IonSelectOption,
+    IonIcon, IonSelect, IonSelectOption,
     CommonModule, FormsModule, RouterModule,
     QRCodeComponent
   ]

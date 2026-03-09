@@ -2,6 +2,7 @@
   <ion-toolbar class="glass-header">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/dashboard"></ion-back-button>
+      <img src="assets/logo_participante.png" class="navbar-logo" alt="Logo">
     </ion-buttons>
     <ion-title>Reportes</ion-title>
     <ion-buttons slot="end">
@@ -97,7 +98,7 @@
                 <h3 style="color: var(--ion-color-primary); font-weight: bold; margin-bottom: 5px;">🔥 Tendencia Actual:</h3>
                 <p style="font-size: 0.95rem;">
                   El stand <strong>{{ mostVisitedStand?.standName || 'Ninguno' }}</strong> es el claro favorito en flujo de personas ({{ mostVisitedStand?.count || 0 }} visitas). 
-                  {{ highestRatedStand ? 'Sin embargo, el mejor sabor lo tiene ' + highestRatedStand?.standName + ' con un promedio de ' + highestRatedStand?.avgRating + ' estrellas.' : '' }}
+                  {{ highestRatedStand ? 'Sin embargo, el mejor sabor lo tiene ' + highestRatedStand.standName + ' con un promedio de ' + highestRatedStand.avgRating + ' estrellas.' : '' }}
                 </p>
               </div>
             </div>

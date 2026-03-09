@@ -4,8 +4,9 @@ import {
   IonHeader, IonToolbar, IonButtons, IonBackButton, 
   IonTitle, IonContent, IonCard, IonCardHeader, 
   IonCardTitle, IonCardContent, IonButton, 
-  IonIcon, ToastController 
+  IonIcon, ToastController, ModalController 
 } from '@ionic/angular/standalone';
+import { ThreeDMapModalComponent } from '../components/3d-map-modal.component';
 import { addIcons } from 'ionicons';
 import { qrCodeOutline, warningOutline } from 'ionicons/icons';
 // @ts-ignore
@@ -34,6 +35,7 @@ export class ScannerPage implements OnInit, OnDestroy {
   private standService = inject(StandService);
   private visitService = inject(VisitService);
   private toastCtrl = inject(ToastController);
+  private modalCtrl = inject(ModalController);
 
   scanner: Html5QrcodeScanner | null = null;
   myStand: Stand | null = null;
@@ -106,6 +108,23 @@ export class ScannerPage implements OnInit, OnDestroy {
       }
 
       this.showToast(result.message, result.success ? 'success' : 'danger');
+
+      if (result.success) {
+        // Cargar todos los stands y visitas para el mapa
+        const allStands = await this.standService.getStands().pipe(take(1)).toPromise() || [];
+        const visits = await this.visitService.getParticipantVisits(participantId);
+        const visitedIds = visits.map((v: any) => v.standId);
+
+        const modal = await this.modalCtrl.create({
+          component: ThreeDMapModalComponent,
+          componentProps: {
+            participantId: participantId,
+            visitedStandIds: visitedIds,
+            allStands: allStands
+          }
+        });
+        await modal.present();
+      }
     } catch (e: any) {
       this.showToast('Error registrando visita: ' + e.message, 'danger');
     }

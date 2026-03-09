@@ -165,6 +165,17 @@ ion-toolbar.glass-header {
   --color: #ffffff !important;
 }
 
+.navbar-logo {
+  height: 32px;
+  width: auto;
+  margin-right: 12px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  vertical-align: middle;
+  border-radius: 50%;
+  clip-path: circle(50%);
+  background: white; /* Asegurar fondo blanco */
+}
+
 /* Modifiaciones directas a iconos de Cabecera (Para forzar blanco) */
 ion-toolbar.glass-header ion-title,
 ion-toolbar.glass-header ion-icon,

@@ -1,30 +1,51 @@
-<ion-header [translucent]="true">
-  <ion-toolbar class="glass-header">
-    <ion-title>Login Francofonía</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+  <div class="login-wrapper">
+    <div class="logo-header">
+      <img src="assets/logo_participante.png" class="main-logo" alt="Logo Francofonía">
+      <h1>Login Francofonía</h1>
+      <p>"La gastronomía une al mundo"</p>
+    </div>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="login-container animate-fade-up delay-100" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
-    <h1 style="text-align: center;">Bienvenido</h1>
-    
-    <ion-item class="premium-input-item">
-      <ion-label position="stacked">Correo</ion-label>
-      <ion-input type="email" [(ngModel)]="email" placeholder="Ingresa tu correo"></ion-input>
-    </ion-item>
-    
-    <ion-item class="premium-input-item">
-      <ion-label position="stacked">Contraseña</ion-label>
-      <ion-input type="password" [(ngModel)]="password" placeholder="Tu contraseña secretra"></ion-input>
-    </ion-item>
-    
-    <ion-button expand="block" style="margin-top: 20px;" (click)="login()">Ingresar</ion-button>
+    <div class="glass-card">
+      <ion-segment [(ngModel)]="loginMode" class="premium-segment" mode="ios">
+        <ion-segment-button value="guest">
+          <ion-icon name="ticket-outline"></ion-icon>
+          <ion-label>Soy Invitado</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="staff">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          <ion-label>Acceso Staff</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <div class="login-form">
+        <div *ngIf="loginMode === 'guest'">
+          <p class="guest-info anim-fade-up delay-1">
+            Ingresa tu correo registrado para vivir esta experiencia gastronómica única.
+          </p>
+          <ion-item class="anim-fade-up delay-2">
+            <ion-label position="stacked">Mi Correo</ion-label>
+            <ion-input type="email" [(ngModel)]="guestEmail" placeholder="Tu correo electrónico"></ion-input>
+          </ion-item>
+          <ion-button expand="block" class="login-btn anim-fade-up delay-3" (click)="onGuestLogin()">
+            Entrar al Evento
+          </ion-button>
+        </div>
+
+        <div *ngIf="loginMode === 'staff'">
+          <ion-item class="anim-fade-up delay-1">
+            <ion-label position="stacked">Correo Staff</ion-label>
+            <ion-input type="email" [(ngModel)]="staffEmail" placeholder="staff@correo.com"></ion-input>
+          </ion-item>
+          <ion-item class="anim-fade-up delay-2">
+            <ion-label position="stacked">Contraseña</ion-label>
+            <ion-input type="password" [(ngModel)]="password" placeholder="••••••••"></ion-input>
+          </ion-item>
+          <ion-button expand="block" class="login-btn anim-fade-up delay-3" (click)="onStaffLogin()">
+            Acceso Administrativo
+          </ion-button>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <ion-toast
-    [isOpen]="isToastOpen"
-    message="{{ errorMessage }}"
-    duration="2000"
-    (didDismiss)="setOpen(false)">
-  </ion-toast>
 </ion-content>

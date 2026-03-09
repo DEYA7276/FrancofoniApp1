@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { 
   IonHeader, IonToolbar, IonTitle, IonButtons, 
   IonButton, IonContent, IonCard, IonCardContent, 
-  IonIcon, IonLabel, IonBadge
+  IonIcon, IonBadge
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
@@ -11,6 +11,7 @@ import {
   qrCodeOutline, documentTextOutline, barChartOutline, wineOutline, star
 } from 'ionicons/icons';
 import { AuthService } from '../services/auth.service';
+import { StandService } from '../services/stand.service';
 import { Router, RouterModule } from '@angular/router';
 import { User } from '../models/user.model';
 import { Observable } from 'rxjs';
@@ -23,19 +24,24 @@ import { Observable } from 'rxjs';
   imports: [
     IonHeader, IonToolbar, IonTitle, IonButtons, 
     IonButton, IonContent, IonCard, IonCardContent, 
-    IonIcon, IonLabel, IonBadge,
+    IonIcon, IonBadge,
     CommonModule, RouterModule
   ]
 })
 export class DashboardPage {
   authService = inject(AuthService);
+  standService = inject(StandService);
   router = inject(Router);
-  user$: Observable<User | null> = this.authService.user$;
+  user$ = this.authService.user$;
 
   constructor() {
     addIcons({ 
       peopleOutline, storefrontOutline, personAddOutline, 
       qrCodeOutline, documentTextOutline, barChartOutline, wineOutline, star
+    });
+    // Inicializar stands si la colección está vacía
+    this.standService.initializeStands().then(created => {
+      if (created) console.log('Stands iniciales creados correctamente');
     });
   }
 

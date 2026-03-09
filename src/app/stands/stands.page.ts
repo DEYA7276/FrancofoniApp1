@@ -79,7 +79,7 @@ export class StandsPage {
   }
 
   resetForm() {
-    this.newStand = { nombre: '', descripcion: '', usuarioId: '', activo: true };
+    this.newStand = { nombre: '', descripcion: '', usuarioId: '', activo: true, responsable: '' };
   }
 
   async deleteStand(id: string) {

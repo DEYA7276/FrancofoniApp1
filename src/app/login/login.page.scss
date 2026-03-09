@@ -1,0 +1,206 @@
+:host {
+  --champagne: #F5F3ED;
+  --champagne-dark: #E8E5DA;
+  --navy: #0F3B6E;
+  --gold: #D4AF37;
+}
+
+ion-content {
+  --background: none !important;
+  background: var(--champagne);
+  position: relative;
+  overflow: hidden;
+
+  // Fondo animado de luz cálida
+  &::before {
+    content: '';
+    position: absolute;
+    width: 250%;
+    height: 250%;
+    top: -75%;
+    left: -75%;
+    background: radial-gradient(circle at center, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+    animation: warmLight 15s ease-in-out infinite alternate;
+    z-index: 0;
+  }
+}
+
+@keyframes warmLight {
+  0% { transform: translate(-10%, -10%); }
+  100% { transform: translate(10%, 10%); }
+}
+
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  padding: 25px;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-header {
+  text-align: center;
+  margin-bottom: 35px;
+  animation: slideDownFade 1s both;
+
+  .main-logo {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    background: white;
+    padding: 10px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    animation: floatingLogo 5s ease-in-out infinite;
+    object-fit: contain;
+    border: 2px solid white;
+  }
+
+  h1 {
+    color: var(--navy);
+    font-size: 2rem;
+    margin-top: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    color: #8c7b6c;
+    font-style: italic;
+    font-size: 1.05rem;
+    margin-top: 8px;
+  }
+}
+
+@keyframes floatingLogo {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px) rotate(3deg); }
+}
+
+@keyframes slideDownFade {
+  from { opacity: 0; transform: translateY(-25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 1);
+  border-radius: 35px;
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  box-shadow: 0 40px 100px rgba(140, 123, 108, 0.15);
+  animation: cardReveal 1.2s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: scale(0.95) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.premium-segment {
+  background: #E8EBEF !important;
+  border-radius: 20px;
+  padding: 5px;
+  margin-bottom: 35px;
+  animation: fadeIn 1s 0.3s both;
+
+  ion-segment-button {
+    --color: #90a4ae;
+    --color-checked: var(--navy);
+    --indicator-color: #ffffff;
+    --border-radius: 16px;
+    min-height: 48px;
+    font-weight: 700;
+
+    ion-label { 
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+.login-form {
+  .anim-fade-up {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+    
+    &.delay-1 { animation-delay: 0.5s; }
+    &.delay-2 { animation-delay: 0.7s; }
+    &.delay-3 { animation-delay: 0.9s; }
+  }
+
+  ion-item {
+    --background: #ffffff !important;
+    --border-radius: 18px;
+    --border-color: #f1f3f5 !important;
+    --highlight-color-focused: var(--navy);
+    --padding-start: 22px !important;
+    --padding-end: 22px !important;
+    margin-bottom: 22px;
+    min-height: 75px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    transition: all 0.3s ease;
+
+    &:focus-within {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(140, 123, 108, 0.1);
+    }
+    
+    ion-label {
+      color: #adb5bd !important;
+      font-size: 0.82rem !important;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 8px !important;
+      margin-top: 12px !important;
+    }
+
+    ion-input {
+      --color: var(--navy);
+      font-weight: 600;
+    }
+  }
+
+  .login-btn {
+    --background: var(--navy);
+    --color: #ffffff;
+    --box-shadow: 0 15px 35px rgba(15, 59, 110, 0.25);
+    height: 60px;
+    margin-top: 25px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    --border-radius: 20px;
+    text-transform: none;
+    letter-spacing: 0.6px;
+    transition: all 0.3s ease;
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+
+  .guest-info {
+    text-align: center;
+    color: #78909c;
+    margin-bottom: 30px;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

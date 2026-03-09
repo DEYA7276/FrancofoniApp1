@@ -66,4 +66,11 @@ export class VisitService {
     const q = collection(this.firestore, 'visits');
     return collectionData(q, { idField: 'id' }) as Observable<Visit[]>;
   }
+
+  async getParticipantVisits(participantId: string): Promise<Visit[]> {
+    const visitsRef = collection(this.firestore, 'visits');
+    const q = query(visitsRef, where('participantId', '==', participantId));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Visit));
+  }
 }

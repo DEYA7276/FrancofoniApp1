@@ -59,16 +59,28 @@ export class SurveyPage implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params: any) => {
+    this.route.queryParams.pipe(take(1)).subscribe((params: any) => {
       const standIdParam = params['standId'];
+      
       if (standIdParam) {
-        this.survey.standId = standIdParam;
-        this.standService.getStandById(standIdParam).pipe(take(1)).subscribe((stand: Stand | undefined) => {
-          if (stand) {
-            this.myStand = stand;
-            this.myStand.id = standIdParam;
+        this.loadStand(standIdParam);
+      } else {
+        // Fallback: Check logged-in user's profile
+        this.authService.user$.pipe(take(1)).subscribe(user => {
+          if (user && user.standId) {
+            this.loadStand(user.standId);
           }
         });
+      }
+    });
+  }
+
+  private loadStand(id: string) {
+    this.standService.getStandById(id).pipe(take(1)).subscribe((stand: Stand | undefined) => {
+      if (stand) {
+        this.myStand = stand;
+        this.myStand.id = id;
+        this.survey.standId = id; // Pre-populate the survey object
       }
     });
   }
