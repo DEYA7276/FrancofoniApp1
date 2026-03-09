@@ -1,27 +1,28 @@
-<ion-content>
+<ion-content [fullscreen]="true">
   <div class="login-wrapper">
     <div class="logo-header">
       <img src="assets/logo_participante.png" class="main-logo" alt="Logo Francofonía">
-      <h1>Login Francofonía</h1>
+      <h1>Francofonía 2026</h1>
       <p>"La gastronomía une al mundo"</p>
     </div>
 
     <div class="glass-card">
-      <ion-segment [(ngModel)]="loginMode" class="premium-segment" mode="ios">
-        <ion-segment-button value="guest">
+      <div class="custom-toggle">
+        <div class="slider" [class.staff]="loginMode === 'staff'"></div>
+        <div class="toggle-option" (click)="loginMode = 'guest'" [class.active]="loginMode === 'guest'">
           <ion-icon name="ticket-outline"></ion-icon>
-          <ion-label>Soy Invitado</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="staff">
+          <span>Soy Invitado</span>
+        </div>
+        <div class="toggle-option" (click)="loginMode = 'staff'" [class.active]="loginMode === 'staff'">
           <ion-icon name="shield-checkmark-outline"></ion-icon>
-          <ion-label>Acceso Staff</ion-label>
-        </ion-segment-button>
-      </ion-segment>
+          <span>Acceso Staff</span>
+        </div>
+      </div>
 
       <div class="login-form">
         <div *ngIf="loginMode === 'guest'">
           <p class="guest-info anim-fade-up delay-1">
-            Ingresa tu correo registrado para vivir esta experiencia gastronómica única.
+            Ingresa tu correo de registro para ver tu Mapa 3D NAKU y progreso.
           </p>
           <ion-item class="anim-fade-up delay-2">
             <ion-label position="stacked">Mi Correo</ion-label>
