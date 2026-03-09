@@ -239,7 +239,7 @@ export class ParticipantsPage implements OnInit {
           </div>
           <div class="body-content">
             <h2 class="name">${p.nombre}<br>${p.apellido_paterno}</h2>
-            <div class="role">Participante VIP</div>
+            <div class="role">Participante</div>
             <div class="qr-box">
               <img src="${qrDataUrl}" alt="QR del Participante"/>
             </div>
