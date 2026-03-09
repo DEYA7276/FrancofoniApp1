@@ -1,0 +1,98 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Participantes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Registrar Participante</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input [(ngModel)]="newParticipant.nombre"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Apellido Paterno</ion-label>
+        <ion-input [(ngModel)]="newParticipant.apellido_paterno"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Apellido Materno</ion-label>
+        <ion-input [(ngModel)]="newParticipant.apellido_materno"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Correo Electrónico</ion-label>
+        <ion-input type="email" [(ngModel)]="newParticipant.correo"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Ciudad</ion-label>
+        <ion-input [(ngModel)]="newParticipant.ciudad"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Municipio</ion-label>
+        <ion-input [(ngModel)]="newParticipant.municipio"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Sexo</ion-label>
+        <ion-select [(ngModel)]="newParticipant.sexo">
+          <ion-select-option value="Masculino">Masculino</ion-select-option>
+          <ion-select-option value="Femenino">Femenino</ion-select-option>
+          <ion-select-option value="Otro">Otro</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-button expand="block" style="margin-top: 15px;" (click)="addParticipant()" [disabled]="isSaving">
+        {{ isSaving ? 'Guardando...' : (newParticipant.id ? 'Actualizar Datos' : 'Guardar Participante') }}
+      </ion-button>
+      <ion-button *ngIf="newParticipant.id" [disabled]="isSaving" expand="block" fill="clear" color="medium" (click)="resetForm()">
+        Cancelar Edición
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="participants-container">
+    <h2 class="ion-padding-start">Lista de Participantes</h2>
+    
+    <ion-card *ngFor="let p of participants$ | async" class="participant-card">
+      <ion-card-content>
+        <div class="card-layout">
+          <div class="qr-section">
+            <qrcode [id]="'qr-' + p.id" [qrdata]="p.id || ''" [width]="160" [errorCorrectionLevel]="'M'"></qrcode>
+            <div class="qr-actions">
+              <ion-button fill="clear" size="small" (click)="downloadQR(p.id!, p.nombre)">
+                <ion-icon name="download" slot="start"></ion-icon>
+                Descargar
+              </ion-button>
+              <ion-button fill="clear" size="small" (click)="sendEmail(p)">
+                <ion-icon name="mail" slot="start"></ion-icon>
+                Enviar
+              </ion-button>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <h3>{{ p.nombre }} {{ p.apellido_paterno }} {{ p.apellido_materno }}</h3>
+            <p><strong>Correo:</strong> {{ p.correo }}</p>
+            <p><strong>Ubicación:</strong> {{ p.ciudad }}, {{ p.municipio }}</p>
+            <p><strong>Sexo:</strong> {{ p.sexo }}</p>
+            
+            <div class="item-actions">
+              <ion-button fill="outline" color="primary" size="small" (click)="editParticipant(p)">
+                <ion-icon name="create" slot="start"></ion-icon>
+                Editar
+              </ion-button>
+              <ion-button fill="outline" color="danger" size="small" (click)="deleteParticipant(p.id!)">
+                <ion-icon name="trash" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

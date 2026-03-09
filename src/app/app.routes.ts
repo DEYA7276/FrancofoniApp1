@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
+import { supervisorGuard } from './guards/supervisor.guard';
+import { usuarioGuard } from './guards/usuario.guard';
 
 export const routes: Routes = [
   {
-    path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
-  },
-  {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
   {
@@ -16,14 +16,37 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
+    canActivate: [authGuard],
     loadComponent: () => import('./dashboard/dashboard.page').then( m => m.DashboardPage)
   },
   {
     path: 'scanner',
+    canActivate: [authGuard, usuarioGuard],
     loadComponent: () => import('./scanner/scanner.page').then( m => m.ScannerPage)
   },
   {
     path: 'register',
+    canActivate: [authGuard, adminGuard],
     loadComponent: () => import('./register/register.page').then( m => m.RegisterPage)
+  },
+  {
+    path: 'participants',
+    canActivate: [authGuard, supervisorGuard],
+    loadComponent: () => import('./participants/participants.page').then( m => m.ParticipantsPage)
+  },
+  {
+    path: 'stands',
+    canActivate: [authGuard, supervisorGuard],
+    loadComponent: () => import('./stands/stands.page').then( m => m.StandsPage)
+  },
+  {
+    path: 'survey',
+    canActivate: [authGuard, usuarioGuard],
+    loadComponent: () => import('./survey/survey.page').then( m => m.SurveyPage)
+  },
+  {
+    path: 'reports',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () => import('./reports/reports.page').then( m => m.ReportsPage)
   },
 ];

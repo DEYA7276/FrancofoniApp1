@@ -1,0 +1,71 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestión de Stands</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Registrar Stand</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Nombre del Stand</ion-label>
+        <ion-input [(ngModel)]="newStand.nombre"></ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label position="floating">Descripción</ion-label>
+        <ion-textarea [(ngModel)]="newStand.descripcion"></ion-textarea>
+      </ion-item>
+
+      <ion-item *ngIf="usuarios$ | async as usuarios">
+        <ion-label>Encargado (Usuario)</ion-label>
+        <ion-select [(ngModel)]="newStand.usuarioId">
+          <ion-select-option *ngFor="let u of usuarios" [value]="u.id">{{ u.email }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Estado (Activo)</ion-label>
+        <ion-toggle [(ngModel)]="newStand.activo"></ion-toggle>
+      </ion-item>
+
+      <ion-button expand="block" style="margin-top: 15px;" (click)="addStand()">
+        {{ newStand.id ? 'Actualizar Stand' : 'Guardar Stand' }}
+      </ion-button>
+      <ion-button *ngIf="newStand.id" expand="block" fill="clear" color="medium" (click)="resetForm()">
+        Cancelar Edición
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Lista de Stands</ion-label>
+    </ion-list-header>
+    
+    <ng-container *ngIf="usuarios$ | async as usuarios">
+      <ion-item *ngFor="let stand of stands$ | async">
+        <ion-label>
+          <h2>{{ stand.nombre }} <ion-badge [color]="stand.activo ? 'success' : 'medium'">{{ stand.activo ? 'Activo' : 'Inactivo' }}</ion-badge></h2>
+          <p>{{ stand.descripcion }}</p>
+          <p>Encargado: {{ getEncargadoName(usuarios, stand.usuarioId) }}</p>
+        </ion-label>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" color="primary" (click)="editStand(stand)">
+            <ion-icon name="create" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="deleteStand(stand.id!)">
+            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+
+</ion-content>

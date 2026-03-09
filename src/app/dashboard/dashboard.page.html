@@ -1,13 +1,56 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>dashboard</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Dashboard</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">Salir</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">dashboard</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding" *ngIf="user$ | async as user">
+  <h2>Hola, {{ user.email }} ({{ user.role }})</h2>
+  <p>Selecciona una opción del menú según tu rol.</p>
+
+  <ion-list>
+    <!-- admin and supervisor can register participants and manage stands -->
+    <ng-container *ngIf="user.role === 'admin' || user.role === 'supervisor'">
+      <ion-item button routerLink="/participants">
+        <ion-icon name="people-outline" slot="start"></ion-icon>
+        <ion-label>Gestión de Participantes</ion-label>
+      </ion-item>
+      
+      <ion-item button routerLink="/stands">
+        <ion-icon name="storefront-outline" slot="start"></ion-icon>
+        <ion-label>Gestión de Stands</ion-label>
+      </ion-item>
+    </ng-container>
+
+    <ng-container *ngIf="user.role === 'admin'">
+      <ion-item button routerLink="/register">
+        <ion-icon name="person-add-outline" slot="start"></ion-icon>
+        <ion-label>Registrar Usuarios Administradores</ion-label>
+      </ion-item>
+    </ng-container>
+
+    <!-- usuario (stand operator) -->
+    <ng-container *ngIf="user.role === 'usuario'">
+      <ion-item button routerLink="/scanner">
+        <ion-icon name="qr-code-outline" slot="start"></ion-icon>
+        <ion-label>Escanear QR Participante</ion-label>
+      </ion-item>
+      <ion-item button routerLink="/survey">
+        <ion-icon name="document-text-outline" slot="start"></ion-icon>
+        <ion-label>Aplicar Encuesta</ion-label>
+      </ion-item>
+    </ng-container>
+
+    <!-- admin only reports -->
+    <ng-container *ngIf="user.role === 'admin'">
+      <ion-item button routerLink="/reports">
+        <ion-icon name="bar-chart-outline" slot="start"></ion-icon>
+        <ion-label>Ver Reportes de Visitas</ion-label>
+      </ion-item>
+    </ng-container>
+
+  </ion-list>
 </ion-content>
