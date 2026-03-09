@@ -1,19 +1,30 @@
 <ion-header [translucent]="true">
+<<<<<<< HEAD
   <ion-toolbar class="glass-header">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/dashboard"></ion-back-button>
       <img src="assets/logo_participante.png" class="navbar-logo" alt="Logo">
+=======
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     </ion-buttons>
     <ion-title>Participantes</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+<<<<<<< HEAD
   <ion-card class="animate-fade-up delay-100">
+=======
+  <ion-card>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     <ion-card-header>
       <ion-card-title>Registrar Participante</ion-card-title>
     </ion-card-header>
     <ion-card-content>
+<<<<<<< HEAD
       <ion-item class="premium-input-item">
         <ion-label position="stacked">Nombre</ion-label>
         <ion-input [(ngModel)]="newParticipant.nombre" placeholder="Ingresa el nombre"></ion-input>
@@ -41,6 +52,35 @@
       <ion-item class="premium-input-item">
         <ion-label position="stacked">Sexo</ion-label>
         <ion-select [(ngModel)]="newParticipant.sexo" placeholder="Selecciona una opción">
+=======
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input [(ngModel)]="newParticipant.nombre"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Apellido Paterno</ion-label>
+        <ion-input [(ngModel)]="newParticipant.apellido_paterno"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Apellido Materno</ion-label>
+        <ion-input [(ngModel)]="newParticipant.apellido_materno"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Correo Electrónico</ion-label>
+        <ion-input type="email" [(ngModel)]="newParticipant.correo"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Ciudad</ion-label>
+        <ion-input [(ngModel)]="newParticipant.ciudad"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Municipio</ion-label>
+        <ion-input [(ngModel)]="newParticipant.municipio"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Sexo</ion-label>
+        <ion-select [(ngModel)]="newParticipant.sexo">
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
           <ion-select-option value="Masculino">Masculino</ion-select-option>
           <ion-select-option value="Femenino">Femenino</ion-select-option>
           <ion-select-option value="Otro">Otro</ion-select-option>
@@ -57,6 +97,7 @@
   </ion-card>
 
   <div class="participants-container">
+<<<<<<< HEAD
     <div class="animate-fade-up delay-200" style="display: flex; justify-content: space-between; align-items: center; padding-right: 15px;">
       <h2 class="ion-padding-start">Lista de Participantes</h2>
       <ion-button color="tertiary" (click)="exportPendingQRs()">
@@ -66,6 +107,11 @@
     </div>
     
     <ion-card *ngFor="let p of participants$ | async" class="participant-card gourmet-ticket animate-fade-up delay-300">
+=======
+    <h2 class="ion-padding-start">Lista de Participantes</h2>
+    
+    <ion-card *ngFor="let p of participants$ | async" class="participant-card">
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
       <ion-card-content>
         <div class="card-layout">
           <div class="qr-section">
@@ -83,6 +129,7 @@
           </div>
 
           <div class="info-section">
+<<<<<<< HEAD
             <h3 class="ticket-font" style="margin-bottom: 18px; font-size: 1.1rem; color: #444;"><strong>Ticket #:</strong> {{ p.id ? p.id.substring(0,8) : '00000000' }}</h3>
             <h3 style="margin-bottom: 18px; font-weight: bold; color: var(--ion-color-primary); font-size: 1.3rem;">{{ p.nombre }} {{ p.apellido_paterno }} {{ p.apellido_materno }}</h3>
             <p style="margin-bottom: 14px; font-size: 1.05rem;"><strong>Correo:</strong> {{ p.correo }}</p>
@@ -100,6 +147,21 @@
               <ion-button fill="solid" color="warning" size="small" (click)="printGafete(p)" title="Generar Gafete A4 para Imprimir">
                 <ion-icon name="print" slot="start"></ion-icon> Gafete VIP
               </ion-button>
+=======
+            <h3>{{ p.nombre }} {{ p.apellido_paterno }} {{ p.apellido_materno }}</h3>
+            <p><strong>Correo:</strong> {{ p.correo }}</p>
+            <p><strong>Ubicación:</strong> {{ p.ciudad }}, {{ p.municipio }}</p>
+            <p><strong>Sexo:</strong> {{ p.sexo }}</p>
+            
+            <div class="item-actions">
+              <ion-button fill="outline" color="primary" size="small" (click)="editParticipant(p)">
+                <ion-icon name="create" slot="start"></ion-icon>
+                Editar
+              </ion-button>
+              <ion-button fill="outline" color="danger" size="small" (click)="deleteParticipant(p.id!)">
+                <ion-icon name="trash" slot="icon-only"></ion-icon>
+              </ion-button>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
             </div>
           </div>
         </div>

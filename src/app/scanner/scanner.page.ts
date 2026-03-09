@@ -4,12 +4,19 @@ import {
   IonHeader, IonToolbar, IonButtons, IonBackButton, 
   IonTitle, IonContent, IonCard, IonCardHeader, 
   IonCardTitle, IonCardContent, IonButton, 
+<<<<<<< HEAD
   IonIcon, ToastController, ModalController 
 } from '@ionic/angular/standalone';
 import { ThreeDMapModalComponent } from '../components/3d-map-modal.component';
 import { addIcons } from 'ionicons';
 import { qrCodeOutline, warningOutline } from 'ionicons/icons';
 // @ts-ignore
+=======
+  IonIcon, ToastController 
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { qrCodeOutline, warningOutline } from 'ionicons/icons';
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 import { Html5QrcodeScanner, Html5QrcodeScanType } from 'html5-qrcode';
 import { AuthService } from '../services/auth.service';
 import { StandService } from '../services/stand.service';
@@ -35,7 +42,10 @@ export class ScannerPage implements OnInit, OnDestroy {
   private standService = inject(StandService);
   private visitService = inject(VisitService);
   private toastCtrl = inject(ToastController);
+<<<<<<< HEAD
   private modalCtrl = inject(ModalController);
+=======
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 
   scanner: Html5QrcodeScanner | null = null;
   myStand: Stand | null = null;
@@ -47,11 +57,18 @@ export class ScannerPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.authService.user$.pipe(take(1)).subscribe(async user => {
+<<<<<<< HEAD
       if (user && user.standId) {
         this.standService.getStandById(user.standId).pipe(take(1)).subscribe(stand => {
           if (stand) {
             this.myStand = stand;
             this.myStand.id = user.standId; // ensure ID is set in case doc doesn't include it directly
+=======
+      if (user) {
+        this.standService.getStandsByUsuarioId(user.id).pipe(take(1)).subscribe(stands => {
+          if (stands && stands.length > 0) {
+            this.myStand = stands[0];
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
           }
         });
       }
@@ -93,6 +110,7 @@ export class ScannerPage implements OnInit, OnDestroy {
 
     try {
       const result = await this.visitService.registerVisit(participantId, this.myStand.id);
+<<<<<<< HEAD
       
       // Reproducir sonido "sensorial" de éxito o error
       try {
@@ -125,6 +143,9 @@ export class ScannerPage implements OnInit, OnDestroy {
         });
         await modal.present();
       }
+=======
+      this.showToast(result.message, result.success ? 'success' : 'danger');
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     } catch (e: any) {
       this.showToast('Error registrando visita: ' + e.message, 'danger');
     }

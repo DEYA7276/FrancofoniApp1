@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, EnvironmentInjector, runInInjectionContext } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+<<<<<<< HEAD
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButtons,
   IonBackButton, IonCard, IonCardHeader, IonCardTitle,
@@ -18,6 +19,23 @@ import { QRCodeComponent } from 'angularx-qrcode';
 import emailjs from '@emailjs/browser';
 // @ts-ignore
 import * as QRCode from 'qrcode';
+=======
+import { 
+  IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, 
+  IonBackButton, IonCard, IonCardHeader, IonCardTitle, 
+  IonCardContent, IonItem, IonLabel, IonInput, IonButton, 
+  IonList, IonListHeader, IonThumbnail, IonImg, IonIcon, 
+  IonSelect, IonSelectOption, ToastController 
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { trash, peopleOutline, create, download, mail } from 'ionicons/icons';
+// import { ParticipantService } from '../services/participant.service'; // Moved to dynamic import in ngOnInit
+import { Participant } from '../models/participant.model';
+import { Observable } from 'rxjs';
+import { RouterModule } from '@angular/router';
+
+import { QRCodeComponent } from 'angularx-qrcode';
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 
 @Component({
   selector: 'app-participants',
@@ -25,10 +43,18 @@ import * as QRCode from 'qrcode';
   styleUrls: ['./participants.page.scss'],
   standalone: true,
   imports: [
+<<<<<<< HEAD
     IonContent, IonHeader, IonTitle, IonToolbar, IonButtons,
     IonBackButton, IonCard, IonCardHeader, IonCardTitle,
     IonCardContent, IonItem, IonLabel, IonInput, IonButton,
     IonIcon, IonSelect, IonSelectOption,
+=======
+    IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, 
+    IonBackButton, IonCard, IonCardHeader, IonCardTitle, 
+    IonCardContent, IonItem, IonLabel, IonInput, IonButton, 
+    IonList, IonListHeader, IonThumbnail, IonImg, IonIcon, 
+    IonSelect, IonSelectOption, 
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     CommonModule, FormsModule, RouterModule,
     QRCodeComponent
   ]
@@ -36,10 +62,17 @@ import * as QRCode from 'qrcode';
 export class ParticipantsPage implements OnInit {
   private envInjector = inject(EnvironmentInjector);
   private toastCtrl = inject(ToastController);
+<<<<<<< HEAD
 
   private participantService!: any; // Using any for the instance to avoid type cycle if it exists, or cast later
   participants$: Observable<Participant[]> | undefined;
 
+=======
+  
+  private participantService!: any; // Using any for the instance to avoid type cycle if it exists, or cast later
+  participants$: Observable<Participant[]> | undefined;
+  
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
   isSaving = false;
 
   newParticipant: Participant = {
@@ -53,13 +86,21 @@ export class ParticipantsPage implements OnInit {
   };
 
   constructor() {
+<<<<<<< HEAD
     addIcons({ trash, peopleOutline, create, download, mail, print });
+=======
+    addIcons({ trash, peopleOutline, create, download, mail });
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
   }
 
   async ngOnInit() {
     // Completely break ESM and DI cycles by dynamic importing the service
     const { ParticipantService } = await import('../services/participant.service');
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     runInInjectionContext(this.envInjector, () => {
       this.participantService = inject(ParticipantService);
       this.participants$ = this.participantService.getParticipants();
@@ -78,6 +119,7 @@ export class ParticipantsPage implements OnInit {
         await this.participantService.updateParticipant(this.newParticipant.id, this.newParticipant);
         this.showToast('Participante actualizado exitosamente.', 'success');
       } else {
+<<<<<<< HEAD
         const newId = await this.participantService.addParticipant(this.newParticipant);
 
         // Generar QR y enviar correo via EmailJS
@@ -98,6 +140,10 @@ export class ParticipantsPage implements OnInit {
           await this.participantService.updateParticipant(newId, { correoEnviado: false });
           this.showToast('Registrado, pero falló el envío del correo.', 'warning');
         }
+=======
+        await this.participantService.addParticipant(this.newParticipant);
+        this.showToast('Participante registrado exitosamente.', 'success');
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
       }
       this.resetForm();
     } catch (e: any) {
@@ -114,6 +160,7 @@ export class ParticipantsPage implements OnInit {
   }
 
   resetForm() {
+<<<<<<< HEAD
     this.newParticipant = {
       nombre: '',
       apellido_paterno: '',
@@ -122,11 +169,25 @@ export class ParticipantsPage implements OnInit {
       municipio: '',
       sexo: '',
       correo: ''
+=======
+    this.newParticipant = { 
+      nombre: '', 
+      apellido_paterno: '', 
+      apellido_materno: '', 
+      ciudad: '', 
+      municipio: '', 
+      sexo: '', 
+      correo: '' 
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     };
   }
 
   async deleteParticipant(id: string) {
+<<<<<<< HEAD
     if (confirm('¿Seguro que deseas eliminar este participante?')) {
+=======
+    if(confirm('¿Seguro que deseas eliminar este participante?')) {
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
       await this.participantService.deleteParticipant(id);
       this.showToast('Participante eliminado', 'success');
     }
@@ -144,6 +205,7 @@ export class ParticipantsPage implements OnInit {
     }
   }
 
+<<<<<<< HEAD
   // Feature Premium: Generar Gafete (Badge) A4 y Llamar Impresora
   async printGafete(p: Participant) {
     // Generar el Base64 directamente (no dependemos de que esté dibujado en el dom actual)
@@ -264,12 +326,15 @@ export class ParticipantsPage implements OnInit {
     printWindow.document.close();
   }
 
+=======
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
   sendEmail(p: Participant) {
     const subject = encodeURIComponent('Tu Pase para Francofonia');
     const body = encodeURIComponent(`Hola ${p.nombre},\n\nTu registro ha sido exitoso. Tu ID de participante es: ${p.id}\n\nPresenta este código en los stands.`);
     window.location.href = `mailto:${p.correo}?subject=${subject}&body=${body}`;
   }
 
+<<<<<<< HEAD
   async exportPendingQRs() {
     if (!this.participants$) return;
     this.participants$.pipe(take(1)).subscribe((participants: Participant[]) => {
@@ -298,6 +363,8 @@ export class ParticipantsPage implements OnInit {
     });
   }
 
+=======
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
   async showToast(message: string, color: 'success' | 'warning' | 'danger' = 'warning') {
     const toast = await this.toastCtrl.create({
       message,

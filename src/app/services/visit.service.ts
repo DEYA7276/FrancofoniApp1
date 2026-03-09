@@ -66,6 +66,7 @@ export class VisitService {
     const q = collection(this.firestore, 'visits');
     return collectionData(q, { idField: 'id' }) as Observable<Visit[]>;
   }
+<<<<<<< HEAD
 
   async getParticipantVisits(participantId: string): Promise<Visit[]> {
     const visitsRef = collection(this.firestore, 'visits');
@@ -73,4 +74,6 @@ export class VisitService {
     const snap = await getDocs(q);
     return snap.docs.map(d => ({ id: d.id, ...d.data() } as Visit));
   }
+=======
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 }

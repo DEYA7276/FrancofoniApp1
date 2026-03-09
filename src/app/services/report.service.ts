@@ -13,7 +13,11 @@ export class ReportService {
     const snapshot = await getDocs(visitsRef);
     
     const countMap = new Map<string, number>();
+<<<<<<< HEAD
     snapshot.docs.forEach((doc: any) => {
+=======
+    snapshot.docs.forEach(doc => {
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
       const data = doc.data() as Visit;
       countMap.set(data.standId, (countMap.get(data.standId) || 0) + 1);
     });
@@ -33,7 +37,11 @@ export class ReportService {
     
     const ratingMap = new Map<string, { total: number, count: number }>();
     
+<<<<<<< HEAD
     snapshot.docs.forEach((doc: any) => {
+=======
+    snapshot.docs.forEach(doc => {
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
       const data = doc.data() as any;
       const standId = data.standId;
       // Calculate average of p1..p5 for this survey
@@ -58,6 +66,7 @@ export class ReportService {
     }));
   }
 
+<<<<<<< HEAD
   private parseDate(fecha: any): Date {
     if (fecha?.seconds) return new Date(fecha.seconds * 1000);
     return new Date(fecha);
@@ -113,5 +122,37 @@ export class ReportService {
       result.push({ standId, flows });
     }
     return result;
+=======
+  async getVisitorPeaks(): Promise<{ time: string, count: number }[]> {
+    const visitsRef = collection(this.firestore, 'visits');
+    const snapshot = await getDocs(visitsRef);
+    
+    const peakMap = new Map<string, number>();
+    
+    snapshot.docs.forEach(doc => {
+      const data = doc.data() as any;
+      const fecha = data.fecha;
+      let date: Date;
+      
+      if (fecha?.seconds) {
+        date = new Date(fecha.seconds * 1000);
+      } else {
+        date = new Date(fecha);
+      }
+
+      // Group by hour for "peaks"
+      const hourStr = `${date.getHours()}:00`;
+      peakMap.set(hourStr, (peakMap.get(hourStr) || 0) + 1);
+    });
+
+    // Sort by hour
+    const sorted = Array.from(peakMap.entries()).sort((a, b) => {
+      const hA = parseInt(a[0]);
+      const hB = parseInt(b[0]);
+      return hA - hB;
+    });
+
+    return sorted.map(([time, count]) => ({ time, count }));
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
   }
 }

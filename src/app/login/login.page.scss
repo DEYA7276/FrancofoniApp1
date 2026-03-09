@@ -47,15 +47,14 @@ ion-content {
   animation: slideDownFade 1s both;
 
   .main-logo {
-    height: 100px;
-    width: 100px;
-    border-radius: 50%;
+    height: 120px;
+    width: 120px;
     background: white;
     padding: 10px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-    animation: floatingLogo 5s ease-in-out infinite;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
     object-fit: contain;
-    border: 2px solid white;
+    border: 2px solid #ccc;
+    z-index: 999;
   }
 
   h1 {

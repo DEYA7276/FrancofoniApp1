@@ -1,4 +1,5 @@
 <ion-header [translucent]="true">
+<<<<<<< HEAD
   <ion-toolbar class="glass-header">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/dashboard"></ion-back-button>
@@ -11,10 +12,18 @@
         Exportar CSV
       </ion-button>
     </ion-buttons>
+=======
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Reportes</ion-title>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+<<<<<<< HEAD
   <!-- Maestro Sumario Obligatorio -->
   <ion-grid>
     <ion-row>
@@ -69,10 +78,18 @@
 
       <ion-col size="12" size-md="6">
         <ion-card class="animate-fade-up delay-400 gourmet-ticket" style="height: 100%;">
+=======
+  
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-card>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
           <ion-card-header>
             <ion-card-title>Calificación por Stand</ion-card-title>
           </ion-card-header>
           <ion-card-content>
+<<<<<<< HEAD
             <div style="position: relative; height: 40vh; width: 100%;">
               <canvas #ratingsChart></canvas>
             </div>
@@ -102,13 +119,31 @@
                 </p>
               </div>
             </div>
+=======
+            <canvas #ratingsChart></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Picos de Visitantes</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #peaksChart></canvas>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
           </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
 
+<<<<<<< HEAD
   <ion-card *ngIf="visitsPerStand.length > 0" class="animate-fade-up delay-500">
+=======
+  <ion-card *ngIf="visitsPerStand.length > 0">
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     <ion-list-header>
       <ion-label>Visitas por Stand</ion-label>
     </ion-list-header>
@@ -123,10 +158,18 @@
     </ion-card-content>
   </ion-card>
 
+<<<<<<< HEAD
   <ion-card *ngIf="visitsPerStand.length === 0" class="animate-fade-up delay-500">
+=======
+  <ion-card *ngIf="visitsPerStand.length === 0">
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     <ion-card-content class="ion-text-center">
       <p>Aún no hay visitas registradas.</p>
     </ion-card-content>
   </ion-card>
 
+<<<<<<< HEAD
 </ion-content>
+=======
+</ion-content>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be

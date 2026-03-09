@@ -1,8 +1,14 @@
 <ion-header [translucent]="true">
+<<<<<<< HEAD
   <ion-toolbar class="glass-header">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/dashboard"></ion-back-button>
       <img src="assets/logo_participante.png" class="navbar-logo" alt="Logo">
+=======
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     </ion-buttons>
     <ion-title>Registrar Usuarios</ion-title>
   </ion-toolbar>
@@ -10,12 +16,17 @@
 
 <ion-content [fullscreen]="true" class="ion-padding">
   
+<<<<<<< HEAD
   <ion-card class="animate-fade-up delay-100">
+=======
+  <ion-card>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     <ion-card-header>
       <ion-card-title>Crear cuenta administrativa o de operador</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       
+<<<<<<< HEAD
       <ion-item class="premium-input-item">
         <ion-label position="stacked">Correo Electrónico</ion-label>
         <ion-input type="email" [(ngModel)]="email" placeholder="Ingresa un correo vigente"></ion-input>
@@ -29,6 +40,21 @@
       <ion-item class="premium-input-item">
         <ion-label position="stacked">Rol de Usuario</ion-label>
         <ion-select [(ngModel)]="role" placeholder="Elige un nivel de acceso">
+=======
+      <ion-item>
+        <ion-label position="floating">Correo Electrónico</ion-label>
+        <ion-input type="email" [(ngModel)]="email"></ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label position="floating">Contraseña (Mínimo 6 caracteres)</ion-label>
+        <ion-input type="password" [(ngModel)]="password"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Rol de Usuario</ion-label>
+        <ion-select [(ngModel)]="role">
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
           <ion-select-option value="usuario">Encargado de Stand (Usuario)</ion-select-option>
           <ion-select-option value="supervisor">Supervisor</ion-select-option>
           <ion-select-option value="admin">Administrador (Total)</ion-select-option>

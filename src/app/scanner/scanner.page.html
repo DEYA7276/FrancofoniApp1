@@ -1,15 +1,25 @@
 <ion-header [translucent]="true">
+<<<<<<< HEAD
   <ion-toolbar class="glass-header">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/dashboard"></ion-back-button>
       <img src="assets/logo_participante.png" class="navbar-logo" alt="Logo">
+=======
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     </ion-buttons>
     <ion-title>Escanear Visita</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+<<<<<<< HEAD
   <ion-card *ngIf="myStand" class="gourmet-ticket animate-fade-up delay-100">
+=======
+  <ion-card *ngIf="myStand">
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     <ion-card-header>
       <ion-card-title>Stand: {{ myStand.nombre }}</ion-card-title>
     </ion-card-header>
@@ -25,7 +35,11 @@
     </ion-card-content>
   </ion-card>
 
+<<<<<<< HEAD
   <ion-card *ngIf="!myStand" class="animate-fade-up delay-100">
+=======
+  <ion-card *ngIf="!myStand">
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     <ion-card-content class="ion-text-center">
       <ion-icon name="warning-outline" color="warning" style="font-size: 48px;"></ion-icon>
       <h2>No hay stand asignado</h2>

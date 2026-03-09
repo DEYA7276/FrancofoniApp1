@@ -1,5 +1,9 @@
 import { Injectable, inject } from '@angular/core';
+<<<<<<< HEAD
 import { Firestore, collection, collectionData, doc, docData, addDoc, updateDoc, deleteDoc, query, where, getDocs } from '@angular/fire/firestore';
+=======
+import { Firestore, collection, collectionData, doc, docData, addDoc, updateDoc, deleteDoc, query, where } from '@angular/fire/firestore';
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 import { Observable } from 'rxjs';
 import { Stand } from '../models/stand.model';
 
@@ -39,6 +43,7 @@ export class StandService {
     const docRef = doc(this.firestore, `stands/${id}`);
     return deleteDoc(docRef);
   }
+<<<<<<< HEAD
 
   async initializeStands() {
     const defaultStands: Partial<Stand>[] = [
@@ -60,4 +65,6 @@ export class StandService {
     }
     return false;
   }
+=======
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 }
