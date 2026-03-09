@@ -1,0 +1,78 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="glass-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestión de Stands</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-card class="animate-fade-up delay-100">
+    <ion-card-header>
+      <ion-card-title>Registrar Stand</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item class="premium-input-item">
+        <ion-label position="stacked">Nombre del Stand</ion-label>
+        <ion-input [(ngModel)]="newStand.nombre" placeholder="Ej. Stand de Crepas"></ion-input>
+      </ion-item>
+      
+      <ion-item class="premium-input-item">
+        <ion-label position="stacked">Descripción</ion-label>
+        <ion-textarea [(ngModel)]="newStand.descripcion" placeholder="Describe los platillos..."></ion-textarea>
+      </ion-item>
+
+      <ion-item *ngIf="usuarios$ | async as usuarios" class="premium-input-item">
+        <ion-label position="stacked">Encargado (Usuario)</ion-label>
+        <ion-select [(ngModel)]="newStand.usuarioId" placeholder="Selecciona un encargado">
+          <ion-select-option *ngFor="let u of usuarios" [value]="u.id">{{ u.email }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Estado (Activo)</ion-label>
+        <ion-toggle [(ngModel)]="newStand.activo"></ion-toggle>
+      </ion-item>
+
+      <ion-button expand="block" style="margin-top: 15px;" (click)="addStand()">
+        {{ newStand.id ? 'Actualizar Stand' : 'Guardar Stand' }}
+      </ion-button>
+      <ion-button *ngIf="newStand.id" expand="block" fill="clear" color="medium" (click)="resetForm()">
+        Cancelar Edición
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list class="animate-fade-up delay-200">
+    <ion-list-header>
+      <ion-label>Lista de Stands</ion-label>
+    </ion-list-header>
+    
+    <ng-container *ngIf="usuarios$ | async as usuarios">
+      <ion-item *ngFor="let stand of stands$ | async" class="gourmet-ticket" style="margin-bottom: 20px; overflow: visible;">
+        <div slot="start" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 15px;">
+          <qrcode *ngIf="stand?.id" [qrdata]="'https://miapp.com/survey?standId=' + (stand.id || 'N/A')" [width]="80" [errorCorrectionLevel]="'M'"></qrcode>
+          <small class="ticket-font" style="margin-top: 4px; color: #888;">ID: {{ stand.id ? stand.id.substring(0,4) : '' }}</small>
+        </div>
+        <ion-label style="margin-top: 15px; margin-bottom: 15px;">
+          <h2 style="margin-bottom: 12px;">{{ stand.nombre }} <ion-badge [color]="stand.activo ? 'success' : 'medium'" style="margin-left: 10px;">{{ stand.activo ? 'Activo' : 'Inactivo' }}</ion-badge></h2>
+          <p style="margin-bottom: 8px; font-size: 0.95em;"><strong>Pabellón/Descripción:</strong> {{ stand.descripcion }}</p>
+          <p style="margin-bottom: 8px; font-size: 0.95em;"><strong>Encargado Técnico:</strong> {{ getEncargadoName(usuarios, stand.usuarioId) }}</p>
+        </ion-label>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" color="tertiary" (click)="downloadQR(stand.id!, stand.nombre)">
+            <ion-icon name="qr-code-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="primary" (click)="editStand(stand)">
+            <ion-icon name="create" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="deleteStand(stand.id!)">
+            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+
+</ion-content>

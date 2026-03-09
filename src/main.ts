@@ -18,7 +18,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(),
 
-    // 🔥 FIREBASE CONFIGURADO CORRECTAMENTE
+    //  FIREBASE CONFIGURADO CORRECTAMENTE
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),

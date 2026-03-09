@@ -1,0 +1,53 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="glass-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Aplicar Encuesta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  
+  <ion-card *ngIf="myStand" class="animate-fade-up delay-100">
+    <ion-card-header>
+      <ion-card-title>Encuesta de Satisfacción</ion-card-title>
+      <ion-card-subtitle>Stand: {{ myStand.nombre }}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item class="premium-input-item">
+        <ion-label position="stacked">Correo del Participante</ion-label>
+        <ion-input type="email" [(ngModel)]="survey.participantId" placeholder="ejemplo@correo.com"></ion-input>
+      </ion-item>
+      
+      <ion-item class="premium-input-item">
+        <ion-label position="stacked">¿Qué te pareció el stand? (1 al 5)</ion-label>
+        <ion-input type="number" min="1" max="5" maxlength="1" [(ngModel)]="survey.p1" placeholder="Ej. 5"></ion-input>
+      </ion-item>
+      
+      <ion-item class="premium-input-item">
+        <ion-label position="stacked">¿Recomendarías este stand?</ion-label>
+        <ion-select [(ngModel)]="survey.p2" placeholder="Selecciona una opción">
+          <ion-select-option value="Si">Sí</ion-select-option>
+          <ion-select-option value="No">No</ion-select-option>
+        </ion-select>
+      </ion-item>
+      
+      <ion-item class="premium-input-item">
+        <ion-label position="stacked">Comentarios Adicionales (Máx. 100)</ion-label>
+        <ion-textarea [maxlength]="100" [(ngModel)]="survey.p5" placeholder="Escribe aquí tu opinión..."></ion-textarea>
+      </ion-item>
+
+      <ion-button expand="block" style="margin-top: 20px;" (click)="submitSurvey()">Guardar Encuesta</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!myStand" class="animate-fade-up delay-100">
+    <ion-card-content class="ion-text-center">
+      <ion-icon name="warning-outline" color="warning" style="font-size: 48px;"></ion-icon>
+      <h2>No hay stand asignado</h2>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

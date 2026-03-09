@@ -1,12 +1,7 @@
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
+ * Put style rules here that you want to apply globally.
  */
 
 /* Core CSS required for Ionic components to work properly */
@@ -18,7 +13,7 @@
 @import "@ionic/angular/css/typography.css";
 @import "@ionic/angular/css/display.css";
 
-/* Optional CSS utils that can be commented out */
+/* Optional CSS utils */
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
@@ -26,12 +21,406 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 /**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
+ * ELIMINADO MODO OSCURO ("@import '@ionic/angular/css/palettes/dark.system.css';")
+ * para forzar la estética premium culinaria en todos los dispositivos.
  */
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* ==========================================================================
+   FRANCOFONIA APP - PREMIUM DESIGN SYSTEM
+   ========================================================================== */
+
+:root {
+  --ion-font-family: 'Montserrat', sans-serif;
+}
+
+/* ---------------------------------------------------
+   1. Tipografía Premium (Playfair Display para UI clásica)
+   --------------------------------------------------- */
+h1, h2, h3, h4, h5, h6, 
+ion-title, .ion-title, 
+ion-card-title, ion-list-header, ion-card-header,
+.title, .header-title {
+  font-family: 'Playfair Display', serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em;
+}
+
+/* ---------------------------------------------------
+   2. Animaciones Globales (Micro-Interacciones)
+   --------------------------------------------------- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes revealSlow {
+  from { opacity: 0; filter: blur(5px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+@keyframes goldenPulse {
+  0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+  70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+@keyframes holographicShine {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes burningFlame {
+  0%, 100% { text-shadow: 0 -2px 5px rgba(255,100,0,0.8), 0 -5px 10px rgba(255,0,0,0.6), 0 -8px 15px rgba(200,50,0,0.4); transform: translateY(0); }
+  50% { text-shadow: 0 -3px 7px rgba(255,150,0,0.9), 0 -7px 15px rgba(255,50,0,0.8), 0 -12px 20px rgba(200,0,0,0.5); transform: translateY(-2px); }
+}
+
+@keyframes shakeAlert {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px) rotate(-1deg); }
+  75% { transform: translateX(3px) rotate(1deg); }
+}
+
+/* Clases de utilidad para animar cualquier elemento HTML desde los templates */
+.animate-fade-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  opacity: 0; /* Empieza oculto */
+}
+.animate-slide-right {
+  animation: slideInRight 0.5s ease-out forwards;
+  opacity: 0;
+}
+.animate-reveal {
+  animation: revealSlow 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+/* Retrasos secuenciales (Staggering) */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* ---------------------------------------------------
+   3. Sobreescritura de Componentes Ionic (Look and Feel)
+   --------------------------------------------------- */
+
+/* Fondos - Textura de Papel Orgánico y Gradiente */
+ion-content {
+  --background: var(--ion-background-color);
+  /* Un ligero patrón noise/pergamino muy sutil para dar textura de alta gama */
+  --background: radial-gradient(circle at top right, rgba(255,255,255,0.8), transparent), url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E") var(--ion-background-color) !important;
+}
+
+/* Tarjetas (Cards) - Estilo Neumórfico Suave / Flotante */
+ion-card {
+  --background: #FFFFFF;
+  border-radius: 20px !important;
+  box-shadow: 0 10px 30px rgba(114, 47, 55, 0.05), 0 1px 3px rgba(0,0,0,0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Borde sutil transparente para dar brillo */
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease !important;
+  margin-bottom: 24px;
+}
+/* Efecto Hover para Cards en Web/Desktop (o al tocar en móvil) */
+ion-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(10, 28, 44, 0.1), 0 5px 15px rgba(0,0,0,0.03) !important;
+}
+
+/* Rank 1 Breathing Effect */
+.card-rank-1 {
+  animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, goldenPulse 3s infinite;
+  border: 1px solid rgba(212, 175, 55, 0.5) !important;
+}
+
+/* Botones Principales - Premium Pill Style con Gradiente Suave */
+ion-button {
+  --border-radius: 30px !important;
+  --box-shadow: 0 8px 20px rgba(114, 47, 55, 0.2) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px;
+  text-transform: none !important; /* Quitar MAYÚSCULAS obligatorias, se ve más elegante */
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+ion-button:active, ion-button.activated {
+  transform: scale(0.96);
+  filter: brightness(0.9);
+}
+
+/* Toolbars & Headers - Glassmorphism (Efecto cristal) */
+ion-toolbar {
+  --background: rgba(114, 47, 55, 0.95) !important;
+  --border-width: 0 !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+/* Si el toolbar no es del color primario (ej. transparente) */
+ion-toolbar.glass-header {
+  --background: var(--ion-color-primary) !important;
+  --color: #ffffff !important;
+}
+
+/* Modifiaciones directas a iconos de Cabecera (Para forzar blanco) */
+ion-toolbar.glass-header ion-title,
+ion-toolbar.glass-header ion-icon,
+ion-toolbar.glass-header ion-back-button {
+  color: #ffffff !important;
+}
+
+/* Forzar botones de listas (Stands y Participantes) para que JAMAS se vean blancos sobre blanco */
+ion-list ion-item ion-button {
+  --background: rgba(15, 59, 110, 0.1) !important;
+  --background-hover: rgba(15, 59, 110, 0.2) !important;
+  --color: #0F3B6E !important;
+  --box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+}
+
+ion-list ion-item ion-button[color="danger"] {
+  --background: rgba(220, 53, 69, 0.1) !important;
+  --background-hover: rgba(220, 53, 69, 0.2) !important;
+  --color: #dc3545 !important;
+}
+
+/* Inputs y Formularios - Clean Line / Floating Rounded */
+ion-item {
+  --background: transparent !important;
+  --border-color: transparent !important;
+  --inner-border-width: 0 !important;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 20px;
+}
+
+/* Forzar estilos outline premium en inputs y selects */
+ion-input, ion-select, ion-textarea {
+  --background: #FFFFFF;
+  --padding-start: 18px !important;
+  --padding-end: 18px !important;
+  --padding-top: 14px !important;
+  --padding-bottom: 14px !important;
+  --border-radius: 12px;
+  border: 1.5px solid rgba(114, 47, 55, 0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  color: var(--ion-text-color);
+}
+
+/* Hover effect sutil en inputs */
+ion-input:hover, ion-select:hover, ion-textarea:hover {
+  border-color: rgba(114, 47, 55, 0.3);
+  box-shadow: 0 4px 12px rgba(114, 47, 55, 0.05);
+}
+
+/* Cuando el input tiene el foco */
+ion-item.item-has-focus ion-input, 
+ion-item.item-has-focus ion-select,
+ion-item.item-has-focus ion-textarea {
+  border-color: var(--ion-color-primary);
+  box-shadow: 0 4px 15px rgba(114, 47, 55, 0.1), 0 0 0 3px rgba(114, 47, 55, 0.08);
+}
+
+/* Labels de los inputs para darles estilo elegante */
+ion-label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem !important;
+  color: #5c6c7d !important;
+  margin-bottom: 8px !important;
+  transform: none !important;
+}
+
+ion-item.item-has-focus ion-label {
+  color: var(--ion-color-primary) !important;
+  font-weight: 600;
+}
+
+/* Listas y Badge */
+ion-list {
+  background: transparent !important;
+}
+
+ion-badge {
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+/* Reemplazo de verde 'Activo' por un Verde Esmeralda Mate de restaurante (Premium) */
+ion-badge[color="success"] {
+  --ion-color-base: #105948 !important; /* Esmeralda Profundo */
+  color: #E6F4F1 !important;
+  box-shadow: 0 2px 5px rgba(16, 89, 72, 0.2);
+}
+
+/* ---------------------------------------------------
+   4. Componentes VIP Específicos
+   --------------------------------------------------- */
+
+/* The Gourmet Ticket (Para Participantes y Recibos) */
+.gourmet-ticket {
+  background: white;
+  border-radius: 12px 12px 0 0 !important;
+  position: relative;
+  border-bottom: 2px dashed rgba(15, 59, 110, 0.2) !important;
+  box-shadow: 0 15px 35px rgba(15, 59, 110, 0.08) !important;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s;
+  overflow: hidden; /* For hologram effect */
+}
+
+/* Efecto Holográfico Nivel 5K */
+.gourmet-ticket::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+  transform: skewX(-20deg);
+  transition: 0.5s;
+  z-index: 10;
+  pointer-events: none;
+}
+.gourmet-ticket:hover::before {
+  animation: holographicShine 1.5s infinite;
+}
+.gourmet-ticket:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(15, 59, 110, 0.15), 0 0 20px rgba(212, 175, 55, 0.2) !important;
+}
+
+/* Borde dentado inferior usando CSS Mask */
+.gourmet-ticket::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background-size: 12px 12px;
+  background-image: radial-gradient(circle at 6px 6px, transparent 6px, white 7px);
+  background-repeat: repeat-x;
+  background-position: bottom;
+}
+
+.gourmet-ticket .info-section p, 
+.gourmet-ticket .ticket-font {
+  font-family: 'Courier New', Courier, monospace !important;
+  color: #555;
+  font-size: 0.9em;
+  letter-spacing: -0.3px;
+}
+
+/* ---------------------------------------------------
+   5. Dashboard VIP Grid (Bento Boxes)
+   --------------------------------------------------- */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.menu-card {
+  margin: 0 !important;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 20px 20px 0 0 !important; /* Premium rounded top, serrated bottom */
+  
+  .icon-wrapper {
+    background: rgba(114, 47, 55, 0.05);
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    transition: transform 0.3s;
+    
+    ion-icon {
+      font-size: 34px;
+      color: var(--ion-color-primary);
+    }
+  }
+
+  h3 {
+    margin: 0 0 6px;
+    font-size: 1.1rem;
+    color: var(--ion-text-color);
+  }
+  
+  p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #888;
+  }
+}
+
+.menu-card:hover .icon-wrapper {
+  transform: scale(1.1);
+  background: rgba(114, 47, 55, 0.1);
+}
+
+.menu-card-highlight {
+  border: 1.5px solid rgba(212, 175, 55, 0.4) !important;
+  background: linear-gradient(135deg, white, #fffcf5) !important;
+  .icon-wrapper {
+    background: rgba(212, 175, 55, 0.15);
+    ion-icon {
+      color: var(--ion-color-warning);
+    }
+  }
+}
+
+/* ---------------------------------------------------
+   6. Fuego en Ranking y Modo Gala
+   --------------------------------------------------- */
+.flame-hot {
+  color: #ff6a00 !important; /* Base Naranja Fuego */
+  animation: burningFlame 1.5s ease-in-out infinite alternate, shakeAlert 3s infinite;
+  display: inline-block;
+}
+
+/* Modo Gala Oculto - Variables inyectadas en Body */
+body.modo-gala-activado {
+  ion-content {
+    --background: radial-gradient(circle at center, #1a1e24 0%, #0a0c0f 100%) !important;
+  }
+  
+  --ion-text-color: #E6F4F1 !important;
+  
+  .glass-header {
+    background: rgba(10, 12, 15, 0.8) !important;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3) !important;
+    h1, ion-title, ion-icon { color: #d4af37 !important; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+  }
+
+  .gourmet-ticket, .menu-card {
+    background: rgba(25, 30, 36, 0.9) !important;
+    border: 1px solid rgba(212, 175, 55, 0.1) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5) !important;
+    * { color: #f5f5f5 !important; }
+    p, small { color: #aaa !important; }
+  }
+  
+  .ticket-font { color: #d4af37 !important; }
+
+  /* Borde dorado de ticket VIP de noche */
+  .gourmet-ticket {
+    border-bottom: 2px dashed rgba(212, 175, 55, 0.4) !important;
+  }
+  .gourmet-ticket::after {
+    background-image: radial-gradient(circle at 6px 6px, transparent 6px, rgba(25, 30, 36, 0.9) 7px);
+  }
+}
+
