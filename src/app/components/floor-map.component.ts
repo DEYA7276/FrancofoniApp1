@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonIcon, AlertController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { sparklesOutline, checkmarkCircleOutline, ellipseOutline } from 'ionicons/icons';
+import { sparklesOutline, checkmarkCircleOutline, ellipseOutline, lockClosedOutline } from 'ionicons/icons';
 import { RecommendationService } from '../services/recommendation.service';
 import { Stand } from '../models/stand.model';
 
@@ -18,34 +18,39 @@ import { Stand } from '../models/stand.model';
       </div>
 
       <div class="floor-plan">
-        <!-- PUERTA marker -->
+        <!-- PUERTA marker — top left -->
         <div class="puerta-marker">
           <span>PUERTA</span>
         </div>
 
-        <!-- L-shape layout: top row + right column -->
-        <div class="l-shape-layout">
-          <!-- Top row: first 2 stands -->
-          <div class="top-row">
-            <ng-container *ngFor="let stand of topStands; let i = index">
-              <div class="stand-box"
-                [class.visited]="isVisited(stand)"
-                [class.pulse-suggest]="suggestion?.id === stand.id"
-                (click)="onStandTap(stand)">
-                <div class="stand-inner">
-                  <ion-icon 
-                    [name]="isVisited(stand) ? 'checkmark-circle-outline' : 'ellipse-outline'" 
-                    class="stand-status-icon">
-                  </ion-icon>
-                  <span class="stand-name">{{ stand.nombre }}</span>
-                </div>
+        <!-- Top row: 3 stands -->
+        <div class="top-row">
+          <ng-container *ngFor="let stand of topStands">
+            <div class="stand-box"
+              [class.visited]="isVisited(stand)"
+              [class.pulse-suggest]="suggestion?.id === stand.id"
+              (click)="onStandTap(stand)">
+              <div class="stand-inner">
+                <ion-icon 
+                  [name]="isVisited(stand) ? 'checkmark-circle-outline' : 'ellipse-outline'" 
+                  class="stand-status-icon">
+                </ion-icon>
+                <span class="stand-name">{{ stand.nombre }}</span>
               </div>
-            </ng-container>
-          </div>
+            </div>
+          </ng-container>
+        </div>
 
-          <!-- Right column: remaining stands -->
-          <div class="right-column">
-            <ng-container *ngFor="let stand of rightStands; let i = index">
+        <!-- Bottom area: 2 stands on the right + coming soon on left -->
+        <div class="bottom-area">
+          <div class="coming-soon-zone">
+            <div class="coming-soon-box" *ngFor="let p of comingSoonLeft">
+              <ion-icon name="lock-closed-outline" class="cs-icon"></ion-icon>
+              <span class="cs-text">Próximo</span>
+            </div>
+          </div>
+          <div class="bottom-stands">
+            <ng-container *ngFor="let stand of bottomStands">
               <div class="stand-box"
                 [class.visited]="isVisited(stand)"
                 [class.pulse-suggest]="suggestion?.id === stand.id"
@@ -65,25 +70,14 @@ import { Stand } from '../models/stand.model';
 
       <!-- Legend -->
       <div class="map-legend">
-        <div class="legend-item">
-          <span class="legend-dot visited"></span>
-          <span>Visitado</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-dot pending"></span>
-          <span>Pendiente</span>
-        </div>
-        <div class="legend-item" *ngIf="suggestion">
-          <span class="legend-dot suggested"></span>
-          <span>Sugerido</span>
-        </div>
+        <div class="legend-item"><span class="legend-dot visited"></span><span>Visitado</span></div>
+        <div class="legend-item"><span class="legend-dot pending"></span><span>Pendiente</span></div>
+        <div class="legend-item"><span class="legend-dot coming"></span><span>Próximo</span></div>
       </div>
 
       <!-- Recommendation -->
       <div *ngIf="suggestion" class="recommendation-card">
-        <div class="rec-icon">
-          <ion-icon name="sparkles-outline"></ion-icon>
-        </div>
+        <div class="rec-icon"><ion-icon name="sparkles-outline"></ion-icon></div>
         <div class="rec-text">
           <h4>✨ Te sugerimos visitar</h4>
           <p><strong>{{ suggestion.nombre }}</strong> — {{ suggestion.responsable || 'Sorpresa culinaria' }}</p>
@@ -92,49 +86,36 @@ import { Stand } from '../models/stand.model';
     </div>
   `,
   styles: [`
-    .floor-plan-container {
-      width: 100%;
-    }
+    .floor-plan-container { width: 100%; }
 
-    .plan-header {
-      text-align: center;
-      margin-bottom: 12px;
-    }
-
+    .plan-header { text-align: center; margin-bottom: 10px; }
     .building-title {
       font-family: 'Playfair Display', serif;
-      font-size: 1.3rem;
-      color: #0F3B6E;
-      margin: 0 0 2px;
-      letter-spacing: 2px;
+      font-size: 1.3rem; color: #0F3B6E;
+      margin: 0 0 2px; letter-spacing: 2px;
     }
+    .plan-subtitle { font-size: 0.75rem; color: #888; margin: 0; }
 
-    .plan-subtitle {
-      font-size: 0.75rem;
-      color: #888;
-      margin: 0;
-    }
-
-    /* Floor plan area */
+    /* Floor plan */
     .floor-plan {
       position: relative;
-      background: linear-gradient(135deg, #f0f4f8 0%, #e8edf2 100%);
+      background: linear-gradient(135deg, #f0f4f8, #e8edf2);
       border: 2px dashed rgba(15, 59, 110, 0.2);
       border-radius: 14px;
-      padding: 15px 15px 15px 35px;
-      min-height: 220px;
+      padding: 20px 12px 16px 40px;
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    /* PUERTA marker */
+    /* PUERTA — top left */
     .puerta-marker {
       position: absolute;
-      bottom: 20px;
-      left: -2px;
-      background: #dc3545;
-      color: white;
-      padding: 14px 5px;
-      font-size: 0.55rem;
-      font-weight: 700;
+      top: 15px; left: -2px;
+      background: #dc3545; color: white;
+      padding: 12px 5px;
+      font-size: 0.5rem; font-weight: 700;
       letter-spacing: 1.5px;
       writing-mode: vertical-rl;
       text-orientation: mixed;
@@ -143,59 +124,78 @@ import { Stand } from '../models/stand.model';
       z-index: 2;
     }
 
-    /* L-shape layout */
-    .l-shape-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    /* Top row: 2 stands aligned to the right */
+    /* Top row: 3 stands */
     .top-row {
       display: flex;
-      justify-content: flex-end;
-      gap: 10px;
+      gap: 8px;
+      justify-content: center;
     }
 
-    /* Right column: remaining stands aligned to the right */
-    .right-column {
+    /* Bottom area */
+    .bottom-area {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      margin-top: 4px;
+    }
+
+    /* Coming soon zone — left side */
+    .coming-soon-zone {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
-      gap: 10px;
+      gap: 8px;
+      justify-content: flex-end;
     }
 
-    /* Stand box — compact for mobile */
+    .coming-soon-box {
+      background: rgba(15, 59, 110, 0.06);
+      border: 1.5px dashed rgba(15, 59, 110, 0.15);
+      border-radius: 8px;
+      padding: 6px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      height: 50px;
+      justify-content: center;
+    }
+    .cs-icon { font-size: 0.9rem; color: rgba(15, 59, 110, 0.25); }
+    .cs-text { font-size: 0.5rem; color: rgba(15, 59, 110, 0.3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* Bottom stands — right side */
+    .bottom-stands {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: flex-start;
+    }
+
+    /* Stand box */
     .stand-box {
       background: white;
       border: 2px solid #0F3B6E;
       border-radius: 10px;
-      padding: 8px 10px;
+      padding: 6px 8px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      width: 90px;
-      height: 65px;
+      width: 80px; height: 58px;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: center; justify-content: center;
     }
-
-    .stand-box:active {
-      transform: scale(0.93);
-    }
+    .stand-box:active { transform: scale(0.93); }
 
     .stand-box.visited {
       background: linear-gradient(135deg, #d4edda, #c3e6cb);
       border-color: #28a745;
       box-shadow: 0 3px 10px rgba(40, 167, 69, 0.15);
     }
-
     .stand-box:not(.visited) {
       border-style: dashed;
       background: rgba(255, 255, 255, 0.7);
     }
-
     .stand-box.pulse-suggest {
       border-color: #d4af37 !important;
       border-style: solid !important;
@@ -208,118 +208,48 @@ import { Stand } from '../models/stand.model';
       50% { box-shadow: 0 0 0 6px rgba(212, 175, 55, 0); }
     }
 
-    .stand-inner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .stand-status-icon {
-      font-size: 1.1rem;
-      color: #0F3B6E;
-    }
-
-    .stand-box.visited .stand-status-icon {
-      color: #28a745;
-    }
-
+    .stand-inner { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .stand-status-icon { font-size: 1rem; color: #0F3B6E; }
+    .stand-box.visited .stand-status-icon { color: #28a745; }
     .stand-name {
       font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem;
-      font-weight: 600;
-      color: #333;
-      line-height: 1.1;
-      word-break: break-word;
-      max-width: 75px;
+      font-size: 0.55rem; font-weight: 600;
+      color: #333; line-height: 1.1;
+      word-break: break-word; max-width: 70px;
     }
+    .stand-box.visited .stand-name { color: #155724; }
 
-    .stand-box.visited .stand-name {
-      color: #155724;
-    }
-
-    /* Desktop: slightly larger stands */
+    /* Desktop */
     @media (min-width: 600px) {
-      .stand-box {
-        width: 120px;
-        height: 80px;
-        padding: 10px 12px;
-      }
-      .stand-name {
-        font-size: 0.7rem;
-        max-width: 100px;
-      }
-      .stand-status-icon {
-        font-size: 1.3rem;
-      }
+      .stand-box { width: 110px; height: 72px; }
+      .stand-name { font-size: 0.65rem; max-width: 95px; }
+      .stand-status-icon { font-size: 1.2rem; }
+      .coming-soon-box { height: 60px; }
     }
 
     /* Legend */
     .map-legend {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 12px;
-      padding: 6px 0;
+      display: flex; justify-content: center;
+      gap: 14px; margin-top: 10px; padding: 5px 0;
     }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.7rem;
-      color: #666;
-    }
-
-    .legend-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 3px;
-      display: inline-block;
-    }
-
+    .legend-item { display: flex; align-items: center; gap: 4px; font-size: 0.65rem; color: #666; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
     .legend-dot.visited { background: #28a745; }
     .legend-dot.pending { border: 2px dashed #0F3B6E; background: white; }
-    .legend-dot.suggested { background: #d4af37; }
+    .legend-dot.coming { background: rgba(15, 59, 110, 0.12); border: 1.5px dashed rgba(15, 59, 110, 0.3); }
 
-    /* Recommendation card */
+    /* Recommendation */
     .recommendation-card {
-      margin-top: 12px;
-      padding: 10px 14px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 249, 230, 0.95));
-      border-radius: 12px;
-      border: 1.5px solid #d4af37;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);
+      margin-top: 10px; padding: 10px 12px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,249,230,0.95));
+      border-radius: 12px; border: 1.5px solid #d4af37;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 12px rgba(212,175,55,0.1);
     }
-
-    .rec-icon {
-      font-size: 1.3rem;
-      color: #d4af37;
-      animation: spin 6s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .rec-text h4 {
-      margin: 0;
-      font-size: 0.65rem;
-      color: #b8860b;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .rec-text p {
-      margin: 2px 0 0;
-      font-size: 0.8rem;
-      color: #333;
-    }
+    .rec-icon { font-size: 1.2rem; color: #d4af37; animation: spin 6s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .rec-text h4 { margin: 0; font-size: 0.6rem; color: #b8860b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .rec-text p { margin: 2px 0 0; font-size: 0.8rem; color: #333; }
   `]
 })
 export class FloorMapComponent implements OnInit, OnChanges {
@@ -327,14 +257,15 @@ export class FloorMapComponent implements OnInit, OnChanges {
   @Input() allStands: Stand[] = [];
 
   topStands: Stand[] = [];
-  rightStands: Stand[] = [];
+  bottomStands: Stand[] = [];
+  comingSoonLeft: number[] = [];
 
   private recommendationService = inject(RecommendationService);
   private alertCtrl = inject(AlertController);
   suggestion: Stand | null = null;
 
   constructor() {
-    addIcons({ sparklesOutline, checkmarkCircleOutline, ellipseOutline });
+    addIcons({ sparklesOutline, checkmarkCircleOutline, ellipseOutline, lockClosedOutline });
   }
 
   ngOnInit() {
@@ -347,15 +278,18 @@ export class FloorMapComponent implements OnInit, OnChanges {
     this.updateSuggestion();
   }
 
-  /** Split stands into L-shape: top 2 + right column for the rest */
+  /** Layout: 3 stands on top, 2 on bottom-right, coming soon placeholders on bottom-left */
   private distributeStands() {
-    if (this.allStands.length <= 2) {
+    const total = this.allStands.length;
+    if (total <= 3) {
       this.topStands = this.allStands;
-      this.rightStands = [];
+      this.bottomStands = [];
     } else {
-      this.topStands = this.allStands.slice(0, 2);
-      this.rightStands = this.allStands.slice(2);
+      this.topStands = this.allStands.slice(0, 3);
+      this.bottomStands = this.allStands.slice(3, 5);
     }
+    // Add "coming soon" placeholders on the left side of the bottom area
+    this.comingSoonLeft = [1, 2, 3];
   }
 
   isVisited(stand: Stand): boolean {
