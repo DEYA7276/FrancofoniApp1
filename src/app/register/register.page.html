@@ -4,39 +4,80 @@
       <ion-back-button defaultHref="/dashboard"></ion-back-button>
       <img src="assets/logo_participante.png" class="navbar-logo" alt="Logo">
     </ion-buttons>
-    <ion-title>Registrar Usuarios</ion-title>
+    <ion-title>Gestión de Usuarios</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
   
+  <!-- Create / Edit form -->
   <ion-card class="animate-fade-up delay-100">
     <ion-card-header>
-      <ion-card-title>Crear cuenta administrativa o de operador</ion-card-title>
+      <ion-card-title>
+        {{ editingUser ? '✏️ Editar rol de ' + editingUser.email : '➕ Crear cuenta de acceso' }}
+      </ion-card-title>
     </ion-card-header>
     <ion-card-content>
       
-      <ion-item class="premium-input-item">
-        <ion-label position="stacked">Correo Electrónico</ion-label>
-        <ion-input type="email" [(ngModel)]="email" placeholder="Ingresa un correo vigente"></ion-input>
-      </ion-item>
-      
-      <ion-item class="premium-input-item">
-        <ion-label position="stacked">Contraseña (Mínimo 6 caracteres)</ion-label>
-        <ion-input type="password" [(ngModel)]="password" placeholder="Crea una contraseña segura"></ion-input>
-      </ion-item>
+      <ng-container *ngIf="!editingUser">
+        <ion-item class="premium-input-item">
+          <ion-label position="stacked">Correo Electrónico</ion-label>
+          <ion-input type="email" [(ngModel)]="email" placeholder="Ingresa un correo vigente"></ion-input>
+        </ion-item>
+        
+        <ion-item class="premium-input-item">
+          <ion-label position="stacked">Contraseña (Mínimo 6 caracteres)</ion-label>
+          <ion-input type="password" [(ngModel)]="password" placeholder="Crea una contraseña segura"></ion-input>
+        </ion-item>
+      </ng-container>
 
       <ion-item class="premium-input-item">
         <ion-label position="stacked">Rol de Usuario</ion-label>
         <ion-select [(ngModel)]="role" placeholder="Elige un nivel de acceso">
-          <ion-select-option value="usuario">Encargado de Stand (Usuario)</ion-select-option>
-          <ion-select-option value="supervisor">Supervisor</ion-select-option>
-          <ion-select-option value="admin">Administrador (Total)</ion-select-option>
+          <ion-select-option value="usuario">📱 Encargado de Stand</ion-select-option>
+          <ion-select-option value="supervisor">🛡️ Supervisor</ion-select-option>
+          <ion-select-option value="admin">👑 Administrador (Total)</ion-select-option>
         </ion-select>
       </ion-item>
 
-      <ion-button expand="block" style="margin-top: 20px;" (click)="registerUser()">Crear Usuario</ion-button>
+      <ion-button *ngIf="!editingUser" expand="block" style="margin-top: 20px;" (click)="registerUser()">
+        Crear Usuario
+      </ion-button>
+
+      <ion-button *ngIf="editingUser" expand="block" style="margin-top: 20px;" (click)="updateUserRole()">
+        Actualizar Rol
+      </ion-button>
+      <ion-button *ngIf="editingUser" expand="block" fill="clear" color="medium" (click)="resetForm()">
+        Cancelar Edición
+      </ion-button>
     </ion-card-content>
   </ion-card>
+
+  <!-- Users list -->
+  <ion-list class="animate-fade-up delay-200">
+    <ion-list-header>
+      <ion-label>Usuarios del Sistema</ion-label>
+    </ion-list-header>
+
+    <ion-item *ngFor="let user of users$ | async" class="gourmet-ticket" style="margin-bottom: 12px; overflow: visible;">
+      <ion-icon slot="start" [name]="getRoleIcon(user.role)" style="font-size: 1.5rem; margin-right: 12px;" [color]="getRoleBadgeColor(user.role)"></ion-icon>
+      <ion-label>
+        <h2 style="margin-bottom: 4px;">{{ user.email }}</h2>
+        <p>
+          <ion-badge [color]="getRoleBadgeColor(user.role)" style="font-size: 0.7rem;">
+            {{ getRoleLabel(user.role) | uppercase }}
+          </ion-badge>
+        </p>
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button fill="clear" color="primary" (click)="editUser(user)">
+          <ion-icon name="create" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" color="danger" (click)="deleteUser(user)">
+          <ion-icon name="trash" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
 
 </ion-content>
