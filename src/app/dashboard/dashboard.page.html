@@ -7,8 +7,8 @@
     <ion-buttons slot="end">
       <!-- EASTER EGG: Botón mágico AHORA VISIBLE con tooltip -->
       <ion-button title="Activar Modo Cena de Gala" (click)="toggleGalaMode()">
-        <ion-icon name="wine-outline" *ngIf="!isGalaMode" color="primary"></ion-icon>
-        <ion-icon name="star" *ngIf="isGalaMode" color="warning"></ion-icon>
+        <ion-icon name="star" *ngIf="!isGalaMode" style="color: #f5f0e1;"></ion-icon>
+        <ion-icon name="wine-outline" *ngIf="isGalaMode" style="color: #d4af37;"></ion-icon>
       </ion-button>
       <ion-button (click)="logout()">Salir</ion-button>
     </ion-buttons>
