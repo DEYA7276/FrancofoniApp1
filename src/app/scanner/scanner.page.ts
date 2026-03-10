@@ -4,7 +4,7 @@ import {
   IonHeader, IonToolbar, IonButtons, IonBackButton, 
   IonTitle, IonContent, IonCard, IonCardHeader, 
   IonCardTitle, IonCardContent, IonButton, 
-  IonIcon, ToastController, ModalController 
+  IonIcon, ToastController, ModalController, AlertController 
 } from '@ionic/angular/standalone';
 import { ThreeDMapModalComponent } from '../components/3d-map-modal.component';
 import { addIcons } from 'ionicons';
@@ -36,6 +36,7 @@ export class ScannerPage implements OnInit, OnDestroy {
   private visitService = inject(VisitService);
   private toastCtrl = inject(ToastController);
   private modalCtrl = inject(ModalController);
+  private alertCtrl = inject(AlertController);
 
   scanner: Html5QrcodeScanner | null = null;
   myStand: Stand | null = null;
@@ -64,9 +65,15 @@ export class ScannerPage implements OnInit, OnDestroy {
     }
   }
 
-  startScanner() {
+  async startScanner() {
     if (!this.myStand) {
-      this.showToast('No tienes ningún stand asignado.');
+      const noStandAlert = await this.alertCtrl.create({
+        header: '⚠️ Sin stand asignado',
+        message: 'No tienes ningún stand asignado. Contacta al administrador para que te asignen uno.',
+        cssClass: 'custom-alert alert-warning',
+        buttons: [{ text: 'Entendido', cssClass: 'alert-btn-primary' }]
+      });
+      await noStandAlert.present();
       return;
     }
     
@@ -126,7 +133,13 @@ export class ScannerPage implements OnInit, OnDestroy {
         await modal.present();
       }
     } catch (e: any) {
-      this.showToast('Error registrando visita: ' + e.message, 'danger');
+      const errAlert = await this.alertCtrl.create({
+        header: '❌ Error',
+        message: 'Hubo un error al registrar la visita: ' + e.message,
+        cssClass: 'custom-alert alert-danger',
+        buttons: [{ text: 'Cerrar', cssClass: 'alert-btn-primary' }]
+      });
+      await errAlert.present();
     }
   }
 

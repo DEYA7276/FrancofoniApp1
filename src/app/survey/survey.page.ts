@@ -8,7 +8,7 @@ import {
   IonCardTitle, IonCardSubtitle, IonCardContent, 
   IonItem, IonLabel, IonInput, IonSelect, 
   IonSelectOption, IonTextarea, IonButton, 
-  IonIcon, ToastController 
+  IonIcon, AlertController 
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { warningOutline } from 'ionicons/icons';
@@ -38,7 +38,7 @@ export class SurveyPage implements OnInit {
   private surveyService = inject(SurveyService);
   private authService = inject(AuthService);
   private standService = inject(StandService);
-  private toastCtrl = inject(ToastController);
+  private alertCtrl = inject(AlertController);
   private route = inject(ActivatedRoute);
 
   myStand: Stand | null = null;
@@ -65,7 +65,6 @@ export class SurveyPage implements OnInit {
       if (standIdParam) {
         this.loadStand(standIdParam);
       } else {
-        // Fallback: Check logged-in user's profile
         this.authService.user$.pipe(take(1)).subscribe(user => {
           if (user && user.standId) {
             this.loadStand(user.standId);
@@ -80,58 +79,57 @@ export class SurveyPage implements OnInit {
       if (stand) {
         this.myStand = stand;
         this.myStand.id = id;
-        this.survey.standId = id; // Pre-populate the survey object
+        this.survey.standId = id;
       }
     });
   }
 
   async submitSurvey() {
     if (!this.myStand) {
-      this.showToast('No tienes un stand asignado');
+      await this.showAlert('⚠️ Sin stand asignado', 'No tienes un stand asignado. Contacta al administrador.', 'warning');
       return;
     }
     if (!this.survey.participantId) {
-      this.showToast('Debes ingresar tu correo electrónico');
+      await this.showAlert('⚠️ Correo requerido', 'Debes ingresar tu correo electrónico para enviar la encuesta.', 'warning');
       return;
     }
     
     const p1Val = parseInt(this.survey.p1, 10);
     if (!this.survey.p1 || p1Val < 1 || p1Val > 5) {
-      this.showToast('La calificación del stand debe ser del 1 al 5');
+      await this.showAlert('⚠️ Calificación inválida', 'La calificación del stand debe ser un número del 1 al 5.', 'warning');
       return;
     }
 
     if (!this.survey.p2) {
-      this.showToast('Por favor contesta si recomendarías el stand');
+      await this.showAlert('⚠️ Campo incompleto', 'Por favor contesta si recomendarías el stand.', 'warning');
       return;
     }
 
     if (this.survey.p5 && this.survey.p5.length > 100) {
-      this.showToast('Los comentarios no pueden exceder 100 caracteres');
+      await this.showAlert('⚠️ Texto muy largo', 'Los comentarios no pueden exceder 100 caracteres.', 'warning');
       return;
     }
 
     try {
       await this.surveyService.addSurvey(this.survey);
-      this.showToast('Encuesta guardada con éxito', 'success');
+      await this.showAlert('✅ ¡Gracias por tu opinión!', 'Tu encuesta fue guardada exitosamente. ¡Tu feedback nos ayuda a mejorar!', 'success');
       this.survey = {
         participantId: '',
         standId: this.myStand.id!,
         p1: '', p2: '', p3: '', p4: '', p5: '', fecha: ''
       };
     } catch (e: any) {
-      this.showToast('Error al guardar la encuesta', 'danger');
+      await this.showAlert('❌ Error', 'No se pudo guardar la encuesta. Intenta de nuevo.', 'danger');
     }
   }
 
-  async showToast(message: string, color: 'success' | 'warning' | 'danger' = 'warning') {
-    const toast = await this.toastCtrl.create({
+  private async showAlert(header: string, message: string, type: string = 'warning') {
+    const alert = await this.alertCtrl.create({
+      header,
       message,
-      duration: 3000,
-      color,
-      position: 'bottom'
+      cssClass: `custom-alert alert-${type}`,
+      buttons: [{ text: 'Entendido', cssClass: 'alert-btn-primary' }]
     });
-    await toast.present();
+    await alert.present();
   }
 }
-

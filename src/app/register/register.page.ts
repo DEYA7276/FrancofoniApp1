@@ -6,7 +6,7 @@ import {
   IonTitle, IonContent, IonCard, IonCardHeader, 
   IonCardTitle, IonCardContent, IonItem, IonLabel, 
   IonInput, IonSelect, IonSelectOption, IonButton, 
-  ToastController 
+  AlertController 
 } from '@ionic/angular/standalone';
 import { UserService } from '../services/user.service';
 
@@ -25,7 +25,7 @@ import { UserService } from '../services/user.service';
 })
 export class RegisterPage {
   private userService = inject(UserService);
-  private toastCtrl = inject(ToastController);
+  private alertCtrl = inject(AlertController);
 
   email = '';
   password = '';
@@ -33,29 +33,28 @@ export class RegisterPage {
 
   async registerUser() {
     if (!this.email || !this.password || !this.role) {
-      this.showToast('Completa todos los campos');
+      await this.showAlert('⚠️ Campos incompletos', 'Completa todos los campos para registrar un nuevo usuario.', 'warning');
       return;
     }
 
     try {
       await this.userService.createUserAdmin(this.email, this.password, this.role);
-      this.showToast('Usuario registrado con éxito', 'success');
+      await this.showAlert('✅ Usuario creado', `El usuario "${this.email}" fue registrado exitosamente con rol de ${this.role}.`, 'success');
       this.email = '';
       this.password = '';
       this.role = 'usuario';
     } catch (e: any) {
-      this.showToast('Error al registrar usuario: ' + e.message, 'danger');
+      await this.showAlert('❌ Error al registrar', 'No se pudo crear el usuario: ' + e.message, 'danger');
     }
   }
 
-  async showToast(message: string, color: 'success' | 'warning' | 'danger' = 'warning') {
-    const toast = await this.toastCtrl.create({
+  private async showAlert(header: string, message: string, type: string = 'warning') {
+    const alert = await this.alertCtrl.create({
+      header,
       message,
-      duration: 3000,
-      color,
-      position: 'bottom'
+      cssClass: `custom-alert alert-${type}`,
+      buttons: [{ text: 'Entendido', cssClass: 'alert-btn-primary' }]
     });
-    await toast.present();
+    await alert.present();
   }
 }
-

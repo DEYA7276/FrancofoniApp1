@@ -83,7 +83,8 @@ export class DashboardPage {
 
     const alert = await this.alertCtrl.create({
       header: '🔄 Cambiar modo de backend',
-      message: `<strong>Modo actual:</strong> ${currentLabel}<br><br>¿Deseas cambiar a <strong>${newLabel}</strong>?<br><br><small>La app se recargará para aplicar los cambios.</small>`,
+      subHeader: `Modo actual: ${currentLabel}`,
+      message: `¿Deseas cambiar a ${newLabel}? La app se recargará para aplicar los cambios.`,
       cssClass: 'custom-alert',
       buttons: [
         {
