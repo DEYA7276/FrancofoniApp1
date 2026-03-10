@@ -58,8 +58,8 @@
     <ng-container *ngIf="usuarios$ | async as usuarios">
       <ion-item *ngFor="let stand of stands$ | async" class="gourmet-ticket" style="margin-bottom: 20px; overflow: visible;">
         <div slot="start" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 15px;">
-          <qrcode *ngIf="stand?.id" [qrdata]="'https://miapp.com/survey?standId=' + (stand.id || 'N/A')" [width]="80" [errorCorrectionLevel]="'M'"></qrcode>
-          <small class="ticket-font" style="margin-top: 4px; color: #888;">ID: {{ stand.id ? stand.id.substring(0,4) : '' }}</small>
+          <qrcode *ngIf="stand?.id" [qrdata]="getSurveyUrl(stand.id || '')" [width]="80" [errorCorrectionLevel]="'M'"></qrcode>
+          <small class="ticket-font" style="margin-top: 4px; color: #888;">Encuesta QR</small>
         </div>
         <ion-label style="margin-top: 15px; margin-bottom: 15px;">
           <h2 style="margin-bottom: 12px;">{{ stand.nombre }} <ion-badge [color]="stand.activo ? 'success' : 'medium'" style="margin-left: 10px;">{{ stand.activo ? 'Activo' : 'Inactivo' }}</ion-badge></h2>

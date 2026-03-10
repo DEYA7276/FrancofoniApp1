@@ -48,6 +48,9 @@ export class StandsPage {
     map((users: User[]) => users.filter((u: User) => u.role === 'usuario'))
   );
 
+  /** Auto-detects the current URL for QR generation */
+  baseUrl = window.location.origin;
+
   newStand: Stand = {
     nombre: '',
     descripcion: '',
@@ -156,45 +159,70 @@ export class StandsPage {
     return u ? u.email : usuarioId;
   }
 
+  /** Build the survey URL for a stand using current origin */
+  getSurveyUrl(standId: string): string {
+    return `${this.baseUrl}/survey?standId=${standId}`;
+  }
+
   async downloadQR(standId: string, nombre: string) {
-    const defaultUrl = window.location.origin.includes('localhost') 
-      ? 'https://miapp.com' // Sugerencia visual
-      : window.location.origin;
+    const currentUrl = window.location.origin;
 
     const alert = await this.alertController.create({
-      header: '🔗 Enlace del Evento',
-      message: 'Ingresa la dirección web pública donde estará alojada la app. Si dejas localhost, el QR solo funcionará en tu computadora.',
+      header: '🔗 Generar QR de Encuesta',
+      subHeader: `Stand: ${nombre}`,
+      message: `Tu URL actual es: <strong>${currentUrl}</strong><br><br>Usa esta misma URL si todos los dispositivos están en la misma red. Si tienes un dominio público, cámbiala.`,
       cssClass: 'custom-alert',
       inputs: [
         {
           name: 'baseUrl',
           type: 'url',
-          value: defaultUrl,
-          placeholder: 'https://tudominio.com'
+          value: currentUrl,
+          placeholder: 'http://192.168.x.x:8102'
         }
       ],
       buttons: [
         { text: 'Cancelar', role: 'cancel', cssClass: 'alert-btn-cancel' },
         {
-          text: 'Generar y Descargar QR',
+          text: '📋 Usar URL Actual',
+          cssClass: 'alert-btn-secondary',
+          handler: async () => {
+            await this.generateAndDownloadQR(currentUrl, standId, nombre);
+            return true;
+          }
+        },
+        {
+          text: '⬇️ Descargar QR',
+          cssClass: 'alert-btn-primary',
           handler: async (data: any) => {
-            try {
-              let baseUrl = data.baseUrl.trim();
-              if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
-              
-              const url = `${baseUrl}/survey?standId=${standId}`;
-              const qrBase64 = await QRCode.toDataURL(url, { width: 500, margin: 2 });
-              const link = document.createElement('a');
-              link.download = `QR_Encuesta_${nombre.replace(/\s+/g, '_')}.png`;
-              link.href = qrBase64;
-              link.click();
-            } catch (e) {
-              console.error('Error generando QR:', e);
-            }
+            let baseUrl = (data.baseUrl || currentUrl).trim();
+            if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
+            await this.generateAndDownloadQR(baseUrl, standId, nombre);
+            return true;
           }
         }
       ]
     });
     await alert.present();
+  }
+
+  private async generateAndDownloadQR(baseUrl: string, standId: string, nombre: string) {
+    try {
+      const url = `${baseUrl}/survey?standId=${standId}`;
+      const qrBase64 = await QRCode.toDataURL(url, { width: 500, margin: 2 });
+      const link = document.createElement('a');
+      link.download = `QR_Encuesta_${nombre.replace(/\s+/g, '_')}.png`;
+      link.href = qrBase64;
+      link.click();
+
+      const success = await this.alertController.create({
+        header: '✅ QR Descargado',
+        message: `El QR de "${nombre}" apunta a:<br><strong>${url}</strong><br><br>Imprímelo y pégalo en la mesa del stand.`,
+        cssClass: 'custom-alert alert-success',
+        buttons: [{ text: '¡Listo!', cssClass: 'alert-btn-primary' }]
+      });
+      await success.present();
+    } catch (e) {
+      console.error('Error generando QR:', e);
+    }
   }
 }
