@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { FloorMapComponent } from '../components/floor-map.component';
 import { Stand } from '../models/stand.model';
 import { take } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-guest-dashboard',
@@ -144,13 +145,19 @@ export class GuestDashboardPage implements OnInit {
         return;
       }
 
-      const standsPromise = this.standService.getStands().pipe(take(1)).toPromise();
-      const visitsPromise = this.visitService.getParticipantVisits(guest.id!);
+      try {
+        const stands = await firstValueFrom(this.standService.getStands().pipe(take(1)));
+        this.allStands = stands || [];
+        console.log('[GuestDashboard] Stands loaded:', this.allStands.length);
 
-      const [stands, visits] = await Promise.all([standsPromise, visitsPromise]);
-
-      this.allStands = stands || [];
-      this.visitedStandIds = visits.map(v => v.standId);
+        const visits = await this.visitService.getParticipantVisits(guest.id!);
+        this.visitedStandIds = visits.map(v => v.standId);
+        console.log('[GuestDashboard] Visits loaded:', this.visitedStandIds.length);
+      } catch (err) {
+        console.error('[GuestDashboard] Error loading data:', err);
+        this.allStands = [];
+        this.visitedStandIds = [];
+      }
     });
   }
 
