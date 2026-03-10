@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -37,6 +37,8 @@ import { QRCodeComponent } from 'angularx-qrcode';
   ]
 })
 export class StandsPage {
+  @ViewChild(IonContent, { static: false }) content!: IonContent;
+
   private standService = inject(StandService);
   private userService = inject(UserService);
   private alertController = inject(AlertController);
@@ -105,7 +107,16 @@ export class StandsPage {
 
   editStand(s: Stand) {
     this.newStand = { ...s };
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Smooth scroll to form using Ionic's content scroll
+    this.content?.scrollToTop(500);
+    // Flash the form card to highlight it
+    setTimeout(() => {
+      const formCard = document.querySelector('app-stands ion-card');
+      if (formCard) {
+        formCard.classList.add('flash-highlight');
+        setTimeout(() => formCard.classList.remove('flash-highlight'), 1500);
+      }
+    }, 550);
   }
 
   resetForm() {

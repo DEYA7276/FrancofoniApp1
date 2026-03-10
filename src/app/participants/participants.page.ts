@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, EnvironmentInjector, runInInjectionContext } from '@angular/core';
+import { Component, inject, OnInit, EnvironmentInjector, runInInjectionContext, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -34,6 +34,8 @@ import * as QRCode from 'qrcode';
   ]
 })
 export class ParticipantsPage implements OnInit {
+  @ViewChild(IonContent, { static: false }) content!: IonContent;
+
   private envInjector = inject(EnvironmentInjector);
   private toastCtrl = inject(ToastController);
   private alertCtrl = inject(AlertController);
@@ -110,8 +112,16 @@ export class ParticipantsPage implements OnInit {
 
   editParticipant(p: Participant) {
     this.newParticipant = { ...p };
-    // Scroll to top to see the form
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Smooth scroll to form using Ionic's content scroll
+    this.content?.scrollToTop(500);
+    // Flash the form card to highlight it
+    setTimeout(() => {
+      const formCard = document.querySelector('app-participants ion-card');
+      if (formCard) {
+        formCard.classList.add('flash-highlight');
+        setTimeout(() => formCard.classList.remove('flash-highlight'), 1500);
+      }
+    }, 550);
   }
 
   resetForm() {

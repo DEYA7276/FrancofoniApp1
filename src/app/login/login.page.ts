@@ -6,6 +6,7 @@ import { addIcons } from 'ionicons';
 import { ticketOutline, shieldCheckmarkOutline, alertCircleOutline, closeCircleOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -33,6 +34,24 @@ export class LoginPage {
     addIcons({ ticketOutline, shieldCheckmarkOutline, alertCircleOutline, closeCircleOutline, checkmarkCircleOutline });
   }
 
+  private getRoleLabel(role: string): string {
+    const labels: Record<string, string> = {
+      'admin': '👑 Administrador',
+      'supervisor': '🛡️ Supervisor',
+      'usuario': '📱 Encargado de Stand'
+    };
+    return labels[role] || role;
+  }
+
+  private getRoleEmoji(role: string): string {
+    const emojis: Record<string, string> = {
+      'admin': '👑',
+      'supervisor': '🛡️',
+      'usuario': '📱'
+    };
+    return emojis[role] || '✨';
+  }
+
   async onStaffLogin() {
     if (!this.staffEmail || !this.password) {
       await this.showAlert(
@@ -46,7 +65,32 @@ export class LoginPage {
     this.isLoading = true;
     try {
       await this.authService.login(this.staffEmail, this.password);
-      this.router.navigate(['/dashboard']);
+      
+      // Get user data for welcome modal
+      this.authService.user$.pipe(take(1)).subscribe(async user => {
+        if (user) {
+          const roleLabel = this.getRoleLabel(user.role);
+          const emoji = this.getRoleEmoji(user.role);
+          const name = user.email.split('@')[0];
+
+          const welcomeAlert = await this.alertCtrl.create({
+            header: `${emoji} ¡Bienvenue!`,
+            subHeader: `Bienvenido al Panel de ${roleLabel}`,
+            message: `Hola ${name}, tu sesión se ha iniciado correctamente. ¡Que disfrutes la Francofonía 2026!`,
+            cssClass: 'custom-alert alert-success',
+            buttons: [{
+              text: '¡Vamos! 🚀',
+              cssClass: 'alert-btn-primary',
+              handler: () => {
+                this.router.navigate(['/dashboard']);
+              }
+            }]
+          });
+          await welcomeAlert.present();
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
+      });
     } catch (e: any) {
       await this.showAlert(
         '❌ Acceso denegado',
@@ -72,7 +116,20 @@ export class LoginPage {
     try {
       const success = await this.authService.guestLogin(this.guestEmail);
       if (success) {
-        this.router.navigate(['/guest-dashboard']);
+        const welcomeAlert = await this.alertCtrl.create({
+          header: '🎉 ¡Bienvenido!',
+          subHeader: 'Panel de Visitante',
+          message: `¡Genial! Tu correo fue verificado. Disfruta tu recorrido por la Francofonía 2026 y no olvides visitar todos los stands.`,
+          cssClass: 'custom-alert alert-success',
+          buttons: [{
+            text: '¡Explorar! 🇫🇷',
+            cssClass: 'alert-btn-primary',
+            handler: () => {
+              this.router.navigate(['/guest-dashboard']);
+            }
+          }]
+        });
+        await welcomeAlert.present();
       } else {
         await this.showAlert(
           '🔍 No encontrado',
