@@ -119,7 +119,11 @@ export class ParticipantsPage implements OnInit {
       const formCard = document.querySelector('app-participants ion-card');
       if (formCard) {
         formCard.classList.add('flash-highlight');
-        setTimeout(() => formCard.classList.remove('flash-highlight'), 1500);
+        setTimeout(() => {
+          formCard.classList.remove('flash-highlight');
+          formCard.classList.add('flash-highlight-fade');
+          setTimeout(() => formCard.classList.remove('flash-highlight-fade'), 1200);
+        }, 800);
       }
     }, 550);
   }
