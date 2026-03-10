@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, getDocs, query, where } from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
 import { Visit } from '../models/visit.model';
-import { environment } from '../../environments/environment';
+import { BackendModeService } from './backend-mode.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,16 +10,18 @@ import { environment } from '../../environments/environment';
 export class ReportService {
   private firestore = inject(Firestore);
   private http = inject(HttpClient);
-  private apiUrl = `${environment.localApiUrl}/reports`;
+  private mode = inject(BackendModeService);
+
+  private get apiUrl() { return `${this.mode.localApiUrl}/reports`; }
 
   async getVisitsPerStand(): Promise<{ standId: string, count: number }[]> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<any[]>(`${this.apiUrl}/visits-per-stand`).toPromise() as Promise<any[]>;
     }
 
     const visitsRef = collection(this.firestore, 'visits');
     const snapshot = await getDocs(visitsRef);
-    
+
     const countMap = new Map<string, number>();
     snapshot.docs.forEach((doc: any) => {
       const data = doc.data() as Visit;
@@ -30,7 +32,7 @@ export class ReportService {
   }
 
   async getMostVisitedStand(): Promise<{ standId: string, count: number } | null> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<any>(`${this.apiUrl}/most-visited`).toPromise();
     }
 
@@ -40,15 +42,15 @@ export class ReportService {
   }
 
   async getStandRatings(): Promise<{ standId: string, avgRating: number }[]> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<any[]>(`${this.apiUrl}/stand-ratings`).toPromise() as Promise<any[]>;
     }
 
     const surveysRef = collection(this.firestore, 'surveys');
     const snapshot = await getDocs(surveysRef);
-    
+
     const ratingMap = new Map<string, { total: number, count: number }>();
-    
+
     snapshot.docs.forEach((doc: any) => {
       const data = doc.data() as any;
       const standId = data.standId;
@@ -89,7 +91,7 @@ export class ReportService {
   }
 
   async getGlobalFlow15Min(): Promise<{ time: string, count: number }[]> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<any[]>(`${this.apiUrl}/global-flow`).toPromise() as Promise<any[]>;
     }
 
@@ -110,7 +112,7 @@ export class ReportService {
   }
 
   async getStandFlows15Min(): Promise<{ standId: string, flows: { time: string, count: number }[] }[]> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<any[]>(`${this.apiUrl}/stand-flows`).toPromise() as Promise<any[]>;
     }
 
@@ -122,7 +124,7 @@ export class ReportService {
       const data = doc.data() as any;
       const date = this.parseDate(data.fecha);
       const interval = this.get15MinInterval(date);
-      
+
       if (!standMap.has(data.standId)) standMap.set(data.standId, new Map());
       const peakMap = standMap.get(data.standId)!;
       peakMap.set(interval, (peakMap.get(interval) || 0) + 1);

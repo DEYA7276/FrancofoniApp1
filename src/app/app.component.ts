@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AuthService } from './services/auth.service';
-import { environment } from '../environments/environment';
+import { BackendModeService } from './services/backend-mode.service';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +10,11 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent implements OnInit {
   private authService = inject(AuthService);
+  private backendMode = inject(BackendModeService);
 
   ngOnInit() {
     // Restore local session if using local backend
-    if (environment.useLocalBackend) {
+    if (this.backendMode.isLocal) {
       this.authService.restoreLocalSession();
     }
   }

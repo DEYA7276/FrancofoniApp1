@@ -3,15 +3,17 @@ import { CommonModule } from '@angular/common';
 import { 
   IonHeader, IonToolbar, IonTitle, IonButtons, 
   IonButton, IonContent, IonCard, IonCardContent, 
-  IonIcon, IonBadge
+  IonIcon, IonBadge, IonToggle
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
   peopleOutline, storefrontOutline, personAddOutline, 
-  qrCodeOutline, documentTextOutline, barChartOutline, wineOutline, star
+  qrCodeOutline, documentTextOutline, barChartOutline, wineOutline, star,
+  cloudOutline, serverOutline, swapHorizontalOutline
 } from 'ionicons/icons';
 import { AuthService } from '../services/auth.service';
 import { StandService } from '../services/stand.service';
+import { BackendModeService } from '../services/backend-mode.service';
 import { Router, RouterModule } from '@angular/router';
 import { User } from '../models/user.model';
 import { Observable } from 'rxjs';
@@ -24,20 +26,22 @@ import { Observable } from 'rxjs';
   imports: [
     IonHeader, IonToolbar, IonTitle, IonButtons, 
     IonButton, IonContent, IonCard, IonCardContent, 
-    IonIcon, IonBadge,
+    IonIcon, IonBadge, IonToggle,
     CommonModule, RouterModule
   ]
 })
 export class DashboardPage {
   authService = inject(AuthService);
   standService = inject(StandService);
+  backendMode = inject(BackendModeService);
   router = inject(Router);
   user$ = this.authService.user$;
 
   constructor() {
     addIcons({ 
       peopleOutline, storefrontOutline, personAddOutline, 
-      qrCodeOutline, documentTextOutline, barChartOutline, wineOutline, star
+      qrCodeOutline, documentTextOutline, barChartOutline, wineOutline, star,
+      cloudOutline, serverOutline, swapHorizontalOutline
     });
     // Inicializar stands si la colección está vacía
     this.standService.initializeStands().then(created => {
@@ -71,5 +75,13 @@ export class DashboardPage {
       if (this.galaAudio) { this.galaAudio.pause(); }
     }
   }
-}
 
+  toggleBackendMode() {
+    const newMode = this.backendMode.toggleMode();
+    const label = this.backendMode.getModeLabel();
+    // Clear session and reload to reinitialize all services
+    localStorage.removeItem('localUser');
+    alert(`Modo cambiado a: ${label}\n\nLa app se recargará para aplicar los cambios.`);
+    window.location.reload();
+  }
+}

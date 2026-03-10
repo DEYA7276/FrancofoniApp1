@@ -82,5 +82,21 @@
         </ion-card-content>
       </ion-card>
     </ng-container>
+
+    <!-- Backend Mode Toggle (solo admin) -->
+    <ng-container *ngIf="user.role === 'admin'">
+      <ion-card button (click)="toggleBackendMode()" class="menu-card gourmet-ticket mode-toggle-card">
+        <ion-card-content class="ion-text-center">
+          <div class="icon-wrapper">
+            <ion-icon [name]="backendMode.isLocal ? 'server-outline' : 'cloud-outline'"></ion-icon>
+          </div>
+          <h3>{{ backendMode.isLocal ? '🖥️ Modo Local' : '☁️ Modo Internet' }}</h3>
+          <p>Toca para cambiar a {{ backendMode.isLocal ? 'Firestore' : 'XAMPP Local' }}</p>
+          <ion-badge [color]="backendMode.isLocal ? 'success' : 'primary'" style="margin-top: 8px;">
+            {{ backendMode.isLocal ? 'XAMPP + MySQL' : 'Firestore' }}
+          </ion-badge>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
   </div>
 </ion-content>

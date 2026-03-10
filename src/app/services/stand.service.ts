@@ -3,7 +3,7 @@ import { Firestore, collection, collectionData, doc, docData, addDoc, updateDoc,
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Stand } from '../models/stand.model';
-import { environment } from '../../environments/environment';
+import { BackendModeService } from './backend-mode.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +11,12 @@ import { environment } from '../../environments/environment';
 export class StandService {
   private firestore = inject(Firestore);
   private http = inject(HttpClient);
-  private apiUrl = `${environment.localApiUrl}/stands`;
+  private mode = inject(BackendModeService);
+
+  private get apiUrl() { return `${this.mode.localApiUrl}/stands`; }
 
   getStands(): Observable<Stand[]> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<Stand[]>(this.apiUrl);
     }
     const q = collection(this.firestore, 'stands');
@@ -22,7 +24,7 @@ export class StandService {
   }
 
   getStandById(id: string): Observable<Stand> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<Stand>(`${this.apiUrl}/${id}`);
     }
     const docRef = doc(this.firestore, `stands/${id}`);
@@ -30,7 +32,7 @@ export class StandService {
   }
 
   getStandsByUsuarioId(usuarioId: string): Observable<Stand[]> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<Stand[]>(`${this.apiUrl}?usuarioId=${usuarioId}`);
     }
     const standsRef = collection(this.firestore, 'stands');
@@ -39,7 +41,7 @@ export class StandService {
   }
 
   async addStand(stand: Stand): Promise<{ id: string }> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       const response: any = await this.http.post(this.apiUrl, stand).toPromise();
       return { id: response.id };
     }
@@ -49,7 +51,7 @@ export class StandService {
   }
 
   updateStand(id: string, data: Partial<Stand>) {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.put(`${this.apiUrl}/${id}`, data).toPromise();
     }
     const docRef = doc(this.firestore, `stands/${id}`);
@@ -57,7 +59,7 @@ export class StandService {
   }
 
   deleteStand(id: string) {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.delete(`${this.apiUrl}/${id}`).toPromise();
     }
     const docRef = doc(this.firestore, `stands/${id}`);
@@ -65,7 +67,7 @@ export class StandService {
   }
 
   async initializeStands() {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       const response: any = await this.http.post(`${this.apiUrl}/initialize`, {}).toPromise();
       return response?.initialized ?? false;
     }
@@ -80,7 +82,7 @@ export class StandService {
 
     const standsRef = collection(this.firestore, 'stands');
     const snapshot = await getDocs(standsRef);
-    
+
     if (snapshot.empty) {
       for (const stand of defaultStands) {
         await addDoc(standsRef, stand);

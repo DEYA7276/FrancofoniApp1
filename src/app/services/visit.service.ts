@@ -3,7 +3,7 @@ import { Firestore, collection, collectionData, doc, docData, addDoc, query, whe
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Visit } from '../models/visit.model';
-import { environment } from '../../environments/environment';
+import { BackendModeService } from './backend-mode.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +11,18 @@ import { environment } from '../../environments/environment';
 export class VisitService {
   private firestore = inject(Firestore);
   private http = inject(HttpClient);
-  private apiUrl = `${environment.localApiUrl}/visits`;
+  private mode = inject(BackendModeService);
+
+  private get apiUrl() { return `${this.mode.localApiUrl}/visits`; }
 
   async registerVisit(participantId: string, standId: string): Promise<{ success: boolean; message: string; recommendation?: any }> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       const response: any = await this.http.post(this.apiUrl, { participantId, standId }).toPromise();
       return response;
     }
 
-    // Original Firestore logic
     const visitsRef = collection(this.firestore, 'visits');
-    
+
     const qTotal = query(visitsRef, where('participantId', '==', participantId));
     const totalVisitsSnap = await getDocs(qTotal);
     const totalVisits = totalVisitsSnap.size;
@@ -35,7 +36,7 @@ export class VisitService {
 
     if (allVisits.length > 0) {
       const lastVisit = allVisits[0];
-      
+
       if (lastVisit.standId === standId) {
         return { success: false, message: 'No se puede repetir el mismo stand consecutivamente.' };
       }
@@ -44,7 +45,7 @@ export class VisitService {
         const now = Date.now();
         const lastTime = lastVisit.fecha instanceof Timestamp ? lastVisit.fecha.toMillis() : new Date(lastVisit.fecha).getTime();
         const diffMinutes = (now - lastTime) / 60000;
-        
+
         if (diffMinutes < 5) {
           const waitMinutes = Math.ceil(5 - diffMinutes);
           return { success: false, message: `Has completado un ciclo de 5 stands. Debes esperar ${waitMinutes} minuto(s) para continuar.` };
@@ -63,7 +64,7 @@ export class VisitService {
   }
 
   getVisitsByStand(standId: string): Observable<Visit[]> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<Visit[]>(`${this.apiUrl}?standId=${standId}`);
     }
     const q = query(collection(this.firestore, 'visits'), where('standId', '==', standId));
@@ -71,7 +72,7 @@ export class VisitService {
   }
 
   getAllVisits(): Observable<Visit[]> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<Visit[]>(this.apiUrl);
     }
     const q = collection(this.firestore, 'visits');
@@ -79,7 +80,7 @@ export class VisitService {
   }
 
   async getParticipantVisits(participantId: string): Promise<Visit[]> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       const visits: any = await this.http.get(`${this.apiUrl}?participantId=${participantId}`).toPromise();
       return visits as Visit[];
     }

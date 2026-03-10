@@ -3,7 +3,7 @@ import { Firestore, collection, collectionData, doc, docData, addDoc, updateDoc,
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Participant } from '../models/participant.model';
-import { environment } from '../../environments/environment';
+import { BackendModeService } from './backend-mode.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +11,12 @@ import { environment } from '../../environments/environment';
 export class ParticipantService {
   private firestore = inject(Firestore);
   private http = inject(HttpClient);
-  private apiUrl = `${environment.localApiUrl}/participants`;
+  private mode = inject(BackendModeService);
+
+  private get apiUrl() { return `${this.mode.localApiUrl}/participants`; }
 
   getParticipants(): Observable<Participant[]> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<Participant[]>(this.apiUrl);
     }
     const pRef = collection(this.firestore, 'participants');
@@ -22,7 +24,7 @@ export class ParticipantService {
   }
 
   getParticipantById(id: string): Observable<Participant> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<Participant>(`${this.apiUrl}/${id}`);
     }
     const docRef = doc(this.firestore, `participants/${id}`);
@@ -30,7 +32,7 @@ export class ParticipantService {
   }
 
   async addParticipant(participant: Participant): Promise<string> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       const response: any = await this.http.post(this.apiUrl, participant).toPromise();
       return response.id;
     }
@@ -41,7 +43,7 @@ export class ParticipantService {
   }
 
   updateParticipant(id: string, data: Partial<Participant>) {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.put(`${this.apiUrl}/${id}`, data).toPromise();
     }
     const docRef = doc(this.firestore, `participants/${id}`);
@@ -49,7 +51,7 @@ export class ParticipantService {
   }
 
   deleteParticipant(id: string) {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.delete(`${this.apiUrl}/${id}`).toPromise();
     }
     const docRef = doc(this.firestore, `participants/${id}`);

@@ -3,7 +3,7 @@ import { Firestore, collection, collectionData, addDoc, query, where } from '@an
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Survey } from '../models/survey.model';
-import { environment } from '../../environments/environment';
+import { BackendModeService } from './backend-mode.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +11,12 @@ import { environment } from '../../environments/environment';
 export class SurveyService {
   private firestore = inject(Firestore);
   private http = inject(HttpClient);
-  private apiUrl = `${environment.localApiUrl}/surveys`;
+  private mode = inject(BackendModeService);
+
+  private get apiUrl() { return `${this.mode.localApiUrl}/surveys`; }
 
   addSurvey(survey: Survey) {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.post(this.apiUrl, survey).toPromise();
     }
     const ref = collection(this.firestore, 'surveys');
@@ -23,7 +25,7 @@ export class SurveyService {
   }
 
   getAllSurveys(): Observable<Survey[]> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.http.get<Survey[]>(this.apiUrl);
     }
     const q = collection(this.firestore, 'surveys');

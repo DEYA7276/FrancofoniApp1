@@ -6,7 +6,7 @@ import { Observable, of, BehaviorSubject } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { User } from '../models/user.model';
 import { Participant } from '../models/participant.model';
-import { environment } from '../../environments/environment';
+import { BackendModeService } from './backend-mode.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +16,7 @@ export class AuthService {
   private firestore = inject(Firestore);
   private injector = inject(EnvironmentInjector);
   private http = inject(HttpClient);
+  private mode = inject(BackendModeService);
 
   private guestSubject = new BehaviorSubject<Participant | null>(null);
   public guest$ = this.guestSubject.asObservable();
@@ -23,22 +24,29 @@ export class AuthService {
   // For local mode: store user in a BehaviorSubject
   private localUserSubject = new BehaviorSubject<User | null>(null);
 
-  public user$: Observable<User | null> = environment.useLocalBackend
-    ? this.localUserSubject.asObservable()
-    : authState(this.auth).pipe(
-        switchMap(user => {
-          if (!user) return of(null);
-          return runInInjectionContext(this.injector, () => 
-            docData(doc(this.firestore, `users/${user.uid}`)) as Observable<User>
-          );
-        })
-      );
+  // user$ needs to handle both modes dynamically
+  public user$: Observable<User | null> = this.mode.useLocal$
+    .pipe(
+      switchMap(isLocal => {
+        if (isLocal) {
+          return this.localUserSubject.asObservable();
+        }
+        return authState(this.auth).pipe(
+          switchMap(user => {
+            if (!user) return of(null);
+            return runInInjectionContext(this.injector, () =>
+              docData(doc(this.firestore, `users/${user.uid}`)) as Observable<User>
+            );
+          })
+        );
+      })
+    );
 
   async login(email: string, password: string) {
     this.guestSubject.next(null);
 
-    if (environment.useLocalBackend) {
-      const response: any = await this.http.post(`${environment.localApiUrl}/auth/login`, { email, password }).toPromise();
+    if (this.mode.isLocal) {
+      const response: any = await this.http.post(`${this.mode.localApiUrl}/auth/login`, { email, password }).toPromise();
       if (response && response.user) {
         const user: User = {
           id: response.user.id,
@@ -48,7 +56,6 @@ export class AuthService {
           createdAt: response.user.createdAt ? new Date(response.user.createdAt) : new Date()
         };
         this.localUserSubject.next(user);
-        // Store in localStorage for persistence
         localStorage.setItem('localUser', JSON.stringify(user));
         return { user: response.user };
       }
@@ -59,9 +66,9 @@ export class AuthService {
   }
 
   async guestLogin(email: string): Promise<boolean> {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       try {
-        const response: any = await this.http.post(`${environment.localApiUrl}/auth/guest-login`, { correo: email }).toPromise();
+        const response: any = await this.http.post(`${this.mode.localApiUrl}/auth/guest-login`, { correo: email }).toPromise();
         if (response && response.found) {
           this.guestSubject.next(response.participant);
           this.localUserSubject.next(null);
@@ -77,7 +84,7 @@ export class AuthService {
     const participantsRef = collection(this.firestore, 'participants');
     const q = query(participantsRef, where('correo', '==', email.toLowerCase().trim()));
     const snap = await getDocs(q);
-    
+
     if (!snap.empty) {
       const p = { id: snap.docs[0].id, ...snap.docs[0].data() } as Participant;
       this.guestSubject.next(p);
@@ -90,7 +97,7 @@ export class AuthService {
   async logout() {
     this.guestSubject.next(null);
 
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       this.localUserSubject.next(null);
       localStorage.removeItem('localUser');
       return;
@@ -98,17 +105,16 @@ export class AuthService {
 
     return signOut(this.auth);
   }
-  
+
   getCurrentUser() {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       return this.localUserSubject.getValue();
     }
     return this.auth.currentUser;
   }
 
-  // Restore session from localStorage on app init (local mode)
   restoreLocalSession() {
-    if (environment.useLocalBackend) {
+    if (this.mode.isLocal) {
       const stored = localStorage.getItem('localUser');
       if (stored) {
         try {
