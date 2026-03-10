@@ -59,18 +59,48 @@ export class StandsPage {
 
   async addStand() {
     if (!this.newStand.usuarioId) {
-       alert("Por favor asigne un encargado al stand");
-       return;
+      const alert = await this.alertController.create({
+        header: '⚠️ Falta encargado',
+        message: 'Por favor asigna un encargado al stand antes de guardarlo.',
+        cssClass: 'custom-alert alert-warning',
+        buttons: [{ text: 'Entendido', cssClass: 'alert-btn-primary' }]
+      });
+      await alert.present();
+      return;
     }
     
-    if (this.newStand.id) {
-      await this.standService.updateStand(this.newStand.id, this.newStand);
-      await this.userService.updateUser(this.newStand.usuarioId, { standId: this.newStand.id });
-    } else {
-      const docRef = await this.standService.addStand(this.newStand);
-      await this.userService.updateUser(this.newStand.usuarioId, { standId: docRef.id });
+    try {
+      if (this.newStand.id) {
+        await this.standService.updateStand(this.newStand.id, this.newStand);
+        await this.userService.updateUser(this.newStand.usuarioId, { standId: this.newStand.id });
+        const successAlert = await this.alertController.create({
+          header: '✅ Stand actualizado',
+          message: `El stand "${this.newStand.nombre}" fue actualizado exitosamente.`,
+          cssClass: 'custom-alert alert-success',
+          buttons: [{ text: 'Perfecto', cssClass: 'alert-btn-primary' }]
+        });
+        await successAlert.present();
+      } else {
+        const docRef = await this.standService.addStand(this.newStand);
+        await this.userService.updateUser(this.newStand.usuarioId, { standId: docRef.id });
+        const successAlert = await this.alertController.create({
+          header: '✅ Stand creado',
+          message: `El stand "${this.newStand.nombre}" fue creado exitosamente.`,
+          cssClass: 'custom-alert alert-success',
+          buttons: [{ text: 'Perfecto', cssClass: 'alert-btn-primary' }]
+        });
+        await successAlert.present();
+      }
+      this.resetForm();
+    } catch (e: any) {
+      const errAlert = await this.alertController.create({
+        header: '❌ Error',
+        message: 'Hubo un error al guardar el stand: ' + e.message,
+        cssClass: 'custom-alert alert-danger',
+        buttons: [{ text: 'Cerrar', cssClass: 'alert-btn-primary' }]
+      });
+      await errAlert.present();
     }
-    this.resetForm();
   }
 
   editStand(s: Stand) {
@@ -83,9 +113,26 @@ export class StandsPage {
   }
 
   async deleteStand(id: string) {
-    if(confirm('¿Seguro que deseas eliminar este stand?')) {
-      await this.standService.deleteStand(id);
-    }
+    const alert = await this.alertController.create({
+      header: '🗑️ Eliminar stand',
+      message: '¿Estás seguro de que deseas eliminar este stand? Esta acción no se puede deshacer.',
+      cssClass: 'custom-alert alert-danger',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'alert-btn-cancel'
+        },
+        {
+          text: 'Eliminar',
+          cssClass: 'alert-btn-danger',
+          handler: async () => {
+            await this.standService.deleteStand(id);
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   getEncargadoName(users: User[] | null, usuarioId: string): string {
@@ -100,8 +147,9 @@ export class StandsPage {
       : window.location.origin;
 
     const alert = await this.alertController.create({
-      header: 'Enlace del Evento',
+      header: '🔗 Enlace del Evento',
       message: 'Ingresa la dirección web pública donde estará alojada la app. Si dejas localhost, el QR solo funcionará en tu computadora.',
+      cssClass: 'custom-alert',
       inputs: [
         {
           name: 'baseUrl',
@@ -111,7 +159,7 @@ export class StandsPage {
         }
       ],
       buttons: [
-        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Cancelar', role: 'cancel', cssClass: 'alert-btn-cancel' },
         {
           text: 'Generar y Descargar QR',
           handler: async (data: any) => {

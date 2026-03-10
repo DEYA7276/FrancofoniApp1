@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { 
   IonHeader, IonToolbar, IonTitle, IonButtons, 
   IonButton, IonContent, IonCard, IonCardContent, 
-  IonIcon, IonBadge, IonToggle
+  IonIcon, IonBadge, IonToggle, AlertController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
@@ -35,6 +35,7 @@ export class DashboardPage {
   standService = inject(StandService);
   backendMode = inject(BackendModeService);
   router = inject(Router);
+  private alertCtrl = inject(AlertController);
   user$ = this.authService.user$;
 
   constructor() {
@@ -76,12 +77,31 @@ export class DashboardPage {
     }
   }
 
-  toggleBackendMode() {
-    const newMode = this.backendMode.toggleMode();
-    const label = this.backendMode.getModeLabel();
-    // Clear session and reload to reinitialize all services
-    localStorage.removeItem('localUser');
-    alert(`Modo cambiado a: ${label}\n\nLa app se recargará para aplicar los cambios.`);
-    window.location.reload();
+  async toggleBackendMode() {
+    const currentLabel = this.backendMode.getModeLabel();
+    const newLabel = this.backendMode.isLocal ? '☁️ Firestore (Internet)' : '🖥️ Local (XAMPP)';
+
+    const alert = await this.alertCtrl.create({
+      header: '🔄 Cambiar modo de backend',
+      message: `<strong>Modo actual:</strong> ${currentLabel}<br><br>¿Deseas cambiar a <strong>${newLabel}</strong>?<br><br><small>La app se recargará para aplicar los cambios.</small>`,
+      cssClass: 'custom-alert',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'alert-btn-cancel'
+        },
+        {
+          text: 'Cambiar',
+          cssClass: 'alert-btn-primary',
+          handler: () => {
+            this.backendMode.toggleMode();
+            localStorage.removeItem('localUser');
+            window.location.reload();
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 }

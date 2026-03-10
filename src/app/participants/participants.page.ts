@@ -5,7 +5,7 @@ import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButtons,
   IonBackButton, IonCard, IonCardHeader, IonCardTitle,
   IonCardContent, IonItem, IonLabel, IonInput, IonButton,
-  IonIcon, IonSelect, IonSelectOption, ToastController
+  IonIcon, IonSelect, IonSelectOption, ToastController, AlertController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { trash, peopleOutline, create, download, mail, print } from 'ionicons/icons';
@@ -36,6 +36,7 @@ import * as QRCode from 'qrcode';
 export class ParticipantsPage implements OnInit {
   private envInjector = inject(EnvironmentInjector);
   private toastCtrl = inject(ToastController);
+  private alertCtrl = inject(AlertController);
 
   private participantService!: any; // Using any for the instance to avoid type cycle if it exists, or cast later
   participants$: Observable<Participant[]> | undefined;
@@ -126,10 +127,27 @@ export class ParticipantsPage implements OnInit {
   }
 
   async deleteParticipant(id: string) {
-    if (confirm('¿Seguro que deseas eliminar este participante?')) {
-      await this.participantService.deleteParticipant(id);
-      this.showToast('Participante eliminado', 'success');
-    }
+    const alert = await this.alertCtrl.create({
+      header: '🗑️ Eliminar participante',
+      message: '¿Estás seguro de que deseas eliminar este participante? Se perderán sus datos y registro.',
+      cssClass: 'custom-alert alert-danger',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'alert-btn-cancel'
+        },
+        {
+          text: 'Eliminar',
+          cssClass: 'alert-btn-danger',
+          handler: async () => {
+            await this.participantService.deleteParticipant(id);
+            this.showToast('Participante eliminado', 'success');
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   downloadQR(id: string, name: string) {
