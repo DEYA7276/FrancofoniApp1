@@ -4,10 +4,17 @@ import {
   IonHeader, IonToolbar, IonButtons, IonBackButton, 
   IonTitle, IonContent, IonCard, IonCardHeader, 
   IonCardTitle, IonCardContent, IonList, IonListHeader, 
+<<<<<<< HEAD
+  IonItem, IonIcon, IonLabel, IonBadge, IonGrid, IonRow, IonCol, IonButton
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { trophyOutline, podiumOutline, flame, wineOutline, documentText } from 'ionicons/icons';
+=======
   IonItem, IonIcon, IonLabel, IonBadge, IonGrid, IonRow, IonCol
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { trophyOutline, podiumOutline } from 'ionicons/icons';
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 import { ReportService } from '../services/report.service';
 import { StandService } from '../services/stand.service';
 import { Stand } from '../models/stand.model';
@@ -25,7 +32,11 @@ Chart.register(...registerables);
     IonHeader, IonToolbar, IonButtons, IonBackButton, 
     IonTitle, IonContent, IonCard, IonCardHeader, 
     IonCardTitle, IonCardContent, IonList, IonListHeader, 
+<<<<<<< HEAD
+    IonItem, IonIcon, IonLabel, IonBadge, IonGrid, IonRow, IonCol, IonButton,
+=======
     IonItem, IonIcon, IonLabel, IonBadge, IonGrid, IonRow, IonCol,
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     CommonModule
   ]
 })
@@ -34,6 +45,19 @@ export class ReportsPage implements OnInit, AfterViewInit {
   private standService = inject(StandService);
 
   @ViewChild('ratingsChart') ratingsChartCanvas!: ElementRef;
+<<<<<<< HEAD
+  @ViewChild('globalFlowChart') globalFlowChartCanvas!: ElementRef;
+  @ViewChild('standFlowChart') standFlowChartCanvas!: ElementRef;
+
+  ratingsChart: any;
+  globalFlowChart: any;
+  standFlowChart: any;
+
+  visitsPerStand: { standId: string, standName?: string, count: number }[] = [];
+  mostVisitedStand: { standId: string, standName?: string, count: number } | null = null;
+  highestRatedStand: { standName: string, avgRating: number } | null = null;
+  teacherSummaryCards: { standName: string, avgRating: number, totalVisits: number, rank?: number }[] = [];
+=======
   @ViewChild('peaksChart') peaksChartCanvas!: ElementRef;
 
   ratingsChart: any;
@@ -41,12 +65,28 @@ export class ReportsPage implements OnInit, AfterViewInit {
 
   visitsPerStand: { standId: string, standName?: string, count: number }[] = [];
   mostVisitedStand: { standId: string, standName?: string, count: number } | null = null;
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
   stands$: Observable<Stand[]> = this.standService.getStands();
   
   allStands: Stand[] = [];
 
+<<<<<<< HEAD
+  frenchQuotes = [
+    "Un platillo sin queso es como un día sin sol.",
+    "El descubrimiento de un nuevo plato es más útil para el ser humano que el descubrimiento de una estrella.",
+    "No se puede cocinar bien si no se pone en ello el corazón.",
+    "La gastronomía es el arte de usar la comida para crear felicidad.",
+    "El buen vino es la excelente camaradería",
+    "Comer es una necesidad, pero comer de forma inteligente es un arte."
+  ];
+  currentQuote = this.frenchQuotes[0];
+
+  constructor() {
+    addIcons({ trophyOutline, podiumOutline, flame, wineOutline, documentText });
+=======
   constructor() {
     addIcons({ trophyOutline, podiumOutline });
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
   }
 
   ngOnInit() {
@@ -62,7 +102,11 @@ export class ReportsPage implements OnInit, AfterViewInit {
 
   async loadReports() {
     const counts = await this.reportService.getVisitsPerStand();
+<<<<<<< HEAD
+    this.visitsPerStand = counts.map((c: any) => {
+=======
     this.visitsPerStand = counts.map(c => {
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
       const stand = this.allStands.find(s => s.id === c.standId);
       return {
         ...c,
@@ -70,6 +114,38 @@ export class ReportsPage implements OnInit, AfterViewInit {
       };
     });
 
+<<<<<<< HEAD
+    const ratings = await this.reportService.getStandRatings();
+    
+    // Create Teacher Summary Cards (ranking by rating, then visits)
+    this.teacherSummaryCards = this.allStands.map(s => {
+      const v = counts.find((c: any) => c.standId === s.id)?.count || 0;
+      const r = ratings.find((x: any) => x.standId === s.id)?.avgRating || 0;
+      return { standName: s.nombre, avgRating: r, totalVisits: v };
+    }).sort((a: any, b: any) => {
+      if (b.avgRating !== a.avgRating) return b.avgRating - a.avgRating;
+      return b.totalVisits - a.totalVisits;
+    });
+    
+    // Assign ranks
+    this.teacherSummaryCards = this.teacherSummaryCards.map((c: any, index: number) => ({ ...c, rank: index + 1 }));
+
+    // Calcular estadísticas IA para el Panel del Sommelier
+    if (this.visitsPerStand.length > 0) {
+      this.mostVisitedStand = [...this.visitsPerStand].sort((a, b) => b.count - a.count)[0];
+    }
+    if (this.teacherSummaryCards.length > 0 && this.teacherSummaryCards[0].avgRating > 0) {
+      this.highestRatedStand = this.teacherSummaryCards[0];
+    }
+    
+    // Frase aleatoria cada vez que entra
+    this.currentQuote = this.frenchQuotes[Math.floor(Math.random() * this.frenchQuotes.length)];
+
+    // Requerimiento: Gráficas de 15 minutos en lugar de la anterior de horas
+    await this.createRatingsChart();
+    await this.createGlobalFlowChart();
+    await this.createStandFlowChart();
+=======
     const mostVisited = await this.reportService.getMostVisitedStand();
     if (mostVisited) {
       const stand = this.allStands.find(s => s.id === mostVisited.standId);
@@ -81,15 +157,24 @@ export class ReportsPage implements OnInit, AfterViewInit {
 
     await this.createRatingsChart();
     await this.createPeaksChart();
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
   }
 
   async createRatingsChart() {
     const ratings = await this.reportService.getStandRatings();
+<<<<<<< HEAD
+    const labels = ratings.map((r: any) => {
+      const stand = this.allStands.find(s => s.id === r.standId);
+      return stand ? stand.nombre : r.standId;
+    });
+    const data = ratings.map((r: any) => r.avgRating);
+=======
     const labels = ratings.map(r => {
       const stand = this.allStands.find(s => s.id === r.standId);
       return stand ? stand.nombre : r.standId;
     });
     const data = ratings.map(r => r.avgRating);
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 
     if (this.ratingsChart) this.ratingsChart.destroy();
 
@@ -114,6 +199,17 @@ export class ReportsPage implements OnInit, AfterViewInit {
     });
   }
 
+<<<<<<< HEAD
+  async createGlobalFlowChart() {
+    const flows = await this.reportService.getGlobalFlow15Min();
+    const labels = flows.map((f: any) => f.time);
+    const data = flows.map((f: any) => f.count);
+
+    if (this.globalFlowChart) this.globalFlowChart.destroy();
+    if (!this.globalFlowChartCanvas) return;
+
+    this.globalFlowChart = new Chart(this.globalFlowChartCanvas.nativeElement, {
+=======
   async createPeaksChart() {
     const peaks = await this.reportService.getVisitorPeaks();
     const labels = peaks.map(p => p.time);
@@ -122,10 +218,112 @@ export class ReportsPage implements OnInit, AfterViewInit {
     if (this.peaksChart) this.peaksChart.destroy();
 
     this.peaksChart = new Chart(this.peaksChartCanvas.nativeElement, {
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
       type: 'line',
       data: {
         labels: labels,
         datasets: [{
+<<<<<<< HEAD
+          label: 'Visitantes Totales (Intervalos 15 min)',
+          data: data,
+          fill: true,
+          backgroundColor: 'rgba(114, 47, 55, 0.15)', // Vino tinto aguado
+          borderColor: '#722F37', // Vino de Burdeos
+          tension: 0.4, // Curva fluida como líquido
+          pointBackgroundColor: '#fff',
+          pointBorderColor: '#722F37',
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    });
+  }
+
+  async createStandFlowChart() {
+    const standFlows = await this.reportService.getStandFlows15Min();
+    
+    // gather all unique times
+    const allTimes = new Set<string>();
+    standFlows.forEach((sf: any) => sf.flows.forEach((f: any) => allTimes.add(f.time)));
+    const labels = Array.from(allTimes).sort((a, b) => a.localeCompare(b));
+
+    const datasets = standFlows.map((sf: any, i: number) => {
+      const stand = this.allStands.find(s => s.id === sf.standId);
+      const name = stand ? stand.nombre : sf.standId;
+      
+      const data = labels.map((l: string) => {
+        const flow = sf.flows.find((f: any) => f.time === l);
+        return flow ? flow.count : 0;
+      });
+
+      // Generar colores basados en vinos (Tinto, Rosé, Blanco, Dorado)
+      const culinatyColors = [
+        '#722F37', // Vino tinto
+        '#D4AF37', // Dorado / Chardonnay
+        '#FFA07A', // Rose
+        '#5c94c1', // Azul agua
+        '#800020'  // Burgundy
+      ];
+      const color = culinatyColors[i % culinatyColors.length];
+      const bgColor = culinatyColors[i % culinatyColors.length] + '33'; // 20% alpha
+
+      return {
+        label: name,
+        data: data,
+        fill: true,
+        backgroundColor: bgColor,
+        borderColor: color,
+        tension: 0.4,
+        pointRadius: 3
+      };
+    });
+
+    if (this.standFlowChart) this.standFlowChart.destroy();
+    if (!this.standFlowChartCanvas) return;
+
+    this.standFlowChart = new Chart(this.standFlowChartCanvas.nativeElement, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: datasets
+      },
+      options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    });
+  }
+
+  // Feature: Descargar Excel/CSV Nativo de las métricas de los Stands
+  exportToExcel() {
+    if (this.teacherSummaryCards.length === 0) return;
+
+    // Titulos
+    const header = ['Rank', 'Nombre del Stand', 'Calificación Promedio', 'Visitas Totales'];
+    // Filas
+    const rows = this.teacherSummaryCards.map(c => [
+      c.rank,
+      `"${c.standName}"`, // Encapsular en comillas por si tiene comas
+      c.avgRating.toFixed(2),
+      c.totalVisits
+    ]);
+
+    // Combinar (con BOM \uFEFF para arreglar acentos en Excel)
+    const csvContent = '\uFEFF' + [
+      header.join(','),
+      ...rows.map(line => line.join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    // Simular Clic de Descarga
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Francofonia_Reporte_Stands_${new Date().getTime()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+=======
           label: 'Visitantes por Hora',
           data: data,
           fill: true,
@@ -147,5 +345,6 @@ export class ReportsPage implements OnInit, AfterViewInit {
       }
     });
   }
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 }
 

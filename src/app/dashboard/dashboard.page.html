@@ -1,13 +1,65 @@
 <ion-header [translucent]="true">
+<<<<<<< HEAD
+  <ion-toolbar class="glass-header">
+    <ion-buttons slot="start">
+      <img src="assets/logo_participante.png" class="navbar-logo" alt="Logo" style="margin-left: 10px;">
+    </ion-buttons>
+    <ion-title>Dashboard</ion-title>
+    <ion-buttons slot="end">
+      <!-- EASTER EGG: Botón mágico AHORA VISIBLE con tooltip -->
+      <ion-button title="Activar Modo Cena de Gala" (click)="toggleGalaMode()">
+        <ion-icon name="wine-outline" *ngIf="!isGalaMode" color="primary"></ion-icon>
+        <ion-icon name="star" *ngIf="isGalaMode" color="warning"></ion-icon>
+      </ion-button>
+=======
   <ion-toolbar color="primary">
     <ion-title>Dashboard</ion-title>
     <ion-buttons slot="end">
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
       <ion-button (click)="logout()">Salir</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding" *ngIf="user$ | async as user">
+<<<<<<< HEAD
+  <div style="display: flex; justify-content: space-between; align-items: flex-end;" class="animate-fade-up delay-100">
+    <div>
+      <h2 style="margin-bottom: 4px; font-weight: bold;">Bienvenue, {{ user.email.split('@')[0] }}</h2>
+      <p style="margin-top: 0; color: #888; font-style: italic;">"La gastronomía es la alegría de todas las situaciones."</p>
+    </div>
+    <ion-badge color="tertiary" style="margin-bottom: 15px;">{{ user.role | uppercase }}</ion-badge>
+  </div>
+
+  <div class="dashboard-grid animate-fade-up delay-300">
+    <!-- admin and supervisor can register participants and manage stands -->
+    <ng-container *ngIf="user.role === 'admin' || user.role === 'supervisor'">
+      <ion-card button routerLink="/participants" class="menu-card gourmet-ticket">
+        <ion-card-content class="ion-text-center">
+          <div class="icon-wrapper"><ion-icon name="people-outline"></ion-icon></div>
+          <h3>Participantes</h3>
+          <p>Registro y QRs</p>
+        </ion-card-content>
+      </ion-card>
+      
+      <ion-card button routerLink="/stands" class="menu-card gourmet-ticket">
+        <ion-card-content class="ion-text-center">
+          <div class="icon-wrapper"><ion-icon name="storefront-outline"></ion-icon></div>
+          <h3>Stands</h3>
+          <p>Gestión de áreas</p>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+
+    <ng-container *ngIf="user.role === 'admin'">
+      <ion-card button routerLink="/register" class="menu-card gourmet-ticket">
+        <ion-card-content class="ion-text-center">
+          <div class="icon-wrapper"><ion-icon name="person-add-outline"></ion-icon></div>
+          <h3>Usuarios</h3>
+          <p>Accesos Admin</p>
+        </ion-card-content>
+      </ion-card>
+=======
   <h2>Hola, {{ user.email }} ({{ user.role }})</h2>
   <p>Selecciona una opción del menú según tu rol.</p>
 
@@ -30,10 +82,27 @@
         <ion-icon name="person-add-outline" slot="start"></ion-icon>
         <ion-label>Registrar Usuarios Administradores</ion-label>
       </ion-item>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     </ng-container>
 
     <!-- usuario (stand operator) -->
     <ng-container *ngIf="user.role === 'usuario'">
+<<<<<<< HEAD
+      <ion-card button routerLink="/scanner" class="menu-card menu-card-highlight gourmet-ticket">
+        <ion-card-content class="ion-text-center">
+          <div class="icon-wrapper"><ion-icon name="qr-code-outline"></ion-icon></div>
+          <h3>Escanear QR</h3>
+          <p>Registrar Visita</p>
+        </ion-card-content>
+      </ion-card>
+      <ion-card button routerLink="/survey" class="menu-card gourmet-ticket">
+        <ion-card-content class="ion-text-center">
+          <div class="icon-wrapper"><ion-icon name="document-text-outline"></ion-icon></div>
+          <h3>Encuesta</h3>
+          <p>Calificar Stand</p>
+        </ion-card-content>
+      </ion-card>
+=======
       <ion-item button routerLink="/scanner">
         <ion-icon name="qr-code-outline" slot="start"></ion-icon>
         <ion-label>Escanear QR Participante</ion-label>
@@ -42,10 +111,22 @@
         <ion-icon name="document-text-outline" slot="start"></ion-icon>
         <ion-label>Aplicar Encuesta</ion-label>
       </ion-item>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     </ng-container>
 
     <!-- admin only reports -->
     <ng-container *ngIf="user.role === 'admin'">
+<<<<<<< HEAD
+      <ion-card button routerLink="/reports" class="menu-card menu-card-highlight gourmet-ticket">
+        <ion-card-content class="ion-text-center">
+          <div class="icon-wrapper"><ion-icon name="bar-chart-outline"></ion-icon></div>
+          <h3>Reportes Vip</h3>
+          <p>Flujos y Ganador</p>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </div>
+=======
       <ion-item button routerLink="/reports">
         <ion-icon name="bar-chart-outline" slot="start"></ion-icon>
         <ion-label>Ver Reportes de Visitas</ion-label>
@@ -53,4 +134,5 @@
     </ng-container>
 
   </ion-list>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 </ion-content>

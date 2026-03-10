@@ -1,22 +1,125 @@
 <ion-header [translucent]="true">
+<<<<<<< HEAD
+  <ion-toolbar class="glass-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+      <img src="assets/logo_participante.png" class="navbar-logo" alt="Logo">
+    </ion-buttons>
+    <ion-title>Reportes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="exportToExcel()" class="animate-fade-up delay-200" title="Exportar a Excel" style="background: rgba(255,255,255,0.2) !important; border-radius: 8px;">
+        <ion-icon name="document-text" slot="start"></ion-icon>
+        Exportar CSV
+      </ion-button>
+    </ion-buttons>
+=======
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/dashboard"></ion-back-button>
     </ion-buttons>
     <ion-title>Reportes</ion-title>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+<<<<<<< HEAD
+  <!-- Maestro Sumario Obligatorio -->
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <h2 class="ion-padding-start">Ranking de Stands </h2>
+      </ion-col>
+      <ion-col size="12" size-md="4" *ngFor="let card of teacherSummaryCards">
+        <!-- El fondo amarillo se elimina para que el fuego naranja resalte sobre blanco -->
+        <ion-card style="height: 100%;" [ngClass]="card.rank === 1 ? 'card-rank-1 gourmet-ticket' : 'animate-fade-up delay-100 gourmet-ticket'">
+          <ion-card-header>
+            <ion-card-title style="font-size: 1.1rem; font-weight: bold;" [class.flame-hot]="card.rank === 1">
+              <ion-icon *ngIf="card.rank !== 1" name="trophy-outline" color="primary"></ion-icon>
+              <ion-icon *ngIf="card.rank === 1" name="flame" class="flame-hot" style="margin-right: 5px;"></ion-icon>
+              #{{ card.rank }} - {{ card.standName }}
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <h2 style="font-weight: bold;">⭐ Promedio: {{ card.avgRating }}</h2>
+            <p style="margin-top: 5px;">Visitas Totales: {{ card.totalVisits }}</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Gráficas -->
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-card class="animate-fade-up delay-200">
+          <ion-card-header>
+            <ion-card-title>Flujo General (15 min)</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div style="position: relative; height: 40vh; width: 100%;">
+              <canvas #globalFlowChart></canvas>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="6">
+        <ion-card class="animate-fade-up delay-300">
+          <ion-card-header>
+            <ion-card-title>Flujo por Stand (15 min)</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div style="position: relative; height: 40vh; width: 100%;">
+              <canvas #standFlowChart></canvas>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="6">
+        <ion-card class="animate-fade-up delay-400 gourmet-ticket" style="height: 100%;">
+=======
   
   <ion-grid>
     <ion-row>
       <ion-col size="12" size-md="6">
         <ion-card>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
           <ion-card-header>
             <ion-card-title>Calificación por Stand</ion-card-title>
           </ion-card-header>
           <ion-card-content>
+<<<<<<< HEAD
+            <div style="position: relative; height: 40vh; width: 100%;">
+              <canvas #ratingsChart></canvas>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <!-- NUEVO PANEL: Llenando el hueco de la gráfica y aplicando IA/Frases de Cata -->
+      <ion-col size="12" size-md="6">
+        <ion-card class="animate-fade-up delay-500 gourmet-ticket" style="height: 100%; background: linear-gradient(135deg, rgba(212,175,55,0.05), rgba(212,175,55,0)); border: 1px solid rgba(212,175,55,0.3);">
+          <ion-card-header>
+            <ion-card-title style="font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--ion-color-warning);">
+              <ion-icon name="wine-outline"></ion-icon> Notas del Sommelier (IA)
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div style="padding: 10px; text-align: center;">
+              <p style="font-family: 'Courier New', monospace; font-size: 1.2rem; line-height: 1.6; color: var(--ion-text-color);">
+                "{{ currentQuote }}"
+              </p>
+              <hr style="background: rgba(10,28,44,0.1); margin: 20px 0;">
+              <div style="text-align: left;">
+                <h3 style="color: var(--ion-color-primary); font-weight: bold; margin-bottom: 5px;">🔥 Tendencia Actual:</h3>
+                <p style="font-size: 0.95rem;">
+                  El stand <strong>{{ mostVisitedStand?.standName || 'Ninguno' }}</strong> es el claro favorito en flujo de personas ({{ mostVisitedStand?.count || 0 }} visitas). 
+                  {{ highestRatedStand ? 'Sin embargo, el mejor sabor lo tiene ' + highestRatedStand.standName + ' con un promedio de ' + highestRatedStand.avgRating + ' estrellas.' : '' }}
+                </p>
+              </div>
+            </div>
+=======
             <canvas #ratingsChart></canvas>
           </ion-card-content>
         </ion-card>
@@ -29,13 +132,18 @@
           </ion-card-header>
           <ion-card-content>
             <canvas #peaksChart></canvas>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
           </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
 
+<<<<<<< HEAD
+  <ion-card *ngIf="visitsPerStand.length > 0" class="animate-fade-up delay-500">
+=======
   <ion-card *ngIf="visitsPerStand.length > 0">
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     <ion-list-header>
       <ion-label>Visitas por Stand</ion-label>
     </ion-list-header>
@@ -50,10 +158,18 @@
     </ion-card-content>
   </ion-card>
 
+<<<<<<< HEAD
+  <ion-card *ngIf="visitsPerStand.length === 0" class="animate-fade-up delay-500">
+=======
   <ion-card *ngIf="visitsPerStand.length === 0">
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
     <ion-card-content class="ion-text-center">
       <p>Aún no hay visitas registradas.</p>
     </ion-card-content>
   </ion-card>
 
+<<<<<<< HEAD
 </ion-content>
+=======
+</ion-content>
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be

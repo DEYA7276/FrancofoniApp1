@@ -49,4 +49,8 @@ export const routes: Routes = [
     canActivate: [authGuard, adminGuard],
     loadComponent: () => import('./reports/reports.page').then( m => m.ReportsPage)
   },
+  {
+    path: 'guest-dashboard',
+    loadComponent: () => import('./guest-dashboard/guest-dashboard.page').then( m => m.GuestDashboardPage)
+  },
 ];

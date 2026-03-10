@@ -1,2 +1,43 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
+
+:root {
+  /** primary: Azul París Absoluto (Fuerte y visible) **/
+  --ion-color-primary: #0F3B6E;
+  --ion-color-primary-rgb: 15,59,110;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #0d3461;
+  --ion-color-primary-tint: #274f7d;
+
+  /** secondary: Vino de Burdeos **/
+  --ion-color-secondary: #722F37;
+  --ion-color-secondary-rgb: 114,47,55;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255,255,255;
+  --ion-color-secondary-shade: #642930;
+  --ion-color-secondary-tint: #80444b;
+
+  /** tertiary: Queso Brie / Cremoso **/
+  --ion-color-tertiary: #F5F3ED;
+  --ion-color-tertiary-rgb: 245,243,237;
+  --ion-color-tertiary-contrast: #2C3E50;
+  --ion-color-tertiary-contrast-rgb: 44,62,80;
+  --ion-color-tertiary-shade: #d8d6d1;
+  --ion-color-tertiary-tint: #f6f4ef;
+
+  /** warning: Dorado / Pan Horneado **/
+  --ion-color-warning: #D4AF37;
+  --ion-color-warning-rgb: 212,175,55;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0,0,0;
+  --ion-color-warning-shade: #bb9a30;
+  --ion-color-warning-tint: #d8b74b;
+
+  /** Base Background and Text Colors **/
+  --ion-background-color: #FDFBF7;
+  --ion-background-color-rgb: 253,251,247;
+  /* Azul Rey Brillante (Inconfundible con el negro) */
+  --ion-text-color: #004488;
+  --ion-text-color-rgb: 0,68,136;
+}

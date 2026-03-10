@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
@@ -38,6 +39,7 @@ export class SurveyPage implements OnInit {
   private authService = inject(AuthService);
   private standService = inject(StandService);
   private toastCtrl = inject(ToastController);
+  private route = inject(ActivatedRoute);
 
   myStand: Stand | null = null;
   
@@ -57,14 +59,28 @@ export class SurveyPage implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.user$.pipe(take(1)).subscribe(async user => {
-      if (user) {
-        this.standService.getStandsByUsuarioId(user.id).pipe(take(1)).subscribe(stands => {
-          if (stands && stands.length > 0) {
-            this.myStand = stands[0];
-            this.survey.standId = this.myStand.id!;
+    this.route.queryParams.pipe(take(1)).subscribe((params: any) => {
+      const standIdParam = params['standId'];
+      
+      if (standIdParam) {
+        this.loadStand(standIdParam);
+      } else {
+        // Fallback: Check logged-in user's profile
+        this.authService.user$.pipe(take(1)).subscribe(user => {
+          if (user && user.standId) {
+            this.loadStand(user.standId);
           }
         });
+      }
+    });
+  }
+
+  private loadStand(id: string) {
+    this.standService.getStandById(id).pipe(take(1)).subscribe((stand: Stand | undefined) => {
+      if (stand) {
+        this.myStand = stand;
+        this.myStand.id = id;
+        this.survey.standId = id; // Pre-populate the survey object
       }
     });
   }
@@ -75,7 +91,23 @@ export class SurveyPage implements OnInit {
       return;
     }
     if (!this.survey.participantId) {
-      this.showToast('Debes ingresar el ID del participante');
+      this.showToast('Debes ingresar tu correo electrónico');
+      return;
+    }
+    
+    const p1Val = parseInt(this.survey.p1, 10);
+    if (!this.survey.p1 || p1Val < 1 || p1Val > 5) {
+      this.showToast('La calificación del stand debe ser del 1 al 5');
+      return;
+    }
+
+    if (!this.survey.p2) {
+      this.showToast('Por favor contesta si recomendarías el stand');
+      return;
+    }
+
+    if (this.survey.p5 && this.survey.p5.length > 100) {
+      this.showToast('Los comentarios no pueden exceder 100 caracteres');
       return;
     }
 

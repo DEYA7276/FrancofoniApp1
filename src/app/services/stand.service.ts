@@ -1,5 +1,9 @@
 import { Injectable, inject } from '@angular/core';
+<<<<<<< HEAD
+import { Firestore, collection, collectionData, doc, docData, addDoc, updateDoc, deleteDoc, query, where, getDocs } from '@angular/fire/firestore';
+=======
 import { Firestore, collection, collectionData, doc, docData, addDoc, updateDoc, deleteDoc, query, where } from '@angular/fire/firestore';
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 import { Observable } from 'rxjs';
 import { Stand } from '../models/stand.model';
 
@@ -39,4 +43,28 @@ export class StandService {
     const docRef = doc(this.firestore, `stands/${id}`);
     return deleteDoc(docRef);
   }
+<<<<<<< HEAD
+
+  async initializeStands() {
+    const defaultStands: Partial<Stand>[] = [
+      { nombre: 'Crepê', responsable: 'Adriana García', descripcion: 'Deliciosas crepas francesas', activo: true, usuarioId: '' },
+      { nombre: 'Quiche Lorraine', responsable: 'Mildred Zoé', descripcion: 'Clásico quiche de Lorena', activo: true, usuarioId: '' },
+      { nombre: 'Croquembouche', responsable: 'José Emilio', descripcion: 'Torre de profitroles con caramelo', activo: true, usuarioId: '' },
+      { nombre: 'Crème Brûlée', responsable: 'Selina Maldonado', descripcion: 'Postre de crema con azúcar quemada', activo: true, usuarioId: '' },
+      { nombre: 'Croissant', responsable: 'Ivan Atzin', descripcion: 'Pan de hojaldre mantecoso', activo: true, usuarioId: '' }
+    ];
+
+    const standsRef = collection(this.firestore, 'stands');
+    const snapshot = await getDocs(standsRef);
+    
+    if (snapshot.empty) {
+      for (const stand of defaultStands) {
+        await addDoc(standsRef, stand);
+      }
+      return true;
+    }
+    return false;
+  }
+=======
+>>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 }
