@@ -11,16 +11,17 @@ import { environment } from './environments/environment';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
-bootstrapApplication(AppComponent, {
-  providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
-    provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideHttpClient(),
+// Build providers array conditionally
+const providers: any[] = [
+  { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+  provideIonicAngular(),
+  provideRouter(routes, withPreloading(PreloadAllModules)),
+  provideHttpClient(),
 
-    //  FIREBASE CONFIGURADO CORRECTAMENTE
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-  ],
-});
+  // Firebase is always loaded (services still inject it), but only used when useLocalBackend is false
+  provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+  provideAuth(() => getAuth()),
+  provideFirestore(() => getFirestore()),
+];
+
+bootstrapApplication(AppComponent, { providers });

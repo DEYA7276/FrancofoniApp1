@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Documentación Completa — FrancofoníApp 2026</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap');
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8f9fa;
+      color: #1a1a2e;
+      line-height: 1.7;
+      padding: 0;
+    }
+
+    .cover {
+      background: linear-gradient(135deg, #0A2342 0%, #2087C7 60%, #174A7C 100%);
+      color: white;
+      text-align: center;
+      padding: 80px 40px;
+      margin-bottom: 40px;
+    }
+    .cover h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      color: #FBC02D;
+      margin-bottom: 10px;
+    }
+    .cover p { font-size: 1.2rem; opacity: 0.85; font-style: italic; }
+    .cover .meta { margin-top: 30px; font-size: 0.95rem; opacity: 0.7; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 30px 60px; }
+
+    .section {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e8e8e8;
+      page-break-inside: avoid;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: #0A2342;
+      border-bottom: 3px solid #FBC02D;
+      padding-bottom: 10px;
+      margin-bottom: 25px;
+    }
+    h3 {
+      font-size: 1.3rem;
+      color: #2087C7;
+      margin-top: 25px;
+      margin-bottom: 12px;
+    }
+    h4 { font-size: 1.05rem; margin-top: 18px; margin-bottom: 8px; color: #333; }
+
+    p { margin-bottom: 12px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 0.9rem;
+    }
+    th {
+      background: #0A2342;
+      color: white;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #eee;
+    }
+    tr:nth-child(even) { background: #f8f9fa; }
+
+    code {
+      background: #f0f0f5;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      color: #d63384;
+    }
+    pre {
+      background: #1a1a2e;
+      color: #e0e0e0;
+      padding: 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      margin: 15px 0;
+      line-height: 1.5;
+    }
+
+    .mermaid {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 15px 0;
+      text-align: center;
+    }
+
+    .color-swatch {
+      display: inline-block;
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      margin-right: 15px;
+      vertical-align: middle;
+      border: 2px solid rgba(0,0,0,0.1);
+    }
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: #fafafa;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+    .color-info { flex: 1; }
+    .color-info strong { font-size: 1.05rem; }
+    .color-info .hex { color: #888; font-family: monospace; }
+
+    blockquote {
+      background: #f0f7ff;
+      border-left: 4px solid #2087C7;
+      padding: 15px 20px;
+      margin: 15px 0;
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: #333;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #FBC02D;
+      color: #1a1a2e;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    .toc { list-style: none; padding: 0; }
+    .toc li {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 1.05rem;
+    }
+    .toc li a { color: #2087C7; text-decoration: none; font-weight: 600; }
+    .toc li span { color: #888; font-size: 0.9rem; }
+
+    .separator {
+      text-align: center;
+      margin: 50px 0;
+      font-size: 1.5rem;
+      color: #ccc;
+    }
+
+    @media print {
+      body { background: white; }
+      .cover { page-break-after: always; }
+      .section { box-shadow: none; border: 1px solid #ddd; }
+      .no-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ==================== PORTADA ==================== -->
+<div class="cover">
+  <h1>Francofonía 2026</h1>
+  <p>"La gastronomía une al mundo"</p>
+  <div class="meta">
+    <p><strong>Documentación Técnica del Proyecto</strong></p>
+    <p>Repositorio: github.com/DEYA7276/FrancofoniApp1</p>
+    <p>Rama: avance-companiera</p>
+    <p>Generado: Marzo 2026</p>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ==================== ÍNDICE ==================== -->
+<div class="section">
+  <h2>📑 Índice</h2>
+  <ol class="toc">
+    <li><a href="#doc1">Documentación del Proyecto</a> <span>— Arquitectura, modelos, rutas, flujos</span></li>
+    <li><a href="#doc2">Explicación del Backend</a> <span>— Firebase, Guards, Servicios</span></li>
+    <li><a href="#doc3">Implementación de Funcionalidades</a> <span>— EmailJS, Three.js, Chart.js</span></li>
+    <li><a href="#doc4">Paleta de Colores</a> <span>— Justificación de cada color</span></li>
+  </ol>
+</div>
+
+<!-- ================================================================ -->
+<!--               DOCUMENTO 1: DOCUMENTACIÓN DEL PROYECTO            -->
+<!-- ================================================================ -->
+<div class="separator">— · —</div>
+
+<div class="section" id="doc1">
+  <h2>📖 1. Documentación Técnica del Proyecto</h2>
+
+  <h3>1.1 Descripción General</h3>
+  <p><strong>FrancofoníApp</strong> es una aplicación web/móvil híbrida diseñada para gestionar el evento gastronómico "Francofonía 2026". Permite:</p>
+  <ul>
+    <li>Registro y control de participantes (invitados)</li>
+    <li>Escaneo QR en cada stand gastronómico</li>
+    <li>Encuestas de satisfacción por stand</li>
+    <li>Reportes en tiempo real (visitas, ratings, flujo de personas)</li>
+    <li>Mapa 3D interactivo para que los invitados vean su progreso</li>
+    <li>Sistema de roles (Admin, Supervisor, Usuario/Stand)</li>
+  </ul>
+
+  <h3>1.2 Stack Tecnológico</h3>
+  <table>
+    <tr><th>Tecnología</th><th>Uso</th></tr>
+    <tr><td>Angular 19</td><td>Framework principal del frontend</td></tr>
+    <tr><td>Ionic Framework 8</td><td>Componentes UI móviles/web</td></tr>
+    <tr><td>Firebase Authentication</td><td>Autenticación de usuarios Staff</td></tr>
+    <tr><td>Cloud Firestore</td><td>Base de datos NoSQL en tiempo real</td></tr>
+    <tr><td>Three.js</td><td>Mapa 3D interactivo del evento</td></tr>
+    <tr><td>Chart.js</td><td>Gráficas de reportes</td></tr>
+    <tr><td>EmailJS</td><td>Envío de correos con QR</td></tr>
+    <tr><td>TypeScript</td><td>Lenguaje de programación</td></tr>
+    <tr><td>SCSS</td><td>Preprocesador de estilos</td></tr>
+  </table>
+
+  <h3>1.3 Arquitectura del Sistema</h3>
+  <div class="mermaid">
+graph TB
+    subgraph Frontend["Frontend - Angular/Ionic"]
+        LOGIN["Login Page"]
+        DASH["Dashboard Staff"]
+        GUEST["Guest Dashboard"]
+        SCAN["Scanner QR"]
+        REG["Register Page"]
+        PARTS["Participants Page"]
+        STANDS["Stands Page"]
+        SURVEY["Survey Page"]
+        REPORTS["Reports Page"]
+    end
+    subgraph Servicios["Capa de Servicios"]
+        AUTH["AuthService"]
+        PART_S["ParticipantService"]
+        STAND_S["StandService"]
+        VISIT_S["VisitService"]
+        REPORT_S["ReportService"]
+        SURVEY_S["SurveyService"]
+        USER_S["UserService"]
+        RECOM_S["RecommendationService"]
+    end
+    subgraph Firebase["Firebase Backend"]
+        FA["Firebase Auth"]
+        FS["Cloud Firestore"]
+    end
+    LOGIN --> AUTH
+    DASH --> AUTH
+    GUEST --> VISIT_S
+    GUEST --> STAND_S
+    SCAN --> VISIT_S
+    PARTS --> PART_S
+    STANDS --> STAND_S
+    SURVEY --> SURVEY_S
+    REPORTS --> REPORT_S
+    AUTH --> FA
+    PART_S --> FS
+    STAND_S --> FS
+    VISIT_S --> FS
+    SURVEY_S --> FS
+    USER_S --> FS
+    REPORT_S --> FS
+  </div>
+
+  <h3>1.4 Modelo de Datos</h3>
+
+  <h4>User (Usuarios del Staff)</h4>
+  <table>
+    <tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
+    <tr><td>id</td><td>string</td><td>UID de Firebase Auth</td></tr>
+    <tr><td>email</td><td>string</td><td>Correo electrónico</td></tr>
+    <tr><td>role</td><td>'admin' | 'supervisor' | 'usuario'</td><td>Rol en el sistema</td></tr>
+    <tr><td>standId</td><td>string (opcional)</td><td>Stand asignado (si es 'usuario')</td></tr>
+  </table>
+
+  <h4>Participant (Invitados al Evento)</h4>
+  <table>
+    <tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
+    <tr><td>nombre</td><td>string</td><td>Nombre del invitado</td></tr>
+    <tr><td>apellido_paterno</td><td>string</td><td>Apellido paterno</td></tr>
+    <tr><td>apellido_materno</td><td>string</td><td>Apellido materno</td></tr>
+    <tr><td>ciudad, municipio</td><td>string</td><td>Ubicación</td></tr>
+    <tr><td>sexo</td><td>string</td><td>Género</td></tr>
+    <tr><td>correo</td><td>string</td><td>Correo electrónico</td></tr>
+    <tr><td>qrCode</td><td>string (opcional)</td><td>URL del QR generado</td></tr>
+    <tr><td>correoEnviado</td><td>boolean</td><td>¿Se envió el QR por email?</td></tr>
+  </table>
+
+  <h4>Stand (Stands Gastronómicos)</h4>
+  <table>
+    <tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
+    <tr><td>nombre</td><td>string</td><td>Ej: "Crêpe", "Quiche Lorraine"</td></tr>
+    <tr><td>descripcion</td><td>string</td><td>Descripción del platillo</td></tr>
+    <tr><td>usuarioId</td><td>string</td><td>Staff asignado</td></tr>
+    <tr><td>activo</td><td>boolean</td><td>Estado del stand</td></tr>
+    <tr><td>responsable</td><td>string</td><td>Nombre del encargado</td></tr>
+  </table>
+
+  <h4>Visit (Registro de Visitas)</h4>
+  <table>
+    <tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
+    <tr><td>participantId</td><td>string</td><td>Quién visitó</td></tr>
+    <tr><td>standId</td><td>string</td><td>Qué stand visitó</td></tr>
+    <tr><td>fecha</td><td>string (ISO)</td><td>Cuándo lo visitó</td></tr>
+  </table>
+
+  <h4>Survey (Encuestas de Satisfacción)</h4>
+  <table>
+    <tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
+    <tr><td>participantId</td><td>string</td><td>Quién llenó la encuesta</td></tr>
+    <tr><td>standId</td><td>string</td><td>De qué stand es la encuesta</td></tr>
+    <tr><td>p1 - p5</td><td>string (1-5)</td><td>5 preguntas con rating</td></tr>
+    <tr><td>fecha</td><td>string (ISO)</td><td>Fecha de la encuesta</td></tr>
+  </table>
+
+  <h3>1.5 Sistema de Autenticación Dual</h3>
+  <p><strong>Login Staff:</strong> Usa Firebase Authentication (email + contraseña).</p>
+  <p><strong>Login Invitado:</strong> Busca el correo en la colección <code>participants</code>. No usa Firebase Auth — es una sesión local en memoria.</p>
+
+  <h3>1.6 Rutas Protegidas</h3>
+  <table>
+    <tr><th>Ruta</th><th>Componente</th><th>Guards</th><th>Descripción</th></tr>
+    <tr><td>/login</td><td>LoginPage</td><td>Ninguno</td><td>Pantalla de inicio</td></tr>
+    <tr><td>/dashboard</td><td>DashboardPage</td><td>authGuard</td><td>Panel administrativo</td></tr>
+    <tr><td>/scanner</td><td>ScannerPage</td><td>authGuard + usuarioGuard</td><td>Escaneo QR</td></tr>
+    <tr><td>/register</td><td>RegisterPage</td><td>authGuard + adminGuard</td><td>Crear usuarios Staff</td></tr>
+    <tr><td>/participants</td><td>ParticipantsPage</td><td>authGuard + supervisorGuard</td><td>Gestión de invitados</td></tr>
+    <tr><td>/stands</td><td>StandsPage</td><td>authGuard + supervisorGuard</td><td>Gestión de stands</td></tr>
+    <tr><td>/survey</td><td>SurveyPage</td><td>Ninguno</td><td>Encuesta pública</td></tr>
+    <tr><td>/reports</td><td>ReportsPage</td><td>authGuard + adminGuard</td><td>Reportes</td></tr>
+    <tr><td>/guest-dashboard</td><td>GuestDashboardPage</td><td>Ninguno</td><td>Mapa 3D</td></tr>
+  </table>
+
+  <h3>1.7 Reglas de Negocio (Visitas)</h3>
+  <ul>
+    <li><strong>No repetir stand consecutivo:</strong> Un invitado no puede visitar el mismo stand dos veces seguidas.</li>
+    <li><strong>Cooldown cada 5 visitas:</strong> Después de 5 stands, debe esperar 5 minutos.</li>
+    <li><strong>Registro con timestamp:</strong> Cada visita queda con fecha/hora exacta.</li>
+  </ul>
+
+  <h3>1.8 Flujo Completo del Sistema</h3>
+  <div class="mermaid">
+sequenceDiagram
+    participant I as Invitado
+    participant L as Login
+    participant GD as Guest Dashboard
+    participant S as Staff en Stand
+    participant SC as Scanner
+    participant FB as Firebase
+    Note over I,FB: Flujo del Invitado
+    I->>L: Ingresa correo
+    L->>FB: Busca en participants
+    FB-->>L: Participante encontrado
+    L->>GD: Redirige al Mapa 3D
+    GD->>FB: Carga stands y visitas
+    GD-->>I: Muestra mapa interactivo
+    Note over S,FB: Flujo del Staff en Stand
+    S->>L: Login con email y password
+    L->>FB: Firebase Auth
+    FB-->>L: Token valido
+    L->>SC: Redirige al Scanner
+    I->>SC: Muestra QR al encargado
+    SC->>FB: Registra visita con validaciones
+    FB-->>SC: Visita guardada
+    SC-->>I: Confirmacion de visita
+  </div>
+
+  <h3>1.9 Colecciones en Firebase Firestore</h3>
+  <table>
+    <tr><th>Colección</th><th>Descripción</th><th>Campos clave</th></tr>
+    <tr><td>users</td><td>Usuarios Staff</td><td>email, role, standId</td></tr>
+    <tr><td>participants</td><td>Invitados registrados</td><td>nombre, correo, qrCode</td></tr>
+    <tr><td>stands</td><td>Stands gastronómicos</td><td>nombre, responsable, activo</td></tr>
+    <tr><td>visits</td><td>Registro de visitas</td><td>participantId, standId, fecha</td></tr>
+    <tr><td>surveys</td><td>Encuestas completadas</td><td>standId, p1-p5, fecha</td></tr>
+  </table>
+</div>
+
+
+<!-- ================================================================ -->
+<!--               DOCUMENTO 2: EXPLICACIÓN DEL BACKEND               -->
+<!-- ================================================================ -->
+<div class="separator">— · —</div>
+
+<div class="section" id="doc2">
+  <h2>🔧 2. Explicación del Backend</h2>
+
+  <h3>2.1 ¿Usamos Node.js?</h3>
+  <p><strong>No.</strong> Este proyecto no tiene un servidor backend tradicional. Usamos <strong>Firebase</strong> como <strong>BaaS</strong> (Backend as a Service).</p>
+
+  <table>
+    <tr><th>Backend Tradicional (Node.js)</th><th>Nuestro enfoque (Firebase BaaS)</th></tr>
+    <tr><td>Tú creas un servidor con Express</td><td>Firebase ya tiene los servidores</td></tr>
+    <tr><td>Tú escribes endpoints (/api/users)</td><td>Firebase da SDK directo al frontend</td></tr>
+    <tr><td>Manejas la BD (MySQL, MongoDB)</td><td>Cloud Firestore es la base de datos</td></tr>
+    <tr><td>Implementas login con bcrypt/JWT</td><td>Firebase Auth maneja todo el login</td></tr>
+    <tr><td>Necesitas hosting para tu servidor</td><td>Firebase se encarga del hosting</td></tr>
+  </table>
+
+  <h3>2.2 Arquitectura Backend</h3>
+  <div class="mermaid">
+graph LR
+    APP["Angular App - Frontend"] -->|SDK Firebase| FA["Firebase Auth - Login"]
+    APP -->|SDK Firebase| FS["Cloud Firestore - Base de Datos"]
+    FA -->|Verifica credenciales| USERS["Coleccion: users"]
+    FS --> PARTS["Coleccion: participants"]
+    FS --> STANDS["Coleccion: stands"]
+    FS --> VISITS["Coleccion: visits"]
+    FS --> SURVEYS["Coleccion: surveys"]
+  </div>
+
+  <h3>2.3 ¿Qué son los Guards?</h3>
+  <p>Los <strong>Guards</strong> son funciones que <strong>protegen las rutas</strong> de la aplicación. Son como un guardia de seguridad en la puerta de cada página.</p>
+  <blockquote>Imagina un edificio: la recepción (login) es libre, la oficina del director (reportes) solo entra el admin, el almacén (scanner) solo el encargado del stand, y la sala de juntas (participantes) los supervisores.</blockquote>
+
+  <table>
+    <tr><th>Guard</th><th>Pregunta que hace</th><th>Si NO cumple...</th></tr>
+    <tr><td>authGuard</td><td>¿Estás logueado?</td><td>→ Redirige a /login</td></tr>
+    <tr><td>adminGuard</td><td>¿Tu rol es admin?</td><td>→ Redirige a /dashboard</td></tr>
+    <tr><td>supervisorGuard</td><td>¿Tu rol es admin o supervisor?</td><td>→ Redirige a /dashboard</td></tr>
+    <tr><td>usuarioGuard</td><td>¿Tu rol es admin o usuario?</td><td>→ Redirige a /dashboard</td></tr>
+  </table>
+
+  <h3>2.4 Los 8 Servicios</h3>
+  <table>
+    <tr><th>Servicio</th><th>Qué hace</th><th>Colección Firebase</th></tr>
+    <tr><td>AuthService</td><td>Login staff + login invitado</td><td>users, participants</td></tr>
+    <tr><td>UserService</td><td>CRUD de usuarios staff</td><td>users</td></tr>
+    <tr><td>ParticipantService</td><td>CRUD de participantes</td><td>participants</td></tr>
+    <tr><td>StandService</td><td>CRUD de stands + inicialización</td><td>stands</td></tr>
+    <tr><td>VisitService</td><td>Registrar visitas con reglas</td><td>visits</td></tr>
+    <tr><td>SurveyService</td><td>Guardar/leer encuestas</td><td>surveys</td></tr>
+    <tr><td>ReportService</td><td>Estadísticas y flujos</td><td>visits, surveys</td></tr>
+    <tr><td>RecommendationService</td><td>Sugerir siguiente stand</td><td>stands</td></tr>
+  </table>
+
+  <h3>2.5 Sistema de Roles</h3>
+  <table>
+    <tr><th>Rol</th><th>Acceso</th></tr>
+    <tr><td>admin</td><td>Dashboard, Registro Staff, Participantes, Stands, Reportes</td></tr>
+    <tr><td>supervisor</td><td>Dashboard, Participantes, Stands</td></tr>
+    <tr><td>usuario</td><td>Dashboard, Scanner QR (su stand)</td></tr>
+    <tr><td>invitado</td><td>Guest Dashboard, Encuestas, Mapa 3D</td></tr>
+  </table>
+</div>
+
+
+<!-- ================================================================ -->
+<!--           DOCUMENTO 3: IMPLEMENTACIÓN DE FUNCIONALIDADES         -->
+<!-- ================================================================ -->
+<div class="separator">— · —</div>
+
+<div class="section" id="doc3">
+  <h2>⚙️ 3. Implementación de Funcionalidades</h2>
+
+  <h3>3.1 📧 Envío de Correos con QR — EmailJS</h3>
+  <p><strong>EmailJS</strong> es un servicio web que permite enviar correos desde el frontend sin servidor backend.</p>
+  <div class="mermaid">
+sequenceDiagram
+    participant A as Admin Angular
+    participant E as EmailJS API
+    participant G as Gmail SMTP
+    participant I as Invitado
+    A->>A: 1. Registra participante en Firestore
+    A->>A: 2. Genera QR con su ID unico
+    A->>E: 3. Envia datos nombre correo QR a EmailJS
+    E->>G: 4. EmailJS usa la plantilla y envia correo
+    G->>I: 5. Invitado recibe su QR en su bandeja
+  </div>
+  <table>
+    <tr><th>Concepto</th><th>Valor</th></tr>
+    <tr><td>Plan</td><td>Gratuito</td></tr>
+    <tr><td>Límite</td><td>200 correos/mes</td></tr>
+    <tr><td>Plantilla</td><td>Diseñada en el dashboard de EmailJS con HTML</td></tr>
+    <tr><td>Servicio SMTP</td><td>Conectado a una cuenta de Gmail</td></tr>
+  </table>
+
+  <h3>3.2 🗺️ Mapa 3D Interactivo — Three.js</h3>
+  <p><strong>Three.js</strong> es una librería JavaScript que crea gráficos 3D en el navegador usando WebGL.</p>
+  <p>El mapa muestra los 5 stands como <strong>cubos 3D</strong>: 🟢 Verde = Visitado | 🟡 Dorado = Pendiente</p>
+  <div class="mermaid">
+graph TD
+    A["ThreeDMapComponent"] --> B["Recibe: allStands + visitedStandIds"]
+    B --> C["Crea escena Three.js"]
+    C --> D["Piso gris PlaneGeometry"]
+    C --> E["Luces Ambient + Directional"]
+    C --> F["Por cada stand: Cubo 3D BoxGeometry"]
+    F --> G{"Esta visitado?"}
+    G -->|Si| H["Color verde 2dd36f"]
+    G -->|No| I["Color dorado ffd700"]
+  </div>
+  <table>
+    <tr><th>Concepto</th><th>Valor</th></tr>
+    <tr><td>Librería</td><td>Three.js (open source, gratis)</td></tr>
+    <tr><td>Renderizado</td><td>WebGL nativo del navegador</td></tr>
+    <tr><td>Componente</td><td>ThreeDMapComponent (standalone)</td></tr>
+    <tr><td>Costo</td><td>$0</td></tr>
+  </table>
+
+  <h3>3.3 📊 Gráficas en Tiempo Real — Chart.js</h3>
+  <p><strong>Chart.js</strong> genera gráficas interactivas (barras, líneas) a partir de datos de Firestore.</p>
+  <table>
+    <tr><th>Gráfica</th><th>Tipo</th><th>Datos que muestra</th></tr>
+    <tr><td>Calificaciones por Stand</td><td>Barras</td><td>Promedio de 5 preguntas de encuesta</td></tr>
+    <tr><td>Flujo Global (15 min)</td><td>Línea</td><td>Total de visitas cada 15 minutos</td></tr>
+    <tr><td>Flujo por Stand (15 min)</td><td>Líneas múltiples</td><td>Visitas por stand cada 15 min</td></tr>
+  </table>
+  <p><strong>Intervalos de 15 minutos:</strong> El ReportService agrupa las visitas: 10:00-10:14 → "10:00", 10:15-10:29 → "10:15", etc.</p>
+
+  <h3>3.4 📄 Exportar a Excel/CSV</h3>
+  <p>Se genera un archivo CSV directamente con APIs nativas del navegador (<code>Blob</code>). No necesita librería adicional.</p>
+
+  <h3>3.5 Resumen de Tecnologías Externas</h3>
+  <table>
+    <tr><th>Funcionalidad</th><th>Herramienta</th><th>Costo</th><th>Tipo</th></tr>
+    <tr><td>Envío de correos</td><td>EmailJS</td><td>Gratis (200/mes)</td><td>Servicio web</td></tr>
+    <tr><td>Mapa 3D</td><td>Three.js</td><td>Gratis</td><td>Librería JS</td></tr>
+    <tr><td>Gráficas</td><td>Chart.js</td><td>Gratis</td><td>Librería JS</td></tr>
+    <tr><td>Base de datos</td><td>Firebase Firestore</td><td>Gratis (tier)</td><td>BaaS Google</td></tr>
+    <tr><td>Autenticación</td><td>Firebase Auth</td><td>Gratis</td><td>BaaS Google</td></tr>
+    <tr><td>QR Codes</td><td>qrcode (npm)</td><td>Gratis</td><td>Librería JS</td></tr>
+    <tr><td>Export Excel</td><td>API nativa Blob</td><td>Gratis</td><td>JavaScript</td></tr>
+  </table>
+</div>
+
+
+<!-- ================================================================ -->
+<!--               DOCUMENTO 4: PALETA DE COLORES                     -->
+<!-- ================================================================ -->
+<div class="separator">— · —</div>
+
+<div class="section" id="doc4">
+  <h2>🎨 4. Paleta de Colores</h2>
+  <p>Cada color representa la <strong>identidad de Francia</strong> y la experiencia de un <strong>evento gastronómico de alta gama</strong>.</p>
+
+  <div class="color-row">
+    <div class="color-swatch" style="background: #2087C7;"></div>
+    <div class="color-info">
+      <strong>🔵 Azul Principal</strong> <span class="hex">#2087C7</span>
+      <p>El <strong>Bleu de France</strong>. Transmite confianza, elegancia y cultura francesa. Es lo primero que el usuario ve al abrir la app. El azul ha representado a Francia desde la Revolución Francesa (1789).</p>
+    </div>
+  </div>
+
+  <div class="color-row">
+    <div class="color-swatch" style="background: #FBC02D;"></div>
+    <div class="color-info">
+      <strong>🟡 Dorado</strong> <span class="hex">#FBC02D</span>
+      <p>Representa la <strong>gastronomía gourmet</strong> y la excelencia. Evoca los platos con estrella Michelin, los croissants y la crème brûlée. También es el color de la <strong>Flor de Lis</strong>, símbolo de la monarquía francesa.</p>
+    </div>
+  </div>
+
+  <div class="color-row">
+    <div class="color-swatch" style="background: #ffffff; border: 2px solid #ddd;"></div>
+    <div class="color-info">
+      <strong>⚪ Blanco</strong> <span class="hex">#FFFFFF / rgba(255,255,255,0.15)</span>
+      <p>El <strong>Blanc</strong> de la bandera tricolor 🇫🇷. Simboliza pureza y elegancia. Se usa de forma translúcida para crear el efecto <strong>Glassmorphism</strong> (cristal esmerilado) que da el aire moderno y premium.</p>
+    </div>
+  </div>
+
+  <div class="color-row">
+    <div class="color-swatch" style="background: rgba(237, 41, 57, 0.8);"></div>
+    <div class="color-info">
+      <strong>🔴 Rojo</strong> <span class="hex">rgba(237, 41, 57)</span>
+      <p>El <strong>Rouge</strong> de la bandera francesa. Representa la pasión por la cocina, el vino tinto francés (Bordeaux, Burgundy) y la calidez de compartir una mesa. Se aplica como degradado sutil.</p>
+    </div>
+  </div>
+
+  <div class="color-row">
+    <div class="color-swatch" style="background: #1e3a5f;"></div>
+    <div class="color-info">
+      <strong>🔵 Azul Oscuro</strong> <span class="hex">#1e3a5f</span>
+      <p><strong>Bleu Marine</strong> (azul marino), color clásico de la moda francesa. Evoca sofisticación, los uniformes de chef francés y las noches parisinas. Usado en el slider del toggle.</p>
+    </div>
+  </div>
+
+  <h3>La Bandera Francesa en el Login</h3>
+  <p>El fondo del login tiene un degradado diagonal (135°) que representa la bandera tricolor:</p>
+  <div style="height: 120px; border-radius: 12px; background: linear-gradient(135deg, rgba(0,35,149,0.45), rgba(255,255,255,0.15) 50%, rgba(237,41,57,0.35)); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+    🇫🇷 Degradado Tricolor Francés
+  </div>
+
+  <blockquote>
+    La paleta está basada en la bandera tricolor francesa (azul, blanco y rojo), con el dorado como color de acento representando la gastronomía gourmet y la alta cocina francesa.
+  </blockquote>
+</div>
+
+<!-- PIE DE PÁGINA -->
+<div style="text-align: center; padding: 40px; color: #888; font-size: 0.85rem;">
+  <p><strong>FrancofoníApp 2026</strong> — Documentación Técnica</p>
+  <p>Equipo Francofonía · Angular 19 + Ionic 8 + Firebase + Three.js</p>
+</div>
+
+</div><!-- /container -->
+
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'default' });
+</script>
+
+</body>
+</html>

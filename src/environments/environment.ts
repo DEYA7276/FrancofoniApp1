@@ -1,5 +1,7 @@
 export const environment = {
   production: false,
+  useLocalBackend: true,
+  localApiUrl: 'http://localhost/FRANCOFONIA/FrancofoniApp1/api',
   firebaseConfig: {
     apiKey: "AIzaSyAGHLUytZKlSumFH-IoBjPgBnABVp17zf0",
     authDomain: "francofoniapp.firebaseapp.com",

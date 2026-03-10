@@ -1,46 +1,75 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, collectionData, doc, docData, addDoc, updateDoc, deleteDoc, query, where, getDocs } from '@angular/fire/firestore';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Stand } from '../models/stand.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StandService {
   private firestore = inject(Firestore);
+  private http = inject(HttpClient);
+  private apiUrl = `${environment.localApiUrl}/stands`;
 
   getStands(): Observable<Stand[]> {
+    if (environment.useLocalBackend) {
+      return this.http.get<Stand[]>(this.apiUrl);
+    }
     const q = collection(this.firestore, 'stands');
     return collectionData(q, { idField: 'id' }) as Observable<Stand[]>;
   }
 
   getStandById(id: string): Observable<Stand> {
+    if (environment.useLocalBackend) {
+      return this.http.get<Stand>(`${this.apiUrl}/${id}`);
+    }
     const docRef = doc(this.firestore, `stands/${id}`);
     return docData(docRef, { idField: 'id' }) as Observable<Stand>;
   }
 
   getStandsByUsuarioId(usuarioId: string): Observable<Stand[]> {
+    if (environment.useLocalBackend) {
+      return this.http.get<Stand[]>(`${this.apiUrl}?usuarioId=${usuarioId}`);
+    }
     const standsRef = collection(this.firestore, 'stands');
     const q = query(standsRef, where('usuarioId', '==', usuarioId));
     return collectionData(q, { idField: 'id' }) as Observable<Stand[]>;
   }
 
-  addStand(stand: Stand) {
+  async addStand(stand: Stand): Promise<{ id: string }> {
+    if (environment.useLocalBackend) {
+      const response: any = await this.http.post(this.apiUrl, stand).toPromise();
+      return { id: response.id };
+    }
     const ref = collection(this.firestore, 'stands');
-    return addDoc(ref, stand);
+    const docRef = await addDoc(ref, stand);
+    return { id: docRef.id };
   }
 
   updateStand(id: string, data: Partial<Stand>) {
+    if (environment.useLocalBackend) {
+      return this.http.put(`${this.apiUrl}/${id}`, data).toPromise();
+    }
     const docRef = doc(this.firestore, `stands/${id}`);
     return updateDoc(docRef, data);
   }
 
   deleteStand(id: string) {
+    if (environment.useLocalBackend) {
+      return this.http.delete(`${this.apiUrl}/${id}`).toPromise();
+    }
     const docRef = doc(this.firestore, `stands/${id}`);
     return deleteDoc(docRef);
   }
 
   async initializeStands() {
+    if (environment.useLocalBackend) {
+      const response: any = await this.http.post(`${this.apiUrl}/initialize`, {}).toPromise();
+      return response?.initialized ?? false;
+    }
+
     const defaultStands: Partial<Stand>[] = [
       { nombre: 'Crepê', responsable: 'Adriana García', descripcion: 'Deliciosas crepas francesas', activo: true, usuarioId: '' },
       { nombre: 'Quiche Lorraine', responsable: 'Mildred Zoé', descripcion: 'Clásico quiche de Lorena', activo: true, usuarioId: '' },
