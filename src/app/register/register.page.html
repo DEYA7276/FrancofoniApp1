@@ -14,7 +14,7 @@
   <ion-card class="animate-fade-up delay-100">
     <ion-card-header>
       <ion-card-title>
-        {{ editingUser ? '✏️ Editar rol de ' + editingUser.email : '➕ Crear cuenta de acceso' }}
+        {{ editingUser ? '✏️ Editar: ' + editingUser.email : '➕ Crear cuenta de acceso' }}
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
@@ -40,12 +40,22 @@
         </ion-select>
       </ion-item>
 
+      <!-- Stand selector: only for encargados -->
+      <ion-item *ngIf="role === 'usuario' && (stands$ | async) as stands" class="premium-input-item">
+        <ion-label position="stacked">🏪 Stand Asignado (Obligatorio)</ion-label>
+        <ion-select [(ngModel)]="selectedStandId" placeholder="¿Qué stand operará este usuario?">
+          <ion-select-option *ngFor="let stand of stands" [value]="stand.id">
+            {{ stand.nombre }} — {{ stand.responsable || 'Sin responsable' }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
       <ion-button *ngIf="!editingUser" expand="block" style="margin-top: 20px;" (click)="registerUser()">
         Crear Usuario
       </ion-button>
 
       <ion-button *ngIf="editingUser" expand="block" style="margin-top: 20px;" (click)="updateUserRole()">
-        Actualizar Rol
+        Guardar Cambios
       </ion-button>
       <ion-button *ngIf="editingUser" expand="block" fill="clear" color="medium" (click)="resetForm()">
         Cancelar Edición
@@ -54,30 +64,35 @@
   </ion-card>
 
   <!-- Users list -->
-  <ion-list class="animate-fade-up delay-200">
-    <ion-list-header>
-      <ion-label>Usuarios del Sistema</ion-label>
-    </ion-list-header>
+  <ng-container *ngIf="stands$ | async as stands">
+    <ion-list class="animate-fade-up delay-200">
+      <ion-list-header>
+        <ion-label>Usuarios del Sistema</ion-label>
+      </ion-list-header>
 
-    <ion-item *ngFor="let user of users$ | async" class="gourmet-ticket" style="margin-bottom: 12px; overflow: visible;">
-      <ion-icon slot="start" [name]="getRoleIcon(user.role)" style="font-size: 1.5rem; margin-right: 12px;" [color]="getRoleBadgeColor(user.role)"></ion-icon>
-      <ion-label>
-        <h2 style="margin-bottom: 4px;">{{ user.email }}</h2>
-        <p>
-          <ion-badge [color]="getRoleBadgeColor(user.role)" style="font-size: 0.7rem;">
-            {{ getRoleLabel(user.role) | uppercase }}
-          </ion-badge>
-        </p>
-      </ion-label>
-      <ion-buttons slot="end">
-        <ion-button fill="clear" color="primary" (click)="editUser(user)">
-          <ion-icon name="create" slot="icon-only"></ion-icon>
-        </ion-button>
-        <ion-button fill="clear" color="danger" (click)="deleteUser(user)">
-          <ion-icon name="trash" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-item>
-  </ion-list>
+      <ion-item *ngFor="let user of users$ | async" class="gourmet-ticket" style="margin-bottom: 12px; overflow: visible;">
+        <ion-icon slot="start" [name]="getRoleIcon(user.role)" style="font-size: 1.5rem; margin-right: 12px;" [color]="getRoleBadgeColor(user.role)"></ion-icon>
+        <ion-label>
+          <h2 style="margin-bottom: 4px;">{{ user.email }}</h2>
+          <p style="margin-bottom: 4px;">
+            <ion-badge [color]="getRoleBadgeColor(user.role)" style="font-size: 0.7rem;">
+              {{ getRoleLabel(user.role) | uppercase }}
+            </ion-badge>
+          </p>
+          <p *ngIf="user.standId" style="font-size: 0.8rem; color: #666;">
+            🏪 {{ getStandName(user.standId, stands) }}
+          </p>
+        </ion-label>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" color="primary" (click)="editUser(user)">
+            <ion-icon name="create" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="deleteUser(user)">
+            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+  </ng-container>
 
 </ion-content>

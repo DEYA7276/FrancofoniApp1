@@ -12,7 +12,9 @@ import {
 import { addIcons } from 'ionicons';
 import { create, trash, shieldCheckmarkOutline, personOutline } from 'ionicons/icons';
 import { UserService } from '../services/user.service';
+import { StandService } from '../services/stand.service';
 import { User } from '../models/user.model';
+import { Stand } from '../models/stand.model';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -33,14 +35,17 @@ export class RegisterPage implements OnInit {
   @ViewChild(IonContent, { static: false }) content!: IonContent;
   
   private userService = inject(UserService);
+  private standService = inject(StandService);
   private alertCtrl = inject(AlertController);
 
   email = '';
   password = '';
   role: 'admin' | 'supervisor' | 'usuario' = 'usuario';
+  selectedStandId = '';
   editingUser: User | null = null;
 
   users$!: Observable<User[]>;
+  stands$!: Observable<Stand[]>;
 
   constructor() {
     addIcons({ create, trash, shieldCheckmarkOutline, personOutline });
@@ -48,6 +53,7 @@ export class RegisterPage implements OnInit {
 
   ngOnInit() {
     this.users$ = this.userService.getUsers();
+    this.stands$ = this.standService.getStands();
   }
 
   async registerUser() {
@@ -61,9 +67,17 @@ export class RegisterPage implements OnInit {
       return;
     }
 
+    if (this.role === 'usuario' && !this.selectedStandId) {
+      await this.showAlert('⚠️ Stand requerido', 'Debes asignar un stand al encargado para que pueda escanear QRs correctamente.', 'warning');
+      return;
+    }
+
     try {
-      await this.userService.createUserAdmin(this.email, this.password, this.role);
-      await this.showAlert('✅ Usuario creado', `El usuario "${this.email}" fue registrado exitosamente con rol de ${this.getRoleLabel(this.role)}.`, 'success');
+      await this.userService.createUserAdmin(this.email, this.password, this.role, 
+        this.role === 'usuario' ? this.selectedStandId : undefined
+      );
+      const standMsg = this.role === 'usuario' ? ' y se le asignó su stand.' : '.';
+      await this.showAlert('✅ Usuario creado', `El usuario "${this.email}" fue registrado como ${this.getRoleLabel(this.role)}${standMsg}`, 'success');
       this.resetForm();
     } catch (e: any) {
       const msg = e.message?.includes('already-in-use') 
@@ -76,6 +90,7 @@ export class RegisterPage implements OnInit {
   editUser(user: User) {
     this.editingUser = user;
     this.role = user.role;
+    this.selectedStandId = user.standId || '';
     this.content?.scrollToTop(500);
     setTimeout(() => {
       const formCard = document.querySelector('app-register ion-card');
@@ -92,12 +107,25 @@ export class RegisterPage implements OnInit {
 
   async updateUserRole() {
     if (!this.editingUser) return;
+
+    if (this.role === 'usuario' && !this.selectedStandId) {
+      await this.showAlert('⚠️ Stand requerido', 'Asigna un stand al encargado.', 'warning');
+      return;
+    }
+
     try {
-      await this.userService.updateUser(this.editingUser.id!, { role: this.role });
-      await this.showAlert('✅ Rol actualizado', `El usuario "${this.editingUser.email}" ahora es ${this.getRoleLabel(this.role)}.`, 'success');
+      const updateData: Partial<User> = { role: this.role };
+      if (this.role === 'usuario') {
+        updateData.standId = this.selectedStandId;
+      } else {
+        updateData.standId = '';
+      }
+
+      await this.userService.updateUser(this.editingUser.id!, updateData);
+      await this.showAlert('✅ Actualizado', `"${this.editingUser.email}" ahora es ${this.getRoleLabel(this.role)}.`, 'success');
       this.resetForm();
     } catch (e: any) {
-      await this.showAlert('❌ Error', 'No se pudo actualizar el rol: ' + e.message, 'danger');
+      await this.showAlert('❌ Error', 'No se pudo actualizar: ' + e.message, 'danger');
     }
   }
 
@@ -114,7 +142,7 @@ export class RegisterPage implements OnInit {
           handler: async () => {
             try {
               await this.userService.deleteUser(user.id!);
-              await this.showAlert('✅ Eliminado', `El usuario "${user.email}" fue eliminado correctamente.`, 'success');
+              await this.showAlert('✅ Eliminado', `"${user.email}" fue eliminado.`, 'success');
             } catch (e: any) {
               await this.showAlert('❌ Error', 'No se pudo eliminar: ' + e.message, 'danger');
             }
@@ -129,7 +157,13 @@ export class RegisterPage implements OnInit {
     this.email = '';
     this.password = '';
     this.role = 'usuario';
+    this.selectedStandId = '';
     this.editingUser = null;
+  }
+
+  getStandName(standId: string, stands: Stand[]): string {
+    const stand = stands.find(s => s.id === standId);
+    return stand ? stand.nombre : 'Sin asignar';
   }
 
   getRoleLabel(role: string): string {

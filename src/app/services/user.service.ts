@@ -33,9 +33,9 @@ export class UserService {
     return docData(userDocRef, { idField: 'id' }) as Observable<User>;
   }
 
-  async createUserAdmin(email: string, password: string, role: 'admin'|'supervisor'|'usuario') {
+  async createUserAdmin(email: string, password: string, role: 'admin'|'supervisor'|'usuario', standId?: string) {
     if (this.mode.isLocal) {
-      return this.http.post(this.apiUrl, { email, password, role }).toPromise();
+      return this.http.post(this.apiUrl, { email, password, role, standId: standId || '' }).toPromise();
     }
 
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
@@ -43,6 +43,7 @@ export class UserService {
       id: userCredential.user.uid,
       email,
       role: role,
+      standId: standId || '',
       createdAt: new Date()
     };
     const userDocRef = doc(this.firestore, `users/${user.id}`);
