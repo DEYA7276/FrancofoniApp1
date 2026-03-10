@@ -23,21 +23,42 @@ import { Stand } from '../models/stand.model';
           <span>PUERTA</span>
         </div>
 
-        <!-- Stand grid -->
-        <div class="stands-grid">
-          <div 
-            *ngFor="let stand of allStands; let i = index"
-            class="stand-box"
-            [class.visited]="isVisited(stand)"
-            [class.pulse-suggest]="suggestion?.id === stand.id"
-            (click)="onStandTap(stand)">
-            <div class="stand-inner">
-              <ion-icon 
-                [name]="isVisited(stand) ? 'checkmark-circle-outline' : 'ellipse-outline'" 
-                class="stand-status-icon">
-              </ion-icon>
-              <span class="stand-name">{{ stand.nombre }}</span>
-            </div>
+        <!-- L-shape layout: top row + right column -->
+        <div class="l-shape-layout">
+          <!-- Top row: first 2 stands -->
+          <div class="top-row">
+            <ng-container *ngFor="let stand of topStands; let i = index">
+              <div class="stand-box"
+                [class.visited]="isVisited(stand)"
+                [class.pulse-suggest]="suggestion?.id === stand.id"
+                (click)="onStandTap(stand)">
+                <div class="stand-inner">
+                  <ion-icon 
+                    [name]="isVisited(stand) ? 'checkmark-circle-outline' : 'ellipse-outline'" 
+                    class="stand-status-icon">
+                  </ion-icon>
+                  <span class="stand-name">{{ stand.nombre }}</span>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- Right column: remaining stands -->
+          <div class="right-column">
+            <ng-container *ngFor="let stand of rightStands; let i = index">
+              <div class="stand-box"
+                [class.visited]="isVisited(stand)"
+                [class.pulse-suggest]="suggestion?.id === stand.id"
+                (click)="onStandTap(stand)">
+                <div class="stand-inner">
+                  <ion-icon 
+                    [name]="isVisited(stand) ? 'checkmark-circle-outline' : 'ellipse-outline'" 
+                    class="stand-status-icon">
+                  </ion-icon>
+                  <span class="stand-name">{{ stand.nombre }}</span>
+                </div>
+              </div>
+            </ng-container>
           </div>
         </div>
       </div>
@@ -77,82 +98,97 @@ import { Stand } from '../models/stand.model';
 
     .plan-header {
       text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     .building-title {
       font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       color: #0F3B6E;
-      margin: 0 0 4px;
+      margin: 0 0 2px;
       letter-spacing: 2px;
     }
 
     .plan-subtitle {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: #888;
       margin: 0;
     }
 
+    /* Floor plan area */
     .floor-plan {
       position: relative;
       background: linear-gradient(135deg, #f0f4f8 0%, #e8edf2 100%);
       border: 2px dashed rgba(15, 59, 110, 0.2);
-      border-radius: 16px;
-      padding: 60px 15px 20px;
-      min-height: 300px;
+      border-radius: 14px;
+      padding: 15px 15px 15px 35px;
+      min-height: 220px;
     }
 
     /* PUERTA marker */
     .puerta-marker {
       position: absolute;
-      top: 50%;
+      bottom: 20px;
       left: -2px;
-      transform: translateY(-50%);
       background: #dc3545;
       color: white;
-      padding: 20px 8px;
-      font-size: 0.7rem;
+      padding: 14px 5px;
+      font-size: 0.55rem;
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       writing-mode: vertical-rl;
       text-orientation: mixed;
-      border-radius: 0 8px 8px 0;
-      box-shadow: 3px 0 10px rgba(220, 53, 69, 0.3);
+      border-radius: 0 6px 6px 0;
+      box-shadow: 3px 0 8px rgba(220, 53, 69, 0.3);
       z-index: 2;
     }
 
-    /* Stands grid */
-    .stands-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      padding: 0 10px;
+    /* L-shape layout */
+    .l-shape-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
+    /* Top row: 2 stands aligned to the right */
+    .top-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Right column: remaining stands aligned to the right */
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    /* Stand box — compact for mobile */
     .stand-box {
       background: white;
-      border: 2.5px solid #0F3B6E;
-      border-radius: 14px;
-      padding: 14px 8px;
+      border: 2px solid #0F3B6E;
+      border-radius: 10px;
+      padding: 8px 10px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      position: relative;
-      min-height: 70px;
+      width: 90px;
+      height: 65px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .stand-box:active {
-      transform: scale(0.95);
+      transform: scale(0.93);
     }
 
     .stand-box.visited {
       background: linear-gradient(135deg, #d4edda, #c3e6cb);
       border-color: #28a745;
-      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.15);
+      box-shadow: 0 3px 10px rgba(40, 167, 69, 0.15);
     }
 
     .stand-box:not(.visited) {
@@ -169,18 +205,18 @@ import { Stand } from '../models/stand.model';
 
     @keyframes suggestPulse {
       0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
-      50% { box-shadow: 0 0 0 8px rgba(212, 175, 55, 0); }
+      50% { box-shadow: 0 0 0 6px rgba(212, 175, 55, 0); }
     }
 
     .stand-inner {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 3px;
     }
 
     .stand-status-icon {
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       color: #0F3B6E;
     }
 
@@ -190,70 +226,77 @@ import { Stand } from '../models/stand.model';
 
     .stand-name {
       font-family: 'Montserrat', sans-serif;
-      font-size: 0.75rem;
+      font-size: 0.6rem;
       font-weight: 600;
       color: #333;
-      line-height: 1.2;
+      line-height: 1.1;
       word-break: break-word;
+      max-width: 75px;
     }
 
     .stand-box.visited .stand-name {
       color: #155724;
     }
 
+    /* Desktop: slightly larger stands */
+    @media (min-width: 600px) {
+      .stand-box {
+        width: 120px;
+        height: 80px;
+        padding: 10px 12px;
+      }
+      .stand-name {
+        font-size: 0.7rem;
+        max-width: 100px;
+      }
+      .stand-status-icon {
+        font-size: 1.3rem;
+      }
+    }
+
     /* Legend */
     .map-legend {
       display: flex;
       justify-content: center;
-      gap: 20px;
-      margin-top: 15px;
-      padding: 8px 0;
+      gap: 15px;
+      margin-top: 12px;
+      padding: 6px 0;
     }
 
     .legend-item {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
+      gap: 5px;
+      font-size: 0.7rem;
       color: #666;
     }
 
     .legend-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
       display: inline-block;
     }
 
-    .legend-dot.visited {
-      background: #28a745;
-    }
-
-    .legend-dot.pending {
-      border: 2px dashed #0F3B6E;
-      background: white;
-    }
-
-    .legend-dot.suggested {
-      background: #d4af37;
-      animation: suggestPulse 2s infinite;
-    }
+    .legend-dot.visited { background: #28a745; }
+    .legend-dot.pending { border: 2px dashed #0F3B6E; background: white; }
+    .legend-dot.suggested { background: #d4af37; }
 
     /* Recommendation card */
     .recommendation-card {
-      margin-top: 15px;
-      padding: 14px 16px;
+      margin-top: 12px;
+      padding: 10px 14px;
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 249, 230, 0.95));
-      border-radius: 14px;
+      border-radius: 12px;
       border: 1.5px solid #d4af37;
       display: flex;
       align-items: center;
-      gap: 12px;
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.15);
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);
     }
 
     .rec-icon {
-      font-size: 1.6rem;
+      font-size: 1.3rem;
       color: #d4af37;
       animation: spin 6s linear infinite;
     }
@@ -265,7 +308,7 @@ import { Stand } from '../models/stand.model';
 
     .rec-text h4 {
       margin: 0;
-      font-size: 0.8rem;
+      font-size: 0.65rem;
       color: #b8860b;
       font-weight: 700;
       text-transform: uppercase;
@@ -273,8 +316,8 @@ import { Stand } from '../models/stand.model';
     }
 
     .rec-text p {
-      margin: 3px 0 0;
-      font-size: 0.9rem;
+      margin: 2px 0 0;
+      font-size: 0.8rem;
       color: #333;
     }
   `]
@@ -282,6 +325,9 @@ import { Stand } from '../models/stand.model';
 export class FloorMapComponent implements OnInit, OnChanges {
   @Input() visitedStandIds: string[] = [];
   @Input() allStands: Stand[] = [];
+
+  topStands: Stand[] = [];
+  rightStands: Stand[] = [];
 
   private recommendationService = inject(RecommendationService);
   private alertCtrl = inject(AlertController);
@@ -292,11 +338,24 @@ export class FloorMapComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.distributeStands();
     this.updateSuggestion();
   }
 
   ngOnChanges() {
+    this.distributeStands();
     this.updateSuggestion();
+  }
+
+  /** Split stands into L-shape: top 2 + right column for the rest */
+  private distributeStands() {
+    if (this.allStands.length <= 2) {
+      this.topStands = this.allStands;
+      this.rightStands = [];
+    } else {
+      this.topStands = this.allStands.slice(0, 2);
+      this.rightStands = this.allStands.slice(2);
+    }
   }
 
   isVisited(stand: Stand): boolean {

@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { 
-  IonHeader, IonToolbar, IonTitle, IonContent, 
-  IonButton, IonButtons, IonBadge 
+import {
+  IonHeader, IonToolbar, IonTitle, IonContent,
+  IonButton, IonButtons, IonBadge
 } from '@ionic/angular/standalone';
 import { AuthService } from '../services/auth.service';
 import { StandService } from '../services/stand.service';
@@ -16,8 +16,8 @@ import { take } from 'rxjs';
   selector: 'app-guest-dashboard',
   standalone: true,
   imports: [
-    CommonModule, IonHeader, IonToolbar, IonTitle, 
-    IonContent, IonButton, IonButtons, 
+    CommonModule, IonHeader, IonToolbar, IonTitle,
+    IonContent, IonButton, IonButtons,
     IonBadge, FloorMapComponent
   ],
   template: `
@@ -35,9 +35,9 @@ import { take } from 'rxjs';
 
     <ion-content class="ion-padding" *ngIf="guest$ | async as guest">
       <div class="welcome-header animate-fade-up">
-        <h2>Bonjour, {{ guest.nombre }}! 🇫🇷</h2>
+        <h2>Bonjour, {{ guest.nombre }}! </h2>
         <p>Explora los stands del Edificio NAKU y colecciona tus visitas.</p>
-        <ion-badge color="warning">Invitado VIP</ion-badge>
+        <ion-badge color="warning">Invitado</ion-badge>
       </div>
 
       <div class="map-card animate-fade-up delay-200">
@@ -148,7 +148,7 @@ export class GuestDashboardPage implements OnInit {
       const visitsPromise = this.visitService.getParticipantVisits(guest.id!);
 
       const [stands, visits] = await Promise.all([standsPromise, visitsPromise]);
-      
+
       this.allStands = stands || [];
       this.visitedStandIds = visits.map(v => v.standId);
     });
