@@ -25,7 +25,7 @@ import { Router } from '@angular/router';
 })
 export class LoginPage {
   loginMode = 'guest';
-  email = '';
+  staffEmail = '';
   password = '';
   guestEmail = '';
 =======
@@ -46,9 +46,9 @@ export class LoginPage {
     addIcons({ ticketOutline, shieldCheckmarkOutline });
   }
 
-  async login() {
+  async onStaffLogin() {
     try {
-      await this.authService.login(this.email, this.password);
+      await this.authService.login(this.staffEmail, this.password);
       this.router.navigate(['/dashboard']);
     } catch (e: any) {
       this.errorMessage = 'Credenciales inválidas.';
@@ -56,7 +56,7 @@ export class LoginPage {
     }
   }
 
-  async guestLogin() {
+  async onGuestLogin() {
     if (!this.guestEmail) {
       this.errorMessage = 'Por favor ingresa tu correo.';
       this.isToastOpen = true;

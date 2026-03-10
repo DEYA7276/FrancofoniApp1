@@ -1,28 +1,36 @@
-<<<<<<< HEAD
-<ion-content>
+<ion-content [fullscreen]="true">
+
+  <!-- Golden floating particles -->
+  <div class="particles">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
   <div class="login-wrapper">
     <div class="logo-header">
-      <img src="assets/test_logo.png" class="main-logo" alt="Logo Francofonía" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
-      <h1>Login Francofonía</h1>
+      <img src="assets/logo_participante.png" class="main-logo" alt="Logo Francofonía">
+      <h1>Francofonía 2026</h1>
       <p>"La gastronomía une al mundo"</p>
     </div>
 
     <div class="glass-card">
-      <ion-segment [(ngModel)]="loginMode" class="premium-segment" mode="ios">
-        <ion-segment-button value="guest">
+      <div class="custom-toggle">
+        <div class="slider" [class.staff]="loginMode === 'staff'"></div>
+        <div class="toggle-option" (click)="loginMode = 'guest'" [class.active]="loginMode === 'guest'">
           <ion-icon name="ticket-outline"></ion-icon>
-          <ion-label>Soy Invitado</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="staff">
+          <span>Soy Invitado</span>
+        </div>
+        <div class="toggle-option" (click)="loginMode = 'staff'" [class.active]="loginMode === 'staff'">
           <ion-icon name="shield-checkmark-outline"></ion-icon>
-          <ion-label>Acceso Staff</ion-label>
-        </ion-segment-button>
-      </ion-segment>
+          <span>Acceso Staff</span>
+        </div>
+      </div>
 
       <div class="login-form">
         <div *ngIf="loginMode === 'guest'">
           <p class="guest-info anim-fade-up delay-1">
-            Ingresa tu correo registrado para vivir esta experiencia gastronómica única.
+            Ingresa tu correo de registro para ver tu Mapa 3D NAKU y progreso.
           </p>
           <ion-item class="anim-fade-up delay-2">
             <ion-label position="stacked">Mi Correo</ion-label>
@@ -49,29 +57,6 @@
       </div>
     </div>
   </div>
-=======
-<ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title>Login Francofonía</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="login-container" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
-    <h1 style="text-align: center;">Bienvenido</h1>
-    
-    <ion-item>
-      <ion-label position="floating">Correo</ion-label>
-      <ion-input type="email" [(ngModel)]="email"></ion-input>
-    </ion-item>
-    
-    <ion-item>
-      <ion-label position="floating">Contraseña</ion-label>
-      <ion-input type="password" [(ngModel)]="password"></ion-input>
-    </ion-item>
-    
-    <ion-button expand="block" style="margin-top: 20px;" (click)="login()">Ingresar</ion-button>
-  </div>
 
   <ion-toast
     [isOpen]="isToastOpen"
@@ -79,5 +64,4 @@
     duration="2000"
     (didDismiss)="setOpen(false)">
   </ion-toast>
->>>>>>> 8f319084bc27d9d3beef2a6fdbb0087f8f4291be
 </ion-content>

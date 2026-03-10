@@ -130,7 +130,7 @@ export class ReportsPage implements OnInit, AfterViewInit {
     // Assign ranks
     this.teacherSummaryCards = this.teacherSummaryCards.map((c: any, index: number) => ({ ...c, rank: index + 1 }));
 
-    // Calcular estadísticas IA para el Panel del Sommelier
+    // Calcular estadísticas para el Panel del Sommelier
     if (this.visitsPerStand.length > 0) {
       this.mostVisitedStand = [...this.visitsPerStand].sort((a, b) => b.count - a.count)[0];
     }

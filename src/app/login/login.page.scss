@@ -7,27 +7,83 @@
 
 ion-content {
   --background: none !important;
-  background: var(--champagne);
+  background: #2087C7; /* Solid blue background matching screenshot */
   position: relative;
   overflow: hidden;
-
-  // Fondo animado de luz cálida
+  // French tricolor gradient overlay (subtle)
   &::before {
     content: '';
     position: absolute;
-    width: 250%;
-    height: 250%;
-    top: -75%;
-    left: -75%;
-    background: radial-gradient(circle at center, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
-    animation: warmLight 15s ease-in-out infinite alternate;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 35, 149, 0.45) 0%,       // Bleu de France
+      rgba(255, 255, 255, 0.15) 50%,    // Blanc
+      rgba(237, 41, 57, 0.35) 100%      // Rouge
+    );
     z-index: 0;
+    pointer-events: none;
   }
 }
 
-@keyframes warmLight {
-  0% { transform: translate(-10%, -10%); }
-  100% { transform: translate(10%, 10%); }
+
+// ===== GOLDEN FLOATING PARTICLES =====
+.particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+
+  span {
+    position: absolute;
+    display: block;
+    width: 6px;
+    height: 6px;
+    background: rgba(251, 192, 45, 0.5);
+    border-radius: 50%;
+    bottom: -20px;
+    animation: floatUp linear infinite;
+
+    &:nth-child(1)  { left: 5%;  width: 4px; height: 4px; animation-duration: 12s; animation-delay: 0s; }
+    &:nth-child(2)  { left: 15%; width: 7px; height: 7px; animation-duration: 10s; animation-delay: 1s; }
+    &:nth-child(3)  { left: 25%; width: 5px; height: 5px; animation-duration: 14s; animation-delay: 3s; }
+    &:nth-child(4)  { left: 35%; width: 3px; height: 3px; animation-duration: 11s; animation-delay: 0.5s; }
+    &:nth-child(5)  { left: 45%; width: 8px; height: 8px; animation-duration: 13s; animation-delay: 2s; }
+    &:nth-child(6)  { left: 55%; width: 4px; height: 4px; animation-duration: 9s;  animation-delay: 4s; }
+    &:nth-child(7)  { left: 65%; width: 6px; height: 6px; animation-duration: 15s; animation-delay: 1.5s; }
+    &:nth-child(8)  { left: 75%; width: 5px; height: 5px; animation-duration: 11s; animation-delay: 0s; }
+    &:nth-child(9)  { left: 85%; width: 3px; height: 3px; animation-duration: 12s; animation-delay: 3.5s; }
+    &:nth-child(10) { left: 92%; width: 7px; height: 7px; animation-duration: 10s; animation-delay: 2.5s; }
+    &:nth-child(11) { left: 10%; width: 5px; height: 5px; animation-duration: 16s; animation-delay: 5s; background: rgba(255, 255, 255, 0.3); }
+    &:nth-child(12) { left: 30%; width: 4px; height: 4px; animation-duration: 13s; animation-delay: 6s; background: rgba(255, 255, 255, 0.25); }
+    &:nth-child(13) { left: 50%; width: 6px; height: 6px; animation-duration: 11s; animation-delay: 1s; background: rgba(255, 255, 255, 0.2); }
+    &:nth-child(14) { left: 70%; width: 3px; height: 3px; animation-duration: 14s; animation-delay: 4.5s; }
+    &:nth-child(15) { left: 40%; width: 5px; height: 5px; animation-duration: 17s; animation-delay: 7s; background: rgba(255, 255, 255, 0.2); }
+  }
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-110vh) translateX(30px) rotate(720deg);
+    opacity: 0;
+  }
 }
 
 .login-wrapper {
@@ -49,26 +105,29 @@ ion-content {
   .main-logo {
     height: 120px;
     width: 120px;
+    border-radius: 50%;
     background: white;
     padding: 10px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.45), 0 5px 15px rgba(0, 0, 0, 0.1);
+    animation: floatingLogo 5s ease-in-out infinite;
     object-fit: contain;
-    border: 2px solid #ccc;
+    border: none;
     z-index: 999;
   }
 
   h1 {
-    color: var(--navy);
-    font-size: 2rem;
-    margin-top: 20px;
+    color: #FBC02D;
+    font-size: 2.3rem;
+    margin-top: 25px;
     font-weight: 800;
+    font-family: 'Playfair Display', serif;
     letter-spacing: -0.5px;
   }
 
   p {
-    color: #8c7b6c;
+    color: #ffffff;
     font-style: italic;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     margin-top: 8px;
   }
 }
@@ -84,15 +143,15 @@ ion-content {
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 1);
-  border-radius: 35px;
+  background: rgba(255, 255, 255, 0.15); 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 28px;
   width: 100%;
   max-width: 400px;
-  padding: 40px;
-  box-shadow: 0 40px 100px rgba(140, 123, 108, 0.15);
+  padding: 35px 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   animation: cardReveal 1.2s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
@@ -101,24 +160,51 @@ ion-content {
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.premium-segment {
-  background: #E8EBEF !important;
-  border-radius: 20px;
-  padding: 5px;
-  margin-bottom: 35px;
-  animation: fadeIn 1s 0.3s both;
+.custom-toggle {
+  position: relative;
+  display: flex;
+  background: rgba(0, 0, 0, 0.2) !important;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) inset;
+  height: 50px;
+  align-items: center;
 
-  ion-segment-button {
-    --color: #90a4ae;
-    --color-checked: var(--navy);
-    --indicator-color: #ffffff;
-    --border-radius: 16px;
-    min-height: 48px;
+  .slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    height: calc(100% - 8px);
+    background: #1e3a5f; // User specified color
+    border-radius: 6px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+    
+    &.staff {
+      transform: translateX(100%);
+    }
+  }
+
+  .toggle-option {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    text-align: center;
+    color: #ffffff;
     font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+    height: 100%;
 
-    ion-label { 
-      font-size: 0.9rem;
-      letter-spacing: 0.5px;
+    ion-icon {
+      font-size: 1.2rem;
     }
   }
 }
@@ -134,63 +220,60 @@ ion-content {
   }
 
   ion-item {
-    --background: #ffffff !important;
-    --border-radius: 18px;
-    --border-color: #f1f3f5 !important;
-    --highlight-color-focused: var(--navy);
-    --padding-start: 22px !important;
-    --padding-end: 22px !important;
-    margin-bottom: 22px;
-    min-height: 75px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-    transition: all 0.3s ease;
+    --background: transparent !important;
+    --border-color: transparent !important;
+    --border-width: 0 !important;
+    --highlight-height: 0 !important;
+    --inner-border-width: 0 !important;
+    --padding-start: 0 !important;
+    margin-bottom: 16px;
 
-    &:focus-within {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(140, 123, 108, 0.1);
-    }
-    
     ion-label {
-      color: #adb5bd !important;
-      font-size: 0.82rem !important;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      margin-bottom: 8px !important;
-      margin-top: 12px !important;
+      color: rgba(255, 255, 255, 0.9) !important;
+      font-size: 0.85rem !important;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px !important;
     }
 
     ion-input {
-      --color: var(--navy);
+      --background: rgba(255, 255, 255, 0.15) !important;
+      --border-radius: 10px !important;
+      --padding-start: 12px !important;
+      --color: white !important;
+      --placeholder-color: rgba(255, 255, 255, 0.6) !important;
+      --placeholder-opacity: 1;
       font-weight: 600;
     }
   }
 
   .login-btn {
-    --background: var(--navy);
-    --color: #ffffff;
-    --box-shadow: 0 15px 35px rgba(15, 59, 110, 0.25);
-    height: 60px;
+    --background: #FBC02D;
+    --color: #111111;
+    --box-shadow: 0 10px 25px rgba(251, 192, 45, 0.3);
+    height: 56px;
     margin-top: 25px;
-    font-size: 1.15rem;
-    font-weight: 700;
-    --border-radius: 20px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    --border-radius: 50px;
     text-transform: none;
     letter-spacing: 0.6px;
     transition: all 0.3s ease;
 
     &:active {
-      transform: scale(0.97);
+      transform: scale(0.96);
     }
   }
 
   .guest-info {
     text-align: center;
-    color: #78909c;
+    color: #ffffff;
     margin-bottom: 30px;
-    font-size: 1rem;
+    font-size: 13px;
     line-height: 1.6;
-    font-weight: 500;
+    font-weight: 600;
+    opacity: 0.85;
   }
 }
 

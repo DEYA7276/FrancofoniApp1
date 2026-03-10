@@ -38,7 +38,7 @@ import { take } from 'rxjs';
       <div class="welcome-header animate-fade-up">
         <h2>Bonjour, {{ guest.nombre }}!</h2>
         <p>Estás en el Edificio NAKU. Explora los stands y colecciona tus visitas.</p>
-        <ion-badge color="warning">Invitado VIP</ion-badge>
+        <ion-badge color="warning">Invitado</ion-badge>
       </div>
 
       <div class="map-card animate-fade-up delay-200">
