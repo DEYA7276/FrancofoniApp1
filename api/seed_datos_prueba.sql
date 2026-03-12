@@ -16,26 +16,26 @@ INSERT INTO `users` (`id`, `email`, `password`, `role`, `standId`, `createdAt`) 
 ('supervisor-stand4','stand4@francofonia.com','$2y$10$W.kqX4v8D7yUlfDiTD71J.yMMfMKreYGqyU81skMnydBRT7G.k4s2', 'supervisor', 'stand-4', NOW()),
 ('supervisor-stand5','stand5@francofonia.com','$2y$10$W.kqX4v8D7yUlfDiTD71J.yMMfMKreYGqyU81skMnydBRT7G.k4s2', 'supervisor', 'stand-5', NOW());
 
--- Stands (5 mesas gastronómicas)
-INSERT INTO `stands` (`id`, `nombre`, `posicion`, `estado`) VALUES
-('stand-1', 'Crêperie Lafayette',     '1', 'disponible'),
-('stand-2', 'Fromagerie du Midi',      '2', 'disponible'),
-('stand-3', 'Boulangerie Artisanale',  '3', 'disponible'),
-('stand-4', 'Cave à Vin Bordeaux',     '4', 'disponible'),
-('stand-5', 'Pâtisserie Belle Époque', '5', 'disponible');
+-- Stands (5 mesas gastronómicas reales)
+INSERT INTO `stands` (`id`, `nombre`, `descripcion`, `usuarioId`, `activo`, `responsable`) VALUES
+('stand-1', 'Crepê', 'Crepa', 'supervisor-stand1', 1, 'Adriana García Malpica'),
+('stand-2', 'La Madeleine à la Veilleuse', 'Magdalena', 'supervisor-stand2', 1, 'Alexa Sinaí Santiago Villanueva'),
+('stand-3', 'Quiche Lorraine', 'Pastel', 'supervisor-stand3', 1, 'Mildred Zoé Gómez Bautista'),
+('stand-4', 'Croquenbouche', 'Profiterol', 'supervisor-stand4', 1, 'José Emilio Hernández Romero'),
+('stand-5', 'Crème Brûlée', 'Crema flameada', 'supervisor-stand5', 1, 'Selina Maldonado López');
 
 -- Participantes de prueba
-INSERT INTO `participants` (`id`, `nombre`, `apellido_paterno`, `apellido_materno`, `ciudad`, `municipio`, `sexo`, `correo`, `tipoBoleto`, `correoEnviado`, `createdAt`) VALUES
-('demo-p1','Camille','Dubois','Moreau','Ciudad de México','Cuauhtémoc','Femenino','camille.dubois@demo.com','Normal',1,NOW()),
-('demo-p2','Jean-Pierre','Martin','Laurent','Guadalajara','Zapopan','Masculino','jpierre.martin@demo.com','Normal',1,NOW()),
-('demo-p3','Sophie','Bernard','Girard','Monterrey','San Pedro','Femenino','sophie.bernard@demo.com','Normal',0,NOW()),
-('demo-p4','François','Lefevre','Dupont','Ciudad de México','Benito Juárez','Masculino','francois.lefevre@demo.com','VIP',1,NOW()),
-('demo-p5','Marie','Moreau','Blanc','Puebla','Puebla','Femenino','marie.moreau@demo.com','Normal',1,NOW()),
-('demo-p6','Pierre','Rousseau','Faure','Ciudad de México','Miguel Hidalgo','Masculino','pierre.rousseau@demo.com','VIP',0,NOW()),
-('demo-p7','Claire','Simon','Petit','Querétaro','Corregidora','Femenino','claire.simon@demo.com','Normal',1,NOW()),
-('demo-p8','Antoine','Michel','Garnier','Mérida','Umán','Masculino','antoine.michel@demo.com','Normal',1,NOW()),
-('demo-p9','Isabelle','Laurent','Richard','Toluca','Metepec','Femenino','isabelle.laurent@demo.com','Normal',0,NOW()),
-('demo-p10','Remy','Durand','Picard','Ciudad de México','Coyoacán','Masculino','remy.durand@demo.com','VIP',1,NOW());
+INSERT INTO `participants` (`id`, `nombre`, `apellido_paterno`, `apellido_materno`, `ciudad`, `municipio`, `sexo`, `correo`, `correoEnviado`, `createdAt`) VALUES
+('demo-p1','Camille','Dubois','Moreau','Ciudad de México','Cuauhtémoc','Femenino','camille.dubois@demo.com',1,NOW()),
+('demo-p2','Jean-Pierre','Martin','Laurent','Guadalajara','Zapopan','Masculino','jpierre.martin@demo.com',1,NOW()),
+('demo-p3','Sophie','Bernard','Girard','Monterrey','San Pedro','Femenino','sophie.bernard@demo.com',0,NOW()),
+('demo-p4','François','Lefevre','Dupont','Ciudad de México','Benito Juárez','Masculino','francois.lefevre@demo.com',1,NOW()),
+('demo-p5','Marie','Moreau','Blanc','Puebla','Puebla','Femenino','marie.moreau@demo.com',1,NOW()),
+('demo-p6','Pierre','Rousseau','Faure','Ciudad de México','Miguel Hidalgo','Masculino','pierre.rousseau@demo.com',0,NOW()),
+('demo-p7','Claire','Simon','Petit','Querétaro','Corregidora','Femenino','claire.simon@demo.com',1,NOW()),
+('demo-p8','Antoine','Michel','Garnier','Mérida','Umán','Masculino','antoine.michel@demo.com',1,NOW()),
+('demo-p9','Isabelle','Laurent','Richard','Toluca','Metepec','Femenino','isabelle.laurent@demo.com',0,NOW()),
+('demo-p10','Remy','Durand','Picard','Ciudad de México','Coyoacán','Masculino','remy.durand@demo.com',1,NOW());
 
 -- Visitas de prueba (escaneos)
 INSERT INTO `visits` (`id`, `participantId`, `standId`, `fecha`) VALUES
