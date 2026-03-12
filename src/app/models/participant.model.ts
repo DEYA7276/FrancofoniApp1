@@ -7,6 +7,7 @@ export interface Participant {
   municipio: string;
   sexo: string;
   correo: string;
+  tipoBoleto?: string; // 'Normal' | 'VIP'
   qrCode?: string; // URL from Storage
   correoEnviado?: boolean;
   createdAt?: string | Date | any; // Any valid Firestore timestamp or date string

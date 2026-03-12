@@ -6,7 +6,7 @@
 
 class Database {
     private $host = 'localhost';
-    private $db_name = 'francofonia_db';
+    private $db_name = 'francofonia';
     private $username = 'root';
     private $password = ''; // XAMPP default
     private $conn;

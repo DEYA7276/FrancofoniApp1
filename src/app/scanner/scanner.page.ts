@@ -6,7 +6,7 @@ import {
   IonCardTitle, IonCardContent, IonButton, 
   IonIcon, ToastController, ModalController, AlertController 
 } from '@ionic/angular/standalone';
-import { ThreeDMapModalComponent } from '../components/3d-map-modal.component';
+
 import { addIcons } from 'ionicons';
 import { qrCodeOutline, warningOutline } from 'ionicons/icons';
 // @ts-ignore
@@ -57,6 +57,16 @@ export class ScannerPage implements OnInit, OnDestroy {
         });
       }
     });
+
+    // Intentar sincronizar visitas offline periódicamente (cada 15s)
+    setInterval(async () => {
+      if (navigator.onLine) {
+        const synced = await this.visitService.syncOfflineVisits();
+        if (synced > 0) {
+          this.showToast(`📡 Se sincronizaron automáticamente ${synced} visitas guardadas offline.`, 'success');
+        }
+      }
+    }, 15000);
   }
 
   ngOnDestroy() {
@@ -104,42 +114,48 @@ export class ScannerPage implements OnInit, OnDestroy {
       // Reproducir sonido "sensorial" de éxito o error
       try {
         const audio = new Audio();
-        // Usando un bip sutil tipo 'campanilla' o 'ding' suave (basado en data URI para evitar dependencias locales si no existen)
-        // Este es un sonido de éxito corto y premium
-        audio.src = result.success 
-          ? 'https://actions.google.com/sounds/v1/water/water_drop.ogg' // Simula gota de vino / líquido
-          : 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
+        if (result.success && result.tipoBoleto === 'VIP') {
+           audio.src = 'https://actions.google.com/sounds/v1/water/glass_clink.ogg'; // Brindis VIP
+        } else {
+           audio.src = result.success 
+            ? 'https://actions.google.com/sounds/v1/water/water_drop.ogg' 
+            : 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
+        }
         audio.play();
       } catch (audioErr) {
         console.log('No se pudo reproducir el sonido', audioErr);
       }
 
-      this.showToast(result.message, result.success ? 'success' : 'danger');
-
-      if (result.success) {
-        // Cargar todos los stands y visitas para el mapa
-        const allStands = await this.standService.getStands().pipe(take(1)).toPromise() || [];
-        const visits = await this.visitService.getParticipantVisits(participantId);
-        const visitedIds = visits.map((v: any) => v.standId);
-
-        const modal = await this.modalCtrl.create({
-          component: ThreeDMapModalComponent,
-          componentProps: {
-            participantId: participantId,
-            visitedStandIds: visitedIds,
-            allStands: allStands
-          }
+      // Feature Premium: Reconocimiento VIP
+      if (result.success && result.tipoBoleto === 'VIP') {
+        const vipAlert = await this.alertCtrl.create({
+          header: '👑 INVITADO ESPECIAL',
+          subHeader: result.participantNombre ? `¡Bienvenue ${result.participantNombre}!` : 'Acceso Autorizado',
+          message: 'Trato preferencial. Por favor brinda la mejor experiencia gastronómica.',
+          cssClass: 'custom-alert alert-warning', // Se pinta dorado en css global
+          buttons: [{ text: '¡Adelante!', cssClass: 'alert-btn-primary' }]
         });
-        await modal.present();
+        await vipAlert.present();
+      } else {
+        this.showToast(result.message, result.success ? 'success' : 'danger');
       }
+
     } catch (e: any) {
-      const errAlert = await this.alertCtrl.create({
-        header: '❌ Error',
-        message: 'Hubo un error al registrar la visita: ' + e.message,
-        cssClass: 'custom-alert alert-danger',
-        buttons: [{ text: 'Cerrar', cssClass: 'alert-btn-primary' }]
-      });
-      await errAlert.present();
+      // Si falla por problemas de red o servidor apagado temporalmente
+      if (!navigator.onLine || e.status === 0 || e.name === 'HttpErrorResponse') {
+        this.visitService.registerOfflineVisit(participantId, this.myStand.id);
+        
+        // Sonido de alerta (opcional) pero dejamos que fluya
+        this.showToast('📶 Sin conexión a servidor. Visita guardada temporalmente en memoria (Offline Mode).', 'warning');
+      } else {
+        const errAlert = await this.alertCtrl.create({
+          header: '❌ Error',
+          message: 'Hubo un error al registrar la visita: ' + (e.error?.message || e.message),
+          cssClass: 'custom-alert alert-danger',
+          buttons: [{ text: 'Cerrar', cssClass: 'alert-btn-primary' }]
+        });
+        await errAlert.present();
+      }
     }
   }
 

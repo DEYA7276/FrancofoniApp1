@@ -8,13 +8,15 @@ import {
   IonCardTitle, IonCardSubtitle, IonCardContent, 
   IonItem, IonLabel, IonInput, IonSelect, 
   IonSelectOption, IonTextarea, IonButton, 
-  IonIcon, AlertController 
+  IonIcon, AlertController, ModalController 
 } from '@ionic/angular/standalone';
+import { MapModalComponent } from '../components/map-modal.component';
 import { addIcons } from 'ionicons';
 import { warningOutline } from 'ionicons/icons';
 import { SurveyService } from '../services/survey.service';
 import { AuthService } from '../services/auth.service';
 import { StandService } from '../services/stand.service';
+import { VisitService } from '../services/visit.service';
 import { Survey } from '../models/survey.model';
 import { Stand } from '../models/stand.model';
 import { take } from 'rxjs';
@@ -38,7 +40,9 @@ export class SurveyPage implements OnInit {
   private surveyService = inject(SurveyService);
   private authService = inject(AuthService);
   private standService = inject(StandService);
+  private visitService = inject(VisitService);
   private alertCtrl = inject(AlertController);
+  private modalCtrl = inject(ModalController);
   private route = inject(ActivatedRoute);
 
   myStand: Stand | null = null;
@@ -113,6 +117,27 @@ export class SurveyPage implements OnInit {
     try {
       await this.surveyService.addSurvey(this.survey);
       await this.showAlert('✅ ¡Gracias por tu opinión!', 'Tu encuesta fue guardada exitosamente. ¡Tu feedback nos ayuda a mejorar!', 'success');
+      
+      // Mostrar el mapa 3D de progreso al visitante
+      try {
+        const participantId = this.survey.participantId.toLowerCase().trim();
+        const allStands = await this.standService.getStands().pipe(take(1)).toPromise() || [];
+        const visits = await this.visitService.getParticipantVisits(participantId);
+        const visitedIds = visits.map((v: any) => v.standId);
+
+        const modal = await this.modalCtrl.create({
+          component: MapModalComponent,
+          componentProps: {
+            visitedStandIds: visitedIds,
+            allStands: allStands
+          },
+          cssClass: 'map-modal'
+        });
+        await modal.present();
+      } catch (e) {
+        console.error('Error al cargar mapa 3D en encuesta', e);
+      }
+
       this.survey = {
         participantId: '',
         standId: this.myStand.id!,

@@ -46,6 +46,13 @@
           <ion-select-option value="Otro">Otro</ion-select-option>
         </ion-select>
       </ion-item>
+      <ion-item class="premium-input-item">
+        <ion-label position="stacked">Tipo de Boleto <ion-icon name="star" color="warning"></ion-icon></ion-label>
+        <ion-select [(ngModel)]="newParticipant.tipoBoleto" placeholder="Selecciona el Boleto">
+          <ion-select-option value="Normal">🎟️ Boleto Normal</ion-select-option>
+          <ion-select-option value="VIP">👑 Invitado Especial</ion-select-option>
+        </ion-select>
+      </ion-item>
 
       <ion-button expand="block" style="margin-top: 15px;" (click)="addParticipant()" [disabled]="isSaving">
         {{ isSaving ? 'Guardando...' : (newParticipant.id ? 'Actualizar Datos' : 'Guardar Participante') }}
@@ -95,10 +102,6 @@
               </ion-button>
               <ion-button fill="outline" color="danger" size="small" (click)="deleteParticipant(p.id!)" title="Eliminar">
                 <ion-icon name="trash" slot="icon-only"></ion-icon>
-              </ion-button>
-              <!-- Feature Premium: Generación de Gafete PDF -->
-              <ion-button fill="solid" color="warning" size="small" (click)="printGafete(p)" title="Generar Gafete A4 para Imprimir">
-                <ion-icon name="print" slot="start"></ion-icon> Gafete
               </ion-button>
             </div>
           </div>

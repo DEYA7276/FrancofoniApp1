@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { 
   IonHeader, IonToolbar, IonButtons, IonBackButton, 
@@ -29,7 +29,7 @@ Chart.register(...registerables);
     CommonModule
   ]
 })
-export class ReportsPage implements OnInit, AfterViewInit {
+export class ReportsPage implements OnInit, OnDestroy, AfterViewInit {
   private reportService = inject(ReportService);
   private standService = inject(StandService);
 
@@ -59,6 +59,8 @@ export class ReportsPage implements OnInit, AfterViewInit {
   ];
   currentQuote = this.frenchQuotes[0];
 
+  private pollingInterval: any;
+
   constructor() {
     addIcons({ trophyOutline, podiumOutline, flame, wineOutline, documentText });
   }
@@ -67,7 +69,20 @@ export class ReportsPage implements OnInit, AfterViewInit {
     this.stands$.subscribe(async (stands) => {
       this.allStands = stands;
       await this.loadReports();
+      
+      // Start Real-Time Simulation (Polling) every 10 seconds
+      if (!this.pollingInterval) {
+        this.pollingInterval = setInterval(() => {
+          this.loadReports();
+        }, 10000);
+      }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
   }
 
   ngAfterViewInit() {

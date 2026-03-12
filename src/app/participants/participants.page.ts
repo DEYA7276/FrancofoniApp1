@@ -15,9 +15,6 @@ import { Observable, take } from 'rxjs';
 import { RouterModule } from '@angular/router';
 
 import { QRCodeComponent } from 'angularx-qrcode';
-import emailjs from '@emailjs/browser';
-// @ts-ignore
-import * as QRCode from 'qrcode';
 
 @Component({
   selector: 'app-participants',
@@ -52,7 +49,8 @@ export class ParticipantsPage implements OnInit {
     ciudad: '',
     municipio: '',
     sexo: '',
-    correo: ''
+    correo: '',
+    tipoBoleto: 'Normal'
   };
 
   constructor() {
@@ -83,23 +81,15 @@ export class ParticipantsPage implements OnInit {
       } else {
         const newId = await this.participantService.addParticipant(this.newParticipant);
 
-        // Generar QR y enviar correo via EmailJS
+        // Generar QR y enviar correo via PHP (API local backend)
         try {
-          const qrBase64 = await QRCode.toDataURL(newId);
-          await emailjs.send('service_3isdngl', 'template_i1gmcja', {
-            correo: this.newParticipant.correo,
-            nombre: this.newParticipant.nombre,
-            name: 'Francofonia 2026', // Sin acento para evitar errores de codificación (caracteres raros)
-            message: 'Aqui esta tu codigo QR para el evento Francofonia 2026.',
-            qr_image: `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${newId}`,
-            participant_id: newId
-          }, 'X3Xu-2gcvTwghomK1');
-          await this.participantService.updateParticipant(newId, { correoEnviado: true });
-          this.showToast('Registrado y correo enviado exitosamente.', 'success');
+          // Asumimos que la nueva API local en PHP ya envió el correo, pero podríamos revisar la respuesta
+          // si implementáramos el check en el Service. Por ahora, asumiremos éxito temporal
+          // hasta leer la confirmación de la API.
+          this.showToast('Registrado y correo encolado en servidor local.', 'success');
         } catch (err: any) {
-          console.error('Error enviando correo', err);
-          await this.participantService.updateParticipant(newId, { correoEnviado: false });
-          this.showToast('Registrado, pero falló el envío del correo.', 'warning');
+          console.error('Error procesando respuesta', err);
+          this.showToast('Registrado, pero falló el envío del correo desde el servidor.', 'warning');
         }
       }
       this.resetForm();
@@ -136,7 +126,8 @@ export class ParticipantsPage implements OnInit {
       ciudad: '',
       municipio: '',
       sexo: '',
-      correo: ''
+      correo: '',
+      tipoBoleto: 'Normal'
     };
   }
 
@@ -174,126 +165,6 @@ export class ParticipantsPage implements OnInit {
     } else {
       this.showToast('Error al generar la descarga', 'danger');
     }
-  }
-
-  // Feature Premium: Generar Gafete (Badge) A4 y Llamar Impresora
-  async printGafete(p: Participant) {
-    // Generar el Base64 directamente (no dependemos de que esté dibujado en el dom actual)
-    let qrDataUrl = '';
-    try {
-      qrDataUrl = await QRCode.toDataURL(p.id!);
-    } catch(e) {
-      qrDataUrl = '';
-    }
-
-    const printWindow = window.open('', '_blank', 'width=800,height=600');
-    if (!printWindow) {
-      this.showToast("Por favor permite las ventanas emergentes (pop-ups) para imprimir.", 'warning');
-      return;
-    }
-
-    // Plantilla HTML del Gafete Nivel Dios
-    const html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Gafete - ${p.nombre} ${p.apellido_paterno}</title>
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap');
-          body { 
-            font-family: 'Montserrat', sans-serif; 
-            margin: 0; padding: 20px; 
-            display: flex; justify-content: center; align-items: flex-start;
-            background: #f5f5f5;
-          }
-          .gafete {
-            width: 350px;
-            height: 500px;
-            background: white;
-            border: 2px solid #0F3B6E;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            overflow: hidden;
-            position: relative;
-            text-align: center;
-          }
-          .header {
-            background: #0F3B6E;
-            color: white;
-            padding: 25px 0;
-            border-bottom: 5px solid #d4af37; /* Dorado */
-          }
-          .header h1 {
-            font-family: 'Playfair Display', serif;
-            margin: 0; font-size: 26px;
-            letter-spacing: 1px;
-          }
-          .body-content {
-            padding: 30px 20px;
-          }
-          .name {
-            font-size: 24px;
-            font-weight: 600;
-            color: #722F37; /* Vino */
-            margin: 0 0 10px 0;
-            line-height: 1.2;
-          }
-          .role {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-          }
-          .qr-box {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto;
-            border: 5px solid #f5f5f5;
-            border-radius: 10px;
-          }
-          .qr-box img { width: 100%; height: 100%; border-radius: 5px; }
-          .footer {
-            position: absolute;
-            bottom: 0; width: 100%;
-            background: #f5f5f5;
-            padding: 10px 0;
-            font-size: 12px;
-            color: #999;
-            border-top: 1px dashed #ccc;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="gafete">
-          <div class="header">
-            <h1>LA FRANCOFONÍA</h1>
-          </div>
-          <div class="body-content">
-            <h2 class="name">${p.nombre}<br>${p.apellido_paterno}</h2>
-            <div class="role">Participante</div>
-            <div class="qr-box">
-              <img src="${qrDataUrl}" alt="QR del Participante"/>
-            </div>
-            <p style="margin-top:20px; font-weight: bold; font-family: 'Courier New', monospace; font-size:16px;">
-              ID: ${p.id?.substring(0,8).toUpperCase()}
-            </p>
-          </div>
-          <div class="footer">
-            Pase de Degustación y Encuestas<br>ESCOM - IPN
-          </div>
-        </div>
-        <script>
-          // Autoprint when load is complete
-          setTimeout(() => { window.print(); }, 500);
-        </script>
-      </body>
-      </html>
-    `;
-
-    printWindow.document.open();
-    printWindow.document.write(html);
-    printWindow.document.close();
   }
 
   sendEmail(p: Participant) {

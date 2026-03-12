@@ -15,7 +15,7 @@ export class VisitService {
 
   private get apiUrl() { return `${this.mode.localApiUrl}/visits`; }
 
-  async registerVisit(participantId: string, standId: string): Promise<{ success: boolean; message: string; recommendation?: any }> {
+  async registerVisit(participantId: string, standId: string): Promise<{ success: boolean; message: string; recommendation?: any; tipoBoleto?: string; participantNombre?: string }> {
     if (this.mode.isLocal) {
       const response: any = await this.http.post(this.apiUrl, { participantId, standId }).toPromise();
       return response;
@@ -62,6 +62,51 @@ export class VisitService {
     await addDoc(visitsRef, visit);
     return { success: true, message: 'Visita registrada con éxito.' };
   }
+
+  // --- FEATURE AVANZADA: OFFLINE QUEUE PARA SCANNER ---
+  registerOfflineVisit(participantId: string, standId: string) {
+    const queue = this.getOfflineQueue();
+    // Prevenir duplicados en corto plazo si escaneó dos veces en modo offline
+    const exists = queue.find(v => v.participantId === participantId && v.standId === standId);
+    if (!exists) {
+      queue.push({ participantId, standId, timestamp: Date.now() });
+      localStorage.setItem('offline_visits_queue', JSON.stringify(queue));
+    }
+  }
+
+  getOfflineQueue(): { participantId: string, standId: string, timestamp: number }[] {
+    const data = localStorage.getItem('offline_visits_queue');
+    return data ? JSON.parse(data) : [];
+  }
+
+  async syncOfflineVisits(): Promise<number> {
+    const queue = this.getOfflineQueue();
+    if (queue.length === 0) return 0;
+    
+    let syncedCount = 0;
+    const remainingQueue = [];
+
+    // Intentamos subir por grupos o uno por uno. Lo más seguro es uno por uno:
+    for (const item of queue) {
+      try {
+        await this.http.post(this.apiUrl, { 
+          participantId: item.participantId, 
+          standId: item.standId,
+          isOfflineSync: true 
+        }).toPromise();
+        syncedCount++;
+      } catch (err: any) {
+        // If network error, still keep in queue
+        if (err.status === 0) {
+          remainingQueue.push(item);
+        }
+      }
+    }
+
+    localStorage.setItem('offline_visits_queue', JSON.stringify(remainingQueue));
+    return syncedCount;
+  }
+  // ----------------------------------------------------
 
   getVisitsByStand(standId: string): Observable<Visit[]> {
     if (this.mode.isLocal) {

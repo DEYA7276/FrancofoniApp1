@@ -57,6 +57,17 @@ function registerVisit($db) {
         return;
     }
 
+    // Consultar datos del participante antes de la visita
+    $stmtPart = $db->prepare('SELECT nombre, tipoBoleto FROM participants WHERE id = ?');
+    $stmtPart->execute([$participantId]);
+    $participantData = $stmtPart->fetch();
+
+    if (!$participantData) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'message' => 'Participante no encontrado']);
+        return;
+    }
+
     // Get all visits for this participant
     $stmt = $db->prepare('SELECT * FROM visits WHERE participantId = ? ORDER BY fecha DESC');
     $stmt->execute([$participantId]);
@@ -103,7 +114,9 @@ function registerVisit($db) {
         'success' => true,
         'message' => 'Visita registrada con éxito.',
         'visitId' => $id,
-        'totalVisits' => $newTotal
+        'totalVisits' => $newTotal,
+        'participantNombre' => $participantData['nombre'],
+        'tipoBoleto' => $participantData['tipoBoleto']
     ];
 
     // Add recommendation data if they've visited more than 1 stand

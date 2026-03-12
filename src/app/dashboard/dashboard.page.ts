@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { 
   IonHeader, IonToolbar, IonTitle, IonButtons, 
   IonButton, IonContent, IonCard, IonCardContent, 
-  IonIcon, IonBadge, IonToggle, AlertController
+  IonIcon, IonBadge, AlertController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
@@ -26,17 +26,19 @@ import { Observable } from 'rxjs';
   imports: [
     IonHeader, IonToolbar, IonTitle, IonButtons, 
     IonButton, IonContent, IonCard, IonCardContent, 
-    IonIcon, IonBadge, IonToggle,
+    IonIcon, IonBadge,
     CommonModule, RouterModule
   ]
 })
-export class DashboardPage {
+export class DashboardPage implements OnInit, OnDestroy {
   authService = inject(AuthService);
   standService = inject(StandService);
   backendMode = inject(BackendModeService);
   router = inject(Router);
   private alertCtrl = inject(AlertController);
   user$ = this.authService.user$;
+  currentUser: User | null = null;
+  private emailQueueInterval: any;
 
   constructor() {
     addIcons({ 
@@ -48,6 +50,32 @@ export class DashboardPage {
     this.standService.initializeStands().then(created => {
       if (created) console.log('Stands iniciales creados correctamente');
     });
+  }
+
+  ngOnInit() {
+    this.user$.subscribe(user => {
+      this.currentUser = user;
+    });
+
+    // Iniciar el procesador de correos en segundo plano
+    this.emailQueueInterval = setInterval(() => {
+        if (this.backendMode.isLocal && this.currentUser && this.currentUser.role === 'admin') {
+            fetch(`${this.backendMode.localApiUrl}/process_email_queue.php`, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.exitos > 0) {
+                        console.log(`Envío en 2do plano: ${data.exitos} correos enviados exitosamente.`);
+                    }
+                })
+                .catch(err => {}); // Fail silenciosamente
+        }
+    }, 20000); // Cada 20 segundos
+  }
+
+  ngOnDestroy() {
+    if (this.emailQueueInterval) {
+        clearInterval(this.emailQueueInterval);
+    }
   }
 
   async logout() {

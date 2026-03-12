@@ -7,7 +7,7 @@ import {
   IonCardTitle, IonCardContent, IonItem, IonLabel,
   IonInput, IonTextarea, IonSelect, IonSelectOption,
   IonToggle, IonButton, IonList, IonListHeader,
-  IonBadge, IonIcon, AlertController
+  IonBadge, IonIcon, AlertController, IonicSafeString
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { trash, create, qrCodeOutline } from 'ionicons/icons';
@@ -170,7 +170,7 @@ export class StandsPage {
     const alert = await this.alertController.create({
       header: '🔗 Generar QR de Encuesta',
       subHeader: `Stand: ${nombre}`,
-      message: `Tu URL actual es: <strong>${currentUrl}</strong><br><br>Usa esta misma URL si todos los dispositivos están en la misma red. Si tienes un dominio público, cámbiala.`,
+      message: new IonicSafeString(`Tu URL actual es: <strong>${currentUrl}</strong><br><br>Usa esta misma URL si todos los dispositivos están en la misma red. Si tienes un dominio público, cámbiala.`),
       cssClass: 'custom-alert',
       inputs: [
         {
@@ -216,7 +216,7 @@ export class StandsPage {
 
       const success = await this.alertController.create({
         header: '✅ QR Descargado',
-        message: `El QR de "${nombre}" apunta a:<br><strong>${url}</strong><br><br>Imprímelo y pégalo en la mesa del stand.`,
+        message: new IonicSafeString(`El QR de "${nombre}" apunta a:<br><strong>${url}</strong><br><br>Imprímelo y pégalo en la mesa del stand.`),
         cssClass: 'custom-alert alert-success',
         buttons: [{ text: '¡Listo!', cssClass: 'alert-btn-primary' }]
       });

@@ -15,7 +15,7 @@ import { UserService } from '../services/user.service';
 import { StandService } from '../services/stand.service';
 import { User } from '../models/user.model';
 import { Stand } from '../models/stand.model';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom, take } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -67,6 +67,15 @@ export class RegisterPage implements OnInit {
       return;
     }
 
+    // Guard: Only one admin allowed
+    if (this.role === 'admin') {
+      const users = await firstValueFrom(this.userService.getUsers().pipe(take(1)));
+      if (users.some(u => u.role === 'admin')) {
+        await this.showAlert('⚠️ Límite de Administradores', 'Ya existe un administrador en el sistema. El correo de admin debe ser único.', 'warning');
+        return;
+      }
+    }
+
     if (this.role === 'usuario' && !this.selectedStandId) {
       await this.showAlert('⚠️ Stand requerido', 'Debes asignar un stand al encargado para que pueda escanear QRs correctamente.', 'warning');
       return;
@@ -107,6 +116,15 @@ export class RegisterPage implements OnInit {
 
   async updateUserRole() {
     if (!this.editingUser) return;
+
+    // Guard: Only one admin allowed
+    if (this.role === 'admin' && this.editingUser.role !== 'admin') {
+      const users = await firstValueFrom(this.userService.getUsers().pipe(take(1)));
+      if (users.some(u => u.role === 'admin')) {
+        await this.showAlert('⚠️ Límite de Administradores', 'Ya existe un administrador en el sistema.', 'warning');
+        return;
+      }
+    }
 
     if (this.role === 'usuario' && !this.selectedStandId) {
       await this.showAlert('⚠️ Stand requerido', 'Asigna un stand al encargado.', 'warning');
