@@ -37,16 +37,16 @@ $errores = 0;
 try {
     // Configuración Base SMTP 
     $mail->isSMTP();
-    $mail->Host       = 'smtp.gmail.com'; 
-    $mail->SMTPAuth   = true;
-    $mail->Username   = 'TU_CORREO_AQUI@gmail.com'; // TODO: Reemplazar por correo real
-    $mail->Password   = 'TU_PASSWORD_AQUI';         // TODO: Reemplazar por Password de Aplicación
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'francofoniaevento2026@gmail.com'; // TODO: Reemplazar por correo real
+    $mail->Password = 'zofw mbsk sqll cdil'; // TODO: Reemplazar por Password de Aplicación
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port       = 587;
-    $mail->setFrom('TU_CORREO_AQUI@gmail.com', 'Francofonía 2026');
+    $mail->Port = 587;
+    $mail->setFrom('francofoniaevento2026@gmail.com', 'Francofonía 2026');
     $mail->isHTML(true);
-    $mail->CharSet    = 'UTF-8';
-    
+    $mail->CharSet = 'UTF-8';
+
     // Mantener la conexión KeepAlive abierta para mandar múltiples rápido
     $mail->SMTPKeepAlive = true;
 
@@ -55,10 +55,10 @@ try {
             $mail->clearAddresses();
             $mail->addAddress($p['correo'], $p['nombre']);
 
-            $mail->Subject = 'Bienvenido a Francofonía 2026 🥐 - Tu Gafete QR';
+            $mail->Subject = 'Bienvenido a Francofonía 2026 🥐 - Tu Acceso QR';
             $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" . urlencode($p['id']);
-            
-            $body  = "<div style='font-family: Arial, sans-serif; font-size: 14px; color: #333;'>";
+
+            $body = "<div style='font-family: Arial, sans-serif; font-size: 14px; color: #333;'>";
             $body .= "<h2 style='color: #722F37;'>🥐 Bienvenue au Festival de Gastronomie Française</h2>";
             $body .= "<p>Hola <strong>{$p['nombre']}</strong>,</p>";
             $body .= "<p>Bienvenido al evento exclusivo de cultura y gastronomía francesa. ¡Estás a punto de vivir una experiencia única!</p>";
@@ -72,13 +72,14 @@ try {
 
             $mail->Body = $body;
             $mail->send();
-            
+
             // Marcar como completado en DB
             $upd = $db->prepare('UPDATE participants SET correoEnviado = 1 WHERE id = ?');
             $upd->execute([$p['id']]);
             $procesados++;
 
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             $errores++;
             // Marcar código de error o resetear a futuro según estrategia
             error_log("Error enviando a {$p['correo']}: {$mail->ErrorInfo}");
@@ -86,10 +87,11 @@ try {
             $mail->getSMTPInstance()->reset();
         }
     }
-    
+
     $mail->smtpClose();
 
-} catch (Exception $e) {
+}
+catch (Exception $e) {
     error_log("Error crítico en Bulk Mailer: {$mail->ErrorInfo}");
     echo json_encode(['error' => 'Fallo al iniciar el servidor SMTP', 'details' => $e->getMessage()]);
     exit;
