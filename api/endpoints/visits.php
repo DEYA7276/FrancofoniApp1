@@ -58,7 +58,7 @@ function registerVisit($db) {
     }
 
     // Consultar datos del participante antes de la visita
-    $stmtPart = $db->prepare('SELECT nombre, tipoBoleto FROM participants WHERE id = ?');
+    $stmtPart = $db->prepare('SELECT nombre FROM participants WHERE id = ?');
     $stmtPart->execute([$participantId]);
     $participantData = $stmtPart->fetch();
 
@@ -115,8 +115,7 @@ function registerVisit($db) {
         'message' => 'Visita registrada con éxito.',
         'visitId' => $id,
         'totalVisits' => $newTotal,
-        'participantNombre' => $participantData['nombre'],
-        'tipoBoleto' => $participantData['tipoBoleto']
+        'participantNombre' => $participantData['nombre']
     ];
 
     // Add recommendation data if they've visited more than 1 stand

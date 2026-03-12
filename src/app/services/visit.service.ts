@@ -15,7 +15,7 @@ export class VisitService {
 
   private get apiUrl() { return `${this.mode.localApiUrl}/visits`; }
 
-  async registerVisit(participantId: string, standId: string): Promise<{ success: boolean; message: string; recommendation?: any; tipoBoleto?: string; participantNombre?: string }> {
+  async registerVisit(participantId: string, standId: string): Promise<{ success: boolean; message: string; recommendation?: any; participantNombre?: string }> {
     if (this.mode.isLocal) {
       const response: any = await this.http.post(this.apiUrl, { participantId, standId }).toPromise();
       return response;

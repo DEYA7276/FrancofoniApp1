@@ -111,33 +111,29 @@ export class ScannerPage implements OnInit, OnDestroy {
     try {
       const result = await this.visitService.registerVisit(participantId, this.myStand.id);
       
-      // Reproducir sonido "sensorial" de éxito o error
+      // Sonido celebratorio para todos (brindis de gala)
       try {
         const audio = new Audio();
-        if (result.success && result.tipoBoleto === 'VIP') {
-           audio.src = 'https://actions.google.com/sounds/v1/water/glass_clink.ogg'; // Brindis VIP
-        } else {
-           audio.src = result.success 
-            ? 'https://actions.google.com/sounds/v1/water/water_drop.ogg' 
-            : 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
-        }
+        audio.src = result.success
+          ? 'https://actions.google.com/sounds/v1/water/glass_clink.ogg'
+          : 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
         audio.play();
       } catch (audioErr) {
         console.log('No se pudo reproducir el sonido', audioErr);
       }
 
-      // Feature Premium: Reconocimiento VIP
-      if (result.success && result.tipoBoleto === 'VIP') {
-        const vipAlert = await this.alertCtrl.create({
-          header: '👑 INVITADO ESPECIAL',
-          subHeader: result.participantNombre ? `¡Bienvenue ${result.participantNombre}!` : 'Acceso Autorizado',
-          message: 'Trato preferencial. Por favor brinda la mejor experiencia gastronómica.',
-          cssClass: 'custom-alert alert-warning', // Se pinta dorado en css global
+      // Alerta de bienvenida de gala para TODOS los invitados
+      if (result.success) {
+        const welcomeAlert = await this.alertCtrl.create({
+          header: '🥐 ¡Bienvenue!',
+          subHeader: result.participantNombre ? `¡Bonjour, ${result.participantNombre}!` : 'Acceso Autorizado',
+          message: 'Bienvenido al Festival de Gastronomía Francesa. ¡Disfruta la experiencia!',
+          cssClass: 'custom-alert alert-warning',
           buttons: [{ text: '¡Adelante!', cssClass: 'alert-btn-primary' }]
         });
-        await vipAlert.present();
+        await welcomeAlert.present();
       } else {
-        this.showToast(result.message, result.success ? 'success' : 'danger');
+        this.showToast(result.message, 'danger');
       }
 
     } catch (e: any) {

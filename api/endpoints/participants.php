@@ -77,7 +77,7 @@ function createParticipant($db) {
     $data = json_decode(file_get_contents('php://input'), true);
     $id = 'p-' . uniqid();
 
-    $stmt = $db->prepare('INSERT INTO participants (id, nombre, apellido_paterno, apellido_materno, ciudad, municipio, sexo, correo, qrCode, tipoBoleto, correoEnviado, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
+    $stmt = $db->prepare('INSERT INTO participants (id, nombre, apellido_paterno, apellido_materno, ciudad, municipio, sexo, correo, qrCode, correoEnviado, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
     $stmt->execute([
         $id,
         $data['nombre'] ?? '',
@@ -88,7 +88,6 @@ function createParticipant($db) {
         $data['sexo'] ?? '',
         strtolower(trim($data['correo'] ?? '')),
         $data['qrCode'] ?? null,
-        $data['tipoBoleto'] ?? 'Normal',
         $data['correoEnviado'] ?? false ? 1 : 0
     ]);
 

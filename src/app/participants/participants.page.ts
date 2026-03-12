@@ -49,8 +49,7 @@ export class ParticipantsPage implements OnInit {
     ciudad: '',
     municipio: '',
     sexo: '',
-    correo: '',
-    tipoBoleto: 'Normal'
+    correo: ''
   };
 
   constructor() {
@@ -126,8 +125,7 @@ export class ParticipantsPage implements OnInit {
       ciudad: '',
       municipio: '',
       sexo: '',
-      correo: '',
-      tipoBoleto: 'Normal'
+      correo: ''
     };
   }
 

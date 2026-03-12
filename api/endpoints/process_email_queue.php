@@ -55,18 +55,13 @@ try {
             $mail->clearAddresses();
             $mail->addAddress($p['correo'], $p['nombre']);
 
-            $isVIP = isset($p['tipoBoleto']) && $p['tipoBoleto'] === 'VIP';
-            
-            $mail->Subject = 'Bienvenido a Francofonía 2026' . ($isVIP ? ' - Invitación Especial 👑' : ' - Tu Gafete QR');
+            $mail->Subject = 'Bienvenido a Francofonía 2026 🥐 - Tu Gafete QR';
             $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" . urlencode($p['id']);
             
             $body  = "<div style='font-family: Arial, sans-serif; font-size: 14px; color: #333;'>";
-            $body .= "<h2 style='color: " . ($isVIP ? "#d4af37" : "#2c3e50") . ";'>🥐 Bienvenue au Festival de Gastronomie</h2>";
+            $body .= "<h2 style='color: #722F37;'>🥐 Bienvenue au Festival de Gastronomie Française</h2>";
             $body .= "<p>Hola <strong>{$p['nombre']}</strong>,</p>";
-            $body .= "<p>Bienvenido al evento exclusivo de cultura y gastronomía francesa.</p>";
-            if ($isVIP) {
-                $body .= "<p><strong>🌟 ERES UN INVITADO ESPECIAL 🌟</strong> - Esperamos que disfrutes del mayor trato de excelencia.</p>";
-            }
+            $body .= "<p>Bienvenido al evento exclusivo de cultura y gastronomía francesa. ¡Estás a punto de vivir una experiencia única!</p>";
             $body .= "<p>Aquí está tu <strong>código QR digital</strong> para acceder y calificar libremente los stands:</p>";
             $body .= "<div style='background: white; padding: 15px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin: 20px 0;'>";
             $body .= "<img src='{$qrUrl}' alt='Tu Código QR' style='width: 250px; height: 250px; display: block;' />";

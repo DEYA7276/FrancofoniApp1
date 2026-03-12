@@ -46,13 +46,7 @@
           <ion-select-option value="Otro">Otro</ion-select-option>
         </ion-select>
       </ion-item>
-      <ion-item class="premium-input-item">
-        <ion-label position="stacked">Tipo de Boleto <ion-icon name="star" color="warning"></ion-icon></ion-label>
-        <ion-select [(ngModel)]="newParticipant.tipoBoleto" placeholder="Selecciona el Boleto">
-          <ion-select-option value="Normal">🎟️ Boleto Normal</ion-select-option>
-          <ion-select-option value="VIP">👑 Invitado Especial</ion-select-option>
-        </ion-select>
-      </ion-item>
+
 
       <ion-button expand="block" style="margin-top: 15px;" (click)="addParticipant()" [disabled]="isSaving">
         {{ isSaving ? 'Guardando...' : (newParticipant.id ? 'Actualizar Datos' : 'Guardar Participante') }}
