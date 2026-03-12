@@ -41,30 +41,22 @@ import { Stand } from '../models/stand.model';
           </ng-container>
         </div>
 
-        <!-- Bottom area: 2 stands on the right + coming soon on left -->
-        <div class="bottom-area">
-          <div class="coming-soon-zone">
-            <div class="coming-soon-box" *ngFor="let p of comingSoonLeft">
-              <ion-icon name="lock-closed-outline" class="cs-icon"></ion-icon>
-              <span class="cs-text">Próximo</span>
-            </div>
-          </div>
-          <div class="bottom-stands">
-            <ng-container *ngFor="let stand of bottomStands">
-              <div class="stand-box"
-                [class.visited]="isVisited(stand)"
-                [class.pulse-suggest]="suggestion?.id === stand.id"
-                (click)="onStandTap(stand)">
-                <div class="stand-inner">
-                  <ion-icon 
-                    [name]="isVisited(stand) ? 'checkmark-circle-outline' : 'ellipse-outline'" 
-                    class="stand-status-icon">
-                  </ion-icon>
-                  <span class="stand-name">{{ stand.nombre }}</span>
-                </div>
+        <!-- Bottom row: remaining stands -->
+        <div class="bottom-row">
+          <ng-container *ngFor="let stand of bottomStands">
+            <div class="stand-box"
+              [class.visited]="isVisited(stand)"
+              [class.pulse-suggest]="suggestion?.id === stand.id"
+              (click)="onStandTap(stand)">
+              <div class="stand-inner">
+                <ion-icon 
+                  [name]="isVisited(stand) ? 'checkmark-circle-outline' : 'ellipse-outline'" 
+                  class="stand-status-icon">
+                </ion-icon>
+                <span class="stand-name">{{ stand.nombre }}</span>
               </div>
-            </ng-container>
-          </div>
+            </div>
+          </ng-container>
         </div>
       </div>
 
@@ -72,7 +64,6 @@ import { Stand } from '../models/stand.model';
       <div class="map-legend">
         <div class="legend-item"><span class="legend-dot visited"></span><span>Visitado</span></div>
         <div class="legend-item"><span class="legend-dot pending"></span><span>Pendiente</span></div>
-        <div class="legend-item"><span class="legend-dot coming"></span><span>Próximo</span></div>
       </div>
 
       <!-- Recommendation -->
@@ -131,45 +122,12 @@ import { Stand } from '../models/stand.model';
       justify-content: center;
     }
 
-    /* Bottom area */
-    .bottom-area {
+    /* Bottom row: centered below */
+    .bottom-row {
       display: flex;
       gap: 8px;
-      flex: 1;
-      margin-top: 4px;
-    }
-
-    /* Coming soon zone — left side */
-    .coming-soon-zone {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      justify-content: flex-end;
-    }
-
-    .coming-soon-box {
-      background: rgba(15, 59, 110, 0.06);
-      border: 1.5px dashed rgba(15, 59, 110, 0.15);
-      border-radius: 8px;
-      padding: 6px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      height: 50px;
       justify-content: center;
-    }
-    .cs-icon { font-size: 0.9rem; color: rgba(15, 59, 110, 0.25); }
-    .cs-text { font-size: 0.5rem; color: rgba(15, 59, 110, 0.3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-
-    /* Bottom stands — right side */
-    .bottom-stands {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      justify-content: flex-start;
+      margin-top: 4px;
     }
 
     /* Stand box */
@@ -236,7 +194,6 @@ import { Stand } from '../models/stand.model';
     .legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
     .legend-dot.visited { background: #28a745; }
     .legend-dot.pending { border: 2px dashed #0F3B6E; background: white; }
-    .legend-dot.coming { background: rgba(15, 59, 110, 0.12); border: 1.5px dashed rgba(15, 59, 110, 0.3); }
 
     /* Recommendation */
     .recommendation-card {
@@ -258,7 +215,6 @@ export class FloorMapComponent implements OnInit, OnChanges {
 
   topStands: Stand[] = [];
   bottomStands: Stand[] = [];
-  comingSoonLeft: number[] = [];
 
   private recommendationService = inject(RecommendationService);
   private alertCtrl = inject(AlertController);
@@ -278,7 +234,7 @@ export class FloorMapComponent implements OnInit, OnChanges {
     this.updateSuggestion();
   }
 
-  /** Layout: 3 stands on top, 2 on bottom-right, coming soon placeholders on bottom-left */
+  /** Layout: 3 stands on top, remaining on bottom */
   private distributeStands() {
     const total = this.allStands.length;
     if (total <= 3) {
@@ -286,10 +242,8 @@ export class FloorMapComponent implements OnInit, OnChanges {
       this.bottomStands = [];
     } else {
       this.topStands = this.allStands.slice(0, 3);
-      this.bottomStands = this.allStands.slice(3, 5);
+      this.bottomStands = this.allStands.slice(3);
     }
-    // Add "coming soon" placeholders on the left side of the bottom area
-    this.comingSoonLeft = [1, 2, 3];
   }
 
   isVisited(stand: Stand): boolean {
