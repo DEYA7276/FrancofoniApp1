@@ -65,7 +65,7 @@ function getMostVisitedStand($db) {
 function getStandRatings($db) {
     $stmt = $db->query('
         SELECT standId,
-               ROUND(AVG((CAST(p1 AS DECIMAL) + CAST(p2 AS DECIMAL) + CAST(p3 AS DECIMAL) + CAST(p4 AS DECIMAL) + CAST(p5 AS DECIMAL)) / 5), 2) as avgRating,
+               ROUND(AVG((CAST(p1 AS DECIMAL) + CAST(p2 AS DECIMAL) + CAST(p3 AS DECIMAL) + CAST(p4 AS DECIMAL)) / 4), 2) as avgRating,
                COUNT(*) as totalSurveys
         FROM surveys
         GROUP BY standId
