@@ -70,7 +70,7 @@ import { Stand } from '../models/stand.model';
       <div *ngIf="suggestion" class="recommendation-card">
         <div class="rec-icon"><ion-icon name="sparkles-outline"></ion-icon></div>
         <div class="rec-text">
-          <h4>✨ Te sugerimos visitar</h4>
+          <h4> Te sugerimos visitar</h4>
           <p><strong>{{ suggestion.nombre }}</strong> — {{ suggestion.responsable || 'Sorpresa culinaria' }}</p>
         </div>
       </div>

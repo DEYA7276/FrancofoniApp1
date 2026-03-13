@@ -47,8 +47,12 @@ import { firstValueFrom } from 'rxjs';
           [visitedStandIds]="visitedStandIds" 
           [allStands]="allStands">
         </app-floor-map>
-        <div *ngIf="allStands.length === 0" class="empty-map">
+        <div *ngIf="allStands.length === 0 && !errorMessage" class="empty-map">
           <p>Cargando mapa del evento...</p>
+        </div>
+        <div *ngIf="errorMessage" class="error-box">
+          <p>⚠️ Error: {{ errorMessage }}</p>
+          <ion-button size="small" (click)="ngOnInit()">Reintentar</ion-button>
         </div>
       </div>
 
@@ -137,6 +141,7 @@ export class GuestDashboardPage implements OnInit {
   guest$ = this.authService.guest$;
   allStands: Stand[] = [];
   visitedStandIds: string[] = [];
+  errorMessage: string | null = null;
 
   ngOnInit() {
     this.guest$.pipe(take(1)).subscribe(async guest => {
@@ -146,15 +151,21 @@ export class GuestDashboardPage implements OnInit {
       }
 
       try {
+        this.errorMessage = null;
         const stands = await firstValueFrom(this.standService.getStands().pipe(take(1)));
         this.allStands = stands || [];
         console.log('[GuestDashboard] Stands loaded:', this.allStands.length);
 
-        const visits = await this.visitService.getParticipantVisits(guest.id!);
-        this.visitedStandIds = visits.map(v => v.standId);
-        console.log('[GuestDashboard] Visits loaded:', this.visitedStandIds.length);
-      } catch (err) {
+        if (this.allStands.length > 0) {
+          const visits = await this.visitService.getParticipantVisits(guest.id!);
+          this.visitedStandIds = visits.map(v => v.standId);
+          console.log('[GuestDashboard] Visits loaded:', this.visitedStandIds.length);
+        } else {
+          this.errorMessage = "No se encontraron stands.";
+        }
+      } catch (err: any) {
         console.error('[GuestDashboard] Error loading data:', err);
+        this.errorMessage = err.message || 'Error de conexión con el servidor';
         this.allStands = [];
         this.visitedStandIds = [];
       }

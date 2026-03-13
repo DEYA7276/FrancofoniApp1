@@ -69,7 +69,7 @@ export class DashboardPage implements OnInit, OnDestroy {
                 })
                 .catch(err => {}); // Fail silenciosamente
         }
-    }, 20000); // Cada 20 segundos
+    }, 10000); // Cada 10 segundos
   }
 
   ngOnDestroy() {

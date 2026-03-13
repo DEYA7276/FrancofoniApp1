@@ -1,0 +1,42 @@
+{"tasks": [
+  {
+    "id": 1,
+    "title": "Analizar estructura general del proyecto y patrones",
+    "status": "PENDING",
+    "plan_approved": false,
+    "assigned_to": "arquitecto",
+    "dependencies": []
+  },
+  {
+    "id": 2,
+    "title": "Analizar código Frontend (Angular/Ionic)",
+    "status": "PENDING",
+    "plan_approved": false,
+    "assigned_to": "especialista_frontend",
+    "dependencies": []
+  },
+  {
+    "id": 3,
+    "title": "Analizar API PHP y patrones backend",
+    "status": "PENDING",
+    "plan_approved": false,
+    "assigned_to": "especialista_backend",
+    "dependencies": []
+  },
+  {
+    "id": 4,
+    "title": "Analizar base de datos MySQL",
+    "status": "PENDING",
+    "plan_approved": false,
+    "assigned_to": "especialista_db",
+    "dependencies": []
+  },
+  {
+    "id": 5,
+    "title": "Revisar código en busca de bugs y problemas de seguridad",
+    "status": "PENDING",
+    "plan_approved": false,
+    "assigned_to": "revisor",
+    "dependencies": []
+  }
+], "members": ["arquitecto", "especialista_frontend", "especialista_backend", "especialista_db", "revisor"]}

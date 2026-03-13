@@ -163,7 +163,7 @@ export class ReportsPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async createGlobalFlowChart() {
-    const flows = await this.reportService.getGlobalFlow15Min();
+    const flows = await this.reportService.getGlobalFlow();
     const labels = flows.map((f: any) => f.time);
     const data = flows.map((f: any) => f.count);
 
@@ -192,7 +192,7 @@ export class ReportsPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async createStandFlowChart() {
-    const standFlows = await this.reportService.getStandFlows15Min();
+    const standFlows = await this.reportService.getStandFlows();
     
     // gather all unique times
     const allTimes = new Set<string>();

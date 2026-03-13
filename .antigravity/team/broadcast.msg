@@ -1,0 +1,1 @@
+{"de": "Tapisbot (Director)", "tipo": "BROADCAST", "mensaje": "EQUIPO: Inician análisis de arquitectura del proyecto FrancofoniApp. Objetivos: 1) Identificar patrones y estructura 2) Detectar code smells 3) Sugerir mejoras de arquitectura 4) Encontrar bugs y problemas de seguridad. Tienen 15 minutos. ¡Manos a la obra!"}
