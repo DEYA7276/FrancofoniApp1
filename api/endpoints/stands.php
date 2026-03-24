@@ -3,6 +3,10 @@
  * Endpoint: Stands - CRUD + inicialización
  */
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../middleware/auth_middleware.php';
+
+// Proteger el endpoint - Detiene la ejecución si no hay token válido
+verifyRequest();
 
 function handleStands($method, $id) {
     $db = (new Database())->getConnection();

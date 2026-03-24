@@ -51,5 +51,13 @@ export const routes: Routes = [
   {
     path: 'guest-dashboard',
     loadComponent: () => import('./guest-dashboard/guest-dashboard.page').then( m => m.GuestDashboardPage)
+  },  {
+    path: 'forgot-password',
+    loadComponent: () => import('./forgot-password/forgot-password.page').then( m => m.ForgotPasswordPage)
   },
+  {
+    path: 'reset-password',
+    loadComponent: () => import('./reset-password/reset-password.page').then( m => m.ResetPasswordPage)
+  },
+
 ];

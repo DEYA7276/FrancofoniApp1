@@ -3,6 +3,10 @@
  * Endpoint: Users - CRUD de usuarios del staff
  */
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../middleware/auth_middleware.php';
+
+// Proteger el endpoint - Detiene la ejecución si no hay token válido
+verifyRequest();
 
 function handleUsers($method, $id) {
     $db = (new Database())->getConnection();

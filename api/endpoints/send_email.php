@@ -146,48 +146,45 @@ function buildEmailBody($participante, $qrUrl, $config) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { margin: 0; padding: 0; background-color: #050A14; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #FFFFFF; }
+        .wrapper { width: 100%; table-layout: fixed; background-color: #050A14; padding: 40px 0; }
+        .card { width: 600px; background-color: #0D1526; margin: 0 auto; border-radius: 15px; border: 1px solid #1E2D45; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .header { background: linear-gradient(135deg, #0A1A2F 0%, #162A47 100%); padding: 40px; text-align: center; border-bottom: 2px solid #FBC02D; }
+        .content { padding: 40px; line-height: 1.8; text-align: center; color: #FFFFFF; }
+        .footer { padding: 20px; text-align: center; font-size: 11px; color: #8A9BB3; background-color: #090F1B; }
+        h1 { color: #FBC02D; margin: 0; font-size: 26px; letter-spacing: 1px; }
+        h2 { color: #FFFFFF; font-weight: 300; margin-bottom: 20px; }
+        p { margin-bottom: 20px; font-size: 16px; color: #CED4DA; }
+        .qr-container { background: white; padding: 20px; border-radius: 15px; display: inline-block; box-shadow: 0 0 25px rgba(251, 192, 45, 0.2); margin: 20px 0; }
+        .qr-img { width: 250px; height: 250px; display: block; }
+        .badge { display: inline-block; padding: 5px 15px; background-color: rgba(251, 192, 45, 0.1); color: #FBC02D; border: 1px solid #FBC02D; border-radius: 20px; font-size: 12px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px;">
-        <tr>
-            <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; overflow: hidden;">
-                    <tr>
-                        <td style="background: linear-gradient(135deg, #0A2342 0%, #2087C7 60%, #174A7C 100%); padding: 30px; text-align: center;">
-                            <h1 style="color: #FBC02D; margin: 0; font-size: 28px;">🥐 Francofonía 2026</h1>
-                            <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 16px;">La gastronomía une al mundo</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 30px;">
-                            <h2 style="color: #722F37; margin-top: 0;">Bienvenue, $nombre!</h2>
-                            <p style="color: #333333; font-size: 14px; line-height: 1.6;">
-                                Bienvenido al evento exclusivo de cultura y gastronomía francesa. 
-                                ¡Estás a punto de vivir una experiencia única!
-                            </p>
-                            <p style="color: #333333; font-size: 14px; line-height: 1.6;">
-                                Aquí está tu <strong>código QR digital</strong>. Muéstralo en cada stand para recibir tu degustación:
-                            </p>
-                            <div style="text-align: center; margin: 25px 0;">
-                                <div style="background: white; padding: 15px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                                    <img src="$qrUrl" alt="Tu Código QR" style="width: 250px; height: 250px; display: block;" />
-                                </div>
-                            </div>
-                            <p style="color: #666666; font-size: 12px; text-align: center;">
-                                Presenta este código en cada stand para degustrar
-                            </p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="background-color: #f8f9fa; padding: 20px; text-align: center;">
-                            <p style="color: #888888; font-size: 12px; margin: 0;">© 2026 Francofonía. Todos los derechos reservados.</p>
-                            <p style="color: #888888; font-size: 11px; margin: 5px 0 0 0;">Equipo Francofonía 2026</p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+<body>
+    <div class="wrapper">
+        <div class="card">
+            <div class="header">
+                <h1>🥐 FRANCOFONÍA 2026</h1>
+                <div style="color: #8A9BB3; font-size: 13px; margin-top: 5px; letter-spacing: 2px;">INVITACIÓN EXCLUSIVA</div>
+            </div>
+            <div class="content">
+                <div class="badge">Bienvenue</div>
+                <h2>¡Hola, $nombre!</h2>
+                <p>Te damos la bienvenida al evento más esperado de gastronomía y cultura francesa.</p>
+                <p>Presenta este <strong>Código QR Digital</strong> en cada stand para registrar tu visita y disfrutar de las degustaciones exclusivas:</p>
+                
+                <div class="qr-container">
+                    <img src="$qrUrl" alt="Tu Código QR" class="qr-img" />
+                </div>
+                
+                <p style="color: #FBC02D; font-size: 13px; margin-top: 20px;">📌 Tip: Puedes tomarle una captura de pantalla para tenerlo siempre a la mano.</p>
+            </div>
+            <div class="footer">
+                © 2026 Francofonía. La experiencia gourmet definitiva en tus manos.
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 HTML;

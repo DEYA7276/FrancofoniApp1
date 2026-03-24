@@ -54,8 +54,20 @@
           <ion-button expand="block" class="login-btn anim-fade-up delay-3" (click)="onStaffLogin()">
             Acceso Administrativo
           </ion-button>
+          <div class="ion-text-center ion-margin-top anim-fade-up delay-4" style="margin-top: 15px;">
+            <a routerLink="/forgot-password" style="color: #FBC02D; text-decoration: none; font-size: 14px; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">¿Olvidaste tu contraseña?</a>
+          </div>
         </div>
       </div>
+
+      <!-- Ayuda Móvil -->
+      <div class="ion-text-center anim-fade-up delay-4" style="margin-top: 25px;">
+        <ion-button fill="clear" (click)="showMobileInstructions()" style="--color: rgba(255,255,255,0.9); font-weight: 600; text-transform: none; font-size: 14px;">
+          <ion-icon name="phone-portrait-outline" slot="start"></ion-icon>
+          ¿Cómo abrir en el celular?
+        </ion-button>
+      </div>
+
     </div>
   </div>
 </ion-content>

@@ -5,6 +5,10 @@
  */
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/validator.php';
+require_once __DIR__ . '/../middleware/auth_middleware.php';
+
+// Proteger el endpoint - Detiene la ejecución si no hay token válido
+verifyRequest();
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;

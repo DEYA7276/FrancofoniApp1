@@ -14,11 +14,12 @@ header('X-XSS-Protection: 1; mode=block');
 header('Referrer-Policy: strict-origin-when-cross-origin');
 header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
 
-// CORS - solo permitir la app
-$allowedOrigins = ['http://localhost:4200', 'http://localhost', 'http://127.0.0.1:4200'];
+// CORS - permitir la red local para conexión desde Celulares vía IP
+$allowedOrigins = ['http://localhost:4200', 'http://localhost', 'http://127.0.0.1:4200', 'http://localhost:8100', 'http://127.0.0.1:8100'];
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-if (in_array($origin, $allowedOrigins) || $origin === '') {
+// Permite localhost o IPs de red local típicas (192.168.x.x)
+if (in_array($origin, $allowedOrigins) || strpos($origin, 'http://192.168.') === 0 || $origin === '') {
     header('Access-Control-Allow-Origin: ' . ($origin ?: '*'));
 }
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
@@ -112,6 +113,15 @@ switch ($resource) {
         break;
     case 'health':
         echo json_encode(['status' => 'ok', 'timestamp' => date('c')]);
+        break;
+    case 'network-info':
+        require_once __DIR__ . '/endpoints/network_info.php';
+        break;
+    case 'request-reset':
+        require_once __DIR__ . '/endpoints/password_reset.php';
+        break;
+    case 'reset-password':
+        require_once __DIR__ . '/endpoints/reset_password.php';
         break;
     default:
         http_response_code(404);

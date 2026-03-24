@@ -20,6 +20,9 @@ function handleAuth($method, $action) {
             case 'guest-login':
                 guestLogin($db, $data);
                 break;
+            case 'logout':
+                staffLogout($db);
+                break;
             default:
                 http_response_code(400);
                 echo json_encode(['error' => 'Acción no válida']);
@@ -60,7 +63,9 @@ function staffLogin($db, $data) {
         return;
     }
 
-    // Verify password
+    // Validar Contraseña con Bcrypt
+    // password_verify compara el texto plano ingresado con el string Hasheado
+    // guardado en la base de datos (que incluye el salt) de forma segura.
     if (!password_verify($password, $user['password'])) {
         SecurityLogger::loginFailed($email, 'Password incorrecto');
         http_response_code(401);
@@ -69,11 +74,40 @@ function staffLogin($db, $data) {
     }
 
     // Login exitoso
+    // -------------------------------------------------------------------------------------
+    // SISTEMA DE SESIONES POR TOKEN
+    // Al autenticarse correctamente, se genera un token criptográficamente seguro.
+    // Este token se guarda en la tabla `sessions` vinculándolo al usuario.
+    // -------------------------------------------------------------------------------------
+    $token = bin2hex(random_bytes(32)); // 64 caracteres hex
+    
+    // Insertar token en BD con vigencia de 8 horas
+    $sessionStmt = $db->prepare('INSERT INTO sessions (user_id, token, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 8 HOUR))');
+    $sessionStmt->execute([$user['id'], $token]);
+
     SecurityLogger::loginSuccess($user['id'], $user['role']);
     
-    // Return user data (without password)
+    // Return user data (sin el password para que no viaje a la UI) y el nuevo token
     unset($user['password']);
-    echo json_encode(['user' => $user]);
+    echo json_encode(['token' => $token, 'user' => $user]);
+}
+
+/**
+ * Función de Logout
+ * Borra el token enviado del registro de sesiones
+ */
+function staffLogout($db) {
+    // Leer el token del Authorization Header
+    $headers = apache_request_headers();
+    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+
+    if (preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
+        $token = $matches[1];
+        $stmt = $db->prepare('DELETE FROM sessions WHERE token = ?');
+        $stmt->execute([$token]);
+    }
+    
+    echo json_encode(['message' => 'Sesión cerrada']);
 }
 
 function guestLogin($db, $data) {

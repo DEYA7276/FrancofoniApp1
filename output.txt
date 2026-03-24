@@ -1,0 +1,2 @@
+HTTP Code: 200
+Response: {"message":"Si el correo existe, se han enviado las instrucciones."}

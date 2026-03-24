@@ -1,27 +1,19 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules, withHashLocation } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './app/interceptors/auth.interceptor';
 
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideAuth, getAuth } from '@angular/fire/auth';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
-
-import { environment } from './environments/environment';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
-// Build providers array conditionally
-const providers: any[] = [
+// Modo 100% local — backend PHP/MySQL via XAMPP
+// Firebase no se inicializa porque todos los servicios usan HttpClient directamente
+const providers = [
   { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   provideIonicAngular(),
   provideRouter(routes, withPreloading(PreloadAllModules), withHashLocation()),
-  provideHttpClient(),
-
-  // Firebase is always loaded (services still inject it), but only used when useLocalBackend is false
-  provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-  provideAuth(() => getAuth()),
-  provideFirestore(() => getFirestore()),
+  provideHttpClient(withInterceptors([authInterceptor])),
 ];
 
 bootstrapApplication(AppComponent, { providers });

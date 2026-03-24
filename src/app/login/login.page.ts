@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonItem, IonLabel, IonInput, IonButton, IonIcon, AlertController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { ticketOutline, shieldCheckmarkOutline, alertCircleOutline, closeCircleOutline, checkmarkCircleOutline } from 'ionicons/icons';
+import { ticketOutline, shieldCheckmarkOutline, alertCircleOutline, closeCircleOutline, checkmarkCircleOutline, phonePortraitOutline } from 'ionicons/icons';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { take } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BackendModeService } from '../services/backend-mode.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +18,8 @@ import { take } from 'rxjs';
   imports: [
     IonContent, CommonModule,
     FormsModule, IonItem, IonLabel, IonInput, IonButton,
-    IonIcon
+    IonIcon,
+    RouterLink
   ]
 })
 export class LoginPage {
@@ -29,9 +32,24 @@ export class LoginPage {
   private authService = inject(AuthService);
   private router = inject(Router);
   private alertCtrl = inject(AlertController);
+  private http = inject(HttpClient);
+  private backendMode = inject(BackendModeService);
 
   constructor() {
-    addIcons({ ticketOutline, shieldCheckmarkOutline, alertCircleOutline, closeCircleOutline, checkmarkCircleOutline });
+    addIcons({ ticketOutline, shieldCheckmarkOutline, alertCircleOutline, closeCircleOutline, checkmarkCircleOutline, phonePortraitOutline });
+  }
+
+  async showMobileInstructions() {
+    try {
+      const res: any = await this.http.get(`${this.backendMode.localApiUrl}/network-info`).toPromise();
+      await this.showAlert(
+        '📱 Usar desde Celular',
+        `Para abrir esta app y la cámara QR desde tu dispositivo móvil, asegúrate de conectarlo a este mismo WiFi y entra a la siguiente dirección:\n\n🔗 ${res.full_url}\n\n(Puedes tomarle foto para no olvidarla)`,
+        'success'
+      );
+    } catch (e) {
+      this.showAlert('❌ Error de red', 'Asegúrate de estar ejecutando XAMPP.', 'danger');
+    }
   }
 
   private getRoleLabel(role: string): string {
