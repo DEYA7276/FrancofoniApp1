@@ -34,10 +34,10 @@ $stmt = $db->prepare('SELECT id, email FROM users WHERE email = ?');
 $stmt->execute([$email]);
 $user = $stmt->fetch();
 
-// Por seguridad, siempre devolvemos un 200 aunque el correo no exista, 
-// para prevenir ataques de "enumeración de usuarios".
+// Si el usuario no existe, devolvemos un error 404 explícito para la interfaz gráfica.
 if (!$user) {
-    echo json_encode(['message' => 'Si el correo existe, se han enviado las instrucciones.']);
+    http_response_code(404);
+    echo json_encode(['error' => 'El correo no se encuentra registrado en el sistema.']);
     exit;
 }
 
@@ -67,9 +67,9 @@ try {
     $mail->Subject = 'Instrucciones para restablecer tu contrasena';
     $mail->isHTML(true);
 
-    // URL dinámica basada en el origen de la petición (permite abrir desde celular con IPs como 192.168.x.x)
-    $origin = $_SERVER['HTTP_ORIGIN'] ?? 'http://localhost:8100';
-    $frontendUrl = rtrim($origin, '/') . "/#/reset-password?token=" . $token;
+    // URL dinámica basada en configuración o en el origen de la petición
+    $frontendBase = $config['frontend_url'] ?? $_SERVER['HTTP_ORIGIN'] ?? 'http://localhost:8100';
+    $frontendUrl = rtrim($frontendBase, '/') . "/#/reset-password?token=" . $token;
 
     $mail->Body = "
 <!DOCTYPE html>
