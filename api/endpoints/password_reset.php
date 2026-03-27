@@ -67,8 +67,8 @@ try {
     $mail->Subject = 'Instrucciones para restablecer tu contrasena';
     $mail->isHTML(true);
 
-    // URL dinámica basada en configuración o en el origen de la petición
-    $frontendBase = $config['frontend_url'] ?? $_SERVER['HTTP_ORIGIN'] ?? 'http://localhost:8100';
+    // URL dinámica basada en el origen de la petición o fallback a Vercel
+    $frontendBase = $_SERVER['HTTP_ORIGIN'] ?? 'https://francofonia-app.vercel.app';
     $frontendUrl = rtrim($frontendBase, '/') . "/#/reset-password?token=" . $token;
 
     $mail->Body = "
